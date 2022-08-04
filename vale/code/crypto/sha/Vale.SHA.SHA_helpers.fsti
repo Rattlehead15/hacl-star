@@ -9,6 +9,9 @@ open Vale.Def.Words_s
 open Vale.Def.Words.Seq_s
 open FStar.Seq
 open Vale.Arch.Types
+open Vale.Def.Sel
+open Vale.SHA2.Wrapper
+open Vale.Def.Words.Four_s
 
 unfold let (.[]) = FStar.Seq.index
 
@@ -236,3 +239,173 @@ val lemma_hash_to_bytes (s:seq quad32) : Lemma
 val lemma_update_multi_opaque_vale_is_update_multi (hash:hash256) (blocks:bytes) : Lemma
   (requires length blocks % 64 = 0)
   (ensures  update_multi_opaque_vale hash blocks == update_multi_transparent hash blocks)
+
+val sigma_0_0_partial_def (t:counter) (block:block_w) : nat32
+[@"opaque_to_smt"] let sigma_0_0_partial = opaque_make sigma_0_0_partial_def
+irreducible let sigma_0_0_partial_reveal = opaque_revealer (`%sigma_0_0_partial) sigma_0_0_partial sigma_0_0_partial_def
+
+val lemma_sha256_sigma0 (src:quad32) (t:counter) (block:block_w) : Lemma
+  (requires 16 <= t /\ t < size_k_w_256 /\
+            src.hi3 == ws_opaque block (t-15))
+  (ensures (sigma256_0_0 src.hi3 == sigma_0_0_partial t block))
+
+val sigma_0_1_partial_def (t:counter) (block:block_w) : nat32
+[@"opaque_to_smt"] let sigma_0_1_partial = opaque_make sigma_0_1_partial_def
+irreducible let sigma_0_1_partial_reveal = opaque_revealer (`%sigma_0_1_partial) sigma_0_1_partial sigma_0_1_partial_def
+
+val lemma_sha256_sigma1 (src:quad32) (t:counter) (block:block_w) : Lemma
+  (requires 16 <= t /\ t < size_k_w_256 /\
+            src.hi3 == ws_opaque block (t-2))
+  (ensures (sigma256_0_1 src.hi3 == sigma_0_1_partial t block))
+
+val sigma_1_0_partial_def (t:counter) (block:block_w) (hash_orig:hash256) : nat32
+[@"opaque_to_smt"] let sigma_1_0_partial = opaque_make sigma_1_0_partial_def
+irreducible let sigma_1_0_partial_reveal = opaque_revealer (`%sigma_1_0_partial) sigma_1_0_partial sigma_1_0_partial_def
+
+val lemma_sha256_sigma2 (src:quad32) (t:counter) (block:block_w) (hash_orig:hash256) : Lemma
+  (requires t < size_k_w_256 /\
+            src.hi3 == word_to_nat32 ((repeat_range_vale t block hash_orig).[0]))
+  (ensures (sigma256_1_0 src.hi3 == sigma_1_0_partial t block hash_orig))
+
+val sigma_1_1_partial_def (t:counter) (block:block_w) (hash_orig:hash256) : nat32
+[@"opaque_to_smt"] let sigma_1_1_partial = opaque_make sigma_1_1_partial_def
+irreducible let sigma_1_1_partial_reveal = opaque_revealer (`%sigma_1_1_partial) sigma_1_1_partial sigma_1_1_partial_def
+
+val lemma_sha256_sigma3 (src:quad32) (t:counter) (block:block_w) (hash_orig:hash256) : Lemma
+  (requires t < size_k_w_256 /\
+            src.hi3 == word_to_nat32 ((repeat_range_vale t block hash_orig).[4]))
+  (ensures (sigma256_1_1 src.hi3 == sigma_1_1_partial t block hash_orig))
+
+val make_seperated_hash (a b c d e f g h:nat32): Pure (hash256)
+  (requires True)
+  (ensures fun hash ->
+         length hash == 8 /\
+         hash.[0] == nat32_to_word a /\
+         hash.[1] == nat32_to_word b /\
+         hash.[2] == nat32_to_word c /\
+         hash.[3] == nat32_to_word d /\
+         hash.[4] == nat32_to_word e /\
+         hash.[5] == nat32_to_word f /\
+         hash.[6] == nat32_to_word g /\
+         hash.[7] == nat32_to_word h
+  )
+
+val make_seperated_hash_quad32 (a b c d e f g h:quad32): Pure (hash256)
+  (requires True)
+  (ensures fun hash ->
+         length hash == 8 /\
+         hash.[0] == nat32_to_word a.hi3 /\
+         hash.[1] == nat32_to_word b.hi3 /\
+         hash.[2] == nat32_to_word c.hi3 /\
+         hash.[3] == nat32_to_word d.hi3 /\
+         hash.[4] == nat32_to_word e.hi3 /\
+         hash.[5] == nat32_to_word f.hi3 /\
+         hash.[6] == nat32_to_word g.hi3 /\
+         hash.[7] == nat32_to_word h.hi3
+  )
+
+val lemma_make_seperated_hash_quad32 (a b c d e f g h:quad32) : Lemma
+  (ensures (let hash = make_seperated_hash a.hi3 b.hi3 c.hi3 d.hi3 e.hi3 f.hi3 g.hi3 h.hi3 in
+         a.hi3 == word_to_nat32 hash.[0] /\
+         b.hi3 == word_to_nat32 hash.[1] /\
+         c.hi3 == word_to_nat32 hash.[2] /\
+         d.hi3 == word_to_nat32 hash.[3] /\
+         e.hi3 == word_to_nat32 hash.[4] /\
+         f.hi3 == word_to_nat32 hash.[5] /\
+         g.hi3 == word_to_nat32 hash.[6] /\
+         h.hi3 == word_to_nat32 hash.[7]))
+
+val lemma_make_seperated_hash (hash:hash256) (a b c d e f g h:quad32) : Lemma
+  (requires length hash == 8 /\
+            a.hi3 == word_to_nat32 hash.[0] /\
+            b.hi3 == word_to_nat32 hash.[1] /\
+            c.hi3 == word_to_nat32 hash.[2] /\
+            d.hi3 == word_to_nat32 hash.[3] /\
+            e.hi3 == word_to_nat32 hash.[4] /\
+            f.hi3 == word_to_nat32 hash.[5] /\
+            g.hi3 == word_to_nat32 hash.[6] /\
+            h.hi3 == word_to_nat32 hash.[7])
+  (ensures hash == make_seperated_hash_quad32 a b c d e f g h)
+
+val lemma_vsel32 (a b c:nat32) : Lemma
+  (ensures (isel32 a b c = (iand32 c a) *^ (iand32 (inot32 c) b)))
+
+val ch256 (x y z:nat32):Pure(nat32)
+  (requires True)
+  (ensures fun a -> a == (iand32 x y) *^ (iand32 (inot32 x) z))
+
+val lemma_eq_maj_xvsel32 (a b c:nat32) : Lemma
+  (ensures (isel32 c b (a *^ b) = (iand32 a b) *^ ((iand32 a c) *^ (iand32 b c))))
+
+val maj256 (x y z:nat32):Pure(nat32)
+  (requires True)
+  (ensures fun a -> a == (iand32 x y) *^ ((iand32 x z) *^ (iand32 y z)))
+
+val lemma_sigma_0_0_partial (t:counter) (block:block_w) : Lemma
+  (requires 16 <= t /\ t < size_k_w_256)
+  (ensures (sigma256_0_0 (ws_opaque block (t-15)) == sigma_0_0_partial t block))
+
+val lemma_sigma_0_1_partial (t:counter) (block:block_w) : Lemma
+  (requires 16 <= t /\ t < size_k_w_256)
+  (ensures (sigma256_0_1 (ws_opaque block (t-2)) == sigma_0_1_partial t block))
+
+val lemma_sigma_1_0_partial (t:counter) (block:block_w) (hash_orig:hash256) : Lemma
+  (requires t < size_k_w_256)
+  (ensures (sigma256_1_0 (word_to_nat32 ((repeat_range_vale t block hash_orig).[0])) == sigma_1_0_partial t block hash_orig))
+
+val lemma_sigma_1_1_partial (t:counter) (block:block_w) (hash_orig:hash256) : Lemma
+  (requires t < size_k_w_256)
+  (ensures (sigma256_1_1 (word_to_nat32 ((repeat_range_vale t block hash_orig).[4])) == sigma_1_1_partial t block hash_orig))
+
+let quads_to_block_be (qs:seq quad32) : block_w
+  =
+  let nat32_seq = Vale.Def.Words.Seq_s.seq_four_to_seq_BE qs in
+  let f (n:nat{n < 16}) : word = nat32_to_word (if n < length nat32_seq then nat32_seq.[n] else 0) in
+  init 16 f
+
+val lemma_quads_to_block_be (qs:seq quad32) : Lemma
+  (requires length qs == 4)
+  (ensures
+  (let block = quads_to_block_be qs in
+            forall i . {:pattern (index qs i)} 0 <= i /\ i < 4 ==>
+              (qs.[i]).hi3 == ws_opaque block (4 * i + 0) /\
+              (qs.[i]).hi2 == ws_opaque block (4 * i + 1) /\
+              (qs.[i]).lo1 == ws_opaque block (4 * i + 2) /\
+              (qs.[i]).lo0 == ws_opaque block (4 * i + 3)))
+
+let k_index (ks:seq quad32) (i:nat) : nat32 =
+  if length ks = size_k_w_256 / 4 && i < size_k_w_256 then four_select ks.[(i/4)] (i % 4)
+  else 0
+
+
+val lemma_shuffle_core_properties (t:counter) (block:block_w) (hash_orig:hash256) : Lemma
+  (requires t < size_k_w_256)
+  (ensures (let hash = Spec.Loops.repeat_range 0 t (shuffle_core_opaque block) hash_orig in
+            let h = Spec.Loops.repeat_range 0 (t + 1) (shuffle_core_opaque block) hash_orig in
+            let a0 = word_to_nat32 hash.[0] in
+            let b0 = word_to_nat32 hash.[1] in
+            let c0 = word_to_nat32 hash.[2] in
+            let d0 = word_to_nat32 hash.[3] in
+            let e0 = word_to_nat32 hash.[4] in
+            let f0 = word_to_nat32 hash.[5] in
+            let g0 = word_to_nat32 hash.[6] in
+            let h0 = word_to_nat32 hash.[7] in
+            let t1 = add_wrap (add_wrap (add_wrap (add_wrap h0 (sigma256_1_1 e0)) (ch256 e0 f0 g0)) (word_to_nat32 k.[t])) (ws_opaque block t) in
+            let t2 = add_wrap (sigma256_1_0 a0) (maj256 a0 b0 c0) in
+            word_to_nat32 h.[0] == add_wrap t1 t2 /\
+            word_to_nat32 h.[1] == a0 /\
+            word_to_nat32 h.[2] == b0 /\
+            word_to_nat32 h.[3] == c0 /\
+            word_to_nat32 h.[4] == add_wrap d0 t1 /\
+            word_to_nat32 h.[5] == e0 /\
+            word_to_nat32 h.[6] == f0 /\
+            word_to_nat32 h.[7] == g0))
+
+val lemma_ws_opaque (block:block_w) (t:counter) : Lemma
+  (requires 16 <= t && t < size_k_w_256)
+  (ensures (let sigma0 = sigma256_0_0 (ws_opaque block (t - 15)) in
+            let sigma1 = sigma256_0_1 (ws_opaque block (t - 2)) in
+            ws_opaque block t == add_wrap (add_wrap (add_wrap sigma1 (ws_opaque block (t - 7))) sigma0) (ws_opaque block (t - 16))))
+
+let repeat_range_vale_64 (block:block_w) (hash:hash256) =
+  Spec.Loops.repeat_range 0 64 (shuffle_core_opaque block) hash

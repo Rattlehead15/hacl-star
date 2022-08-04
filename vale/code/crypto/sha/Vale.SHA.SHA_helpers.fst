@@ -14,9 +14,13 @@ open Vale.Def.Words_s
 open FStar.Seq
 open FStar.UInt32  // Interop with UInt-based SHA spec
 open Vale.Arch.Types
+open Vale.Arch.TypesNative
+open Vale.Def.Sel
+open Vale.SHA2.Wrapper
 
 friend Spec.SHA2
 friend Spec.SHA2.Lemmas
+friend Vale.SHA2.Wrapper
 friend Vale.X64.CryptoInstructions_s
 
 #reset-options "--max_fuel 0 --max_ifuel 0"
@@ -1084,3 +1088,281 @@ let lemma_update_multi_opaque_vale_is_update_multi (hash:hash256) (blocks:bytes)
   =
   update_multi_reveal ();
   ()
+
+let sigma_0_0_partial_def (t:counter) (block:block_w) : nat32 =
+    if 16 <= t && t < size_k_w_256 then
+       (let sigma0_in = ws_opaque block (t-15) in
+        sigma256_0_0 sigma0_in)
+    else
+       0
+
+#reset-options "--max_fuel 0 --max_ifuel 0 --z3rlimit 30"
+let lemma_sha256_sigma0 (src:quad32) (t:counter) (block:block_w) : Lemma
+  (requires 16 <= t /\ t < size_k_w(SHA2_256) /\
+            src.hi3 == ws_opaque block (t-15))
+  (ensures (sigma256_0_0 src.hi3 == sigma_0_0_partial t block))
+  =
+  sigma_0_0_partial_reveal ();
+  ()
+#reset-options "--max_fuel 0 --max_ifuel 0"
+
+let sigma_0_1_partial_def (t:counter) (block:block_w) : nat32 =
+    if 16 <= t && t < size_k_w_256 then
+       (let sigma1_in = ws_opaque block (t-2) in
+        sigma256_0_1 sigma1_in)
+    else
+       0
+
+#reset-options "--max_fuel 0 --max_ifuel 0 --z3rlimit 30"
+let lemma_sha256_sigma1 (src:quad32) (t:counter) (block:block_w) : Lemma
+  (requires 16 <= t /\ t < size_k_w(SHA2_256) /\
+            src.hi3 == ws_opaque block (t-2))
+  (ensures (sigma256_0_1 src.hi3 == sigma_0_1_partial t block))
+  =
+  sigma_0_1_partial_reveal ();
+  ()
+#reset-options "--max_fuel 0 --max_ifuel 0"
+
+let sigma_1_0_partial_def (t:counter) (block:block_w) (hash_orig:hash256) : nat32 =
+    if t < size_k_w_256 then
+       (let sigma0_in = word_to_nat32 ((repeat_range_vale t block hash_orig).[0]) in
+        sigma256_1_0 sigma0_in)
+    else
+       0
+
+#reset-options "--max_fuel 0 --max_ifuel 0 --z3rlimit 30"
+let lemma_sha256_sigma2 (src:quad32) (t:counter) (block:block_w) (hash_orig:hash256) : Lemma
+  (requires t < size_k_w(SHA2_256) /\
+            src.hi3 == word_to_nat32 ((repeat_range_vale t block hash_orig).[0]))
+  (ensures (sigma256_1_0 src.hi3 == sigma_1_0_partial t block hash_orig))
+  =
+  sigma_1_0_partial_reveal ();
+  ()
+#reset-options "--max_fuel 0 --max_ifuel 0"
+
+let sigma_1_1_partial_def (t:counter) (block:block_w) (hash_orig:hash256) : nat32 =
+    if t < size_k_w_256 then
+       (let sigma1_in = word_to_nat32 ((repeat_range_vale t block hash_orig).[4]) in
+        sigma256_1_1 sigma1_in)
+    else
+       0
+
+#reset-options "--max_fuel 0 --max_ifuel 0 --z3rlimit 30"
+let lemma_sha256_sigma3 (src:quad32) (t:counter) (block:block_w) (hash_orig:hash256) : Lemma
+  (requires t < size_k_w(SHA2_256) /\
+            src.hi3 == word_to_nat32 ((repeat_range_vale t block hash_orig).[4]))
+  (ensures (sigma256_1_1 src.hi3 == sigma_1_1_partial t block hash_orig))
+  =
+  sigma_1_1_partial_reveal ();
+  ()
+#reset-options "--max_fuel 0 --max_ifuel 0"
+
+let make_seperated_hash_def (a b c d e f g h:nat32) :
+  (hash:words_state' SHA2_256 {
+         length hash == 8 /\
+         hash.[0] == to_uint32 a /\
+         hash.[1] == to_uint32 b /\
+         hash.[2] == to_uint32 c /\
+         hash.[3] == to_uint32 d /\
+         hash.[4] == to_uint32 e /\
+         hash.[5] == to_uint32 f /\
+         hash.[6] == to_uint32 g /\
+         hash.[7] == to_uint32 h
+   })
+  =
+    let a = to_uint32 a in
+    let b = to_uint32 b in
+    let c = to_uint32 c in
+    let d = to_uint32 d in
+    let e = to_uint32 e in
+    let f = to_uint32 f in
+    let g = to_uint32 g in
+    let h = to_uint32 h in
+    let l = [a; b; c; d; e; f; g; h] in
+    let hash = seq_of_list l in
+    assert_norm (length hash == 8);
+    elim_of_list l;
+    hash
+[@"opaque_to_smt"] let make_seperated_hash = opaque_make make_seperated_hash_def
+irreducible let make_seperated_hash_reveal = opaque_revealer (`%make_seperated_hash) make_seperated_hash make_seperated_hash_def
+
+let make_seperated_hash_quad32_def (a b c d e f g h:quad32) :
+  (hash:words_state' SHA2_256 {
+         length hash == 8 /\
+         hash.[0] == to_uint32 a.hi3 /\
+         hash.[1] == to_uint32 b.hi3 /\
+         hash.[2] == to_uint32 c.hi3 /\
+         hash.[3] == to_uint32 d.hi3 /\
+         hash.[4] == to_uint32 e.hi3 /\
+         hash.[5] == to_uint32 f.hi3 /\
+         hash.[6] == to_uint32 g.hi3 /\
+         hash.[7] == to_uint32 h.hi3
+   })
+  =
+    let a = to_uint32 a.hi3 in
+    let b = to_uint32 b.hi3 in
+    let c = to_uint32 c.hi3 in
+    let d = to_uint32 d.hi3 in
+    let e = to_uint32 e.hi3 in
+    let f = to_uint32 f.hi3 in
+    let g = to_uint32 g.hi3 in
+    let h = to_uint32 h.hi3 in
+    let l = [a; b; c; d; e; f; g; h] in
+    let hash = seq_of_list l in
+    assert_norm (length hash == 8);
+    elim_of_list l;
+    hash
+[@"opaque_to_smt"] let make_seperated_hash_quad32 = opaque_make make_seperated_hash_quad32_def
+irreducible let make_seperated_hash_quad32_reveal = opaque_revealer (`%make_seperated_hash_quad32) make_seperated_hash_quad32 make_seperated_hash_quad32_def
+
+let lemma_make_seperated_hash_quad32 (a b c d e f g h:quad32) : Lemma
+  (ensures (let hash = make_seperated_hash_quad32 a b c d e f g h in
+         a.hi3 == word_to_nat32 hash.[0] /\
+         b.hi3 == word_to_nat32 hash.[1] /\
+         c.hi3 == word_to_nat32 hash.[2] /\
+         d.hi3 == word_to_nat32 hash.[3] /\
+         e.hi3 == word_to_nat32 hash.[4] /\
+         f.hi3 == word_to_nat32 hash.[5] /\
+         g.hi3 == word_to_nat32 hash.[6] /\
+         h.hi3 == word_to_nat32 hash.[7]))
+  =
+  ()
+
+let lemma_make_seperated_hash (hash:hash256) (a b c d e f g h:quad32) : Lemma
+  (requires length hash == 8 /\
+            a.hi3 == word_to_nat32 hash.[0] /\
+            b.hi3 == word_to_nat32 hash.[1] /\
+            c.hi3 == word_to_nat32 hash.[2] /\
+            d.hi3 == word_to_nat32 hash.[3] /\
+            e.hi3 == word_to_nat32 hash.[4] /\
+            f.hi3 == word_to_nat32 hash.[5] /\
+            g.hi3 == word_to_nat32 hash.[6] /\
+            h.hi3 == word_to_nat32 hash.[7])
+  (ensures hash == make_seperated_hash_quad32 a b c d e f g h)
+  =
+  assert (equal hash (make_seperated_hash_quad32 a b c d e f g h))
+
+let lemma_vsel32 (a b c:nat32) : Lemma
+  (ensures (isel32 a b c = (iand32 c a) *^ (iand32 (inot32 c) b)))
+  =
+  reveal_iand_all 32;
+  reveal_inot_all 32;
+  reveal_ixor_all 32;
+  lemma_equal_nth 32 (isel32 a b c) ((iand32 c a) *^ (iand32 (inot32 c) b))
+
+let ch256_def (x y z:nat32) : 
+  (a:nat32 {a == (iand32 x y) *^ (iand32 (inot32 x) z)})
+  =
+  reveal_iand_all 32;
+  reveal_inot_all 32;
+  reveal_ixor_all 32;
+  vv (_Ch SHA2_256 (to_uint32 x) (to_uint32 y) (to_uint32 z))
+[@"opaque_to_smt"] let ch256 = opaque_make ch256_def
+irreducible let ch256_reveal = opaque_revealer (`%ch256) ch256 ch256_def
+
+let lemma_eq_maj_xvsel32 (a b c:nat32) : Lemma
+  (ensures (isel32 c b (a *^ b) = (iand32 a b) *^ ((iand32 a c) *^ (iand32 b c))))
+  =
+  reveal_iand_all 32;
+  reveal_ixor_all 32;
+  lemma_equal_nth 32 (isel32 c b (a *^ b)) ((iand32 a b) *^ ((iand32 a c) *^ (iand32 b c)))
+
+let maj256_def (x y z:nat32) : 
+  (a:nat32 {a == (iand32 x y) *^ ((iand32 x z) *^ (iand32 y z))})
+  =
+  reveal_iand_all 32;
+  reveal_ixor_all 32;
+  vv (_Maj SHA2_256 (to_uint32 x) (to_uint32 y) (to_uint32 z))
+[@"opaque_to_smt"] let maj256 = opaque_make maj256_def
+irreducible let maj256_reveal = opaque_revealer (`%maj256) maj256 maj256_def
+
+let lemma_sigma_0_0_partial (t:counter) (block:block_w) : Lemma
+  (requires 16 <= t /\ t < size_k_w(SHA2_256))
+  (ensures (sigma256_0_0 (ws_opaque block (t-15)) == sigma_0_0_partial t block))
+  =
+  sigma_0_0_partial_reveal ()
+
+let lemma_sigma_0_1_partial (t:counter) (block:block_w) : Lemma
+  (requires 16 <= t /\ t < size_k_w(SHA2_256))
+  (ensures (sigma256_0_1 (ws_opaque block (t-2)) == sigma_0_1_partial t block))
+  =
+  sigma_0_1_partial_reveal ()
+
+let lemma_sigma_1_0_partial (t:counter) (block:block_w) (hash_orig:hash256) : Lemma
+  (requires t < size_k_w(SHA2_256))
+  (ensures (sigma256_1_0 (word_to_nat32 ((repeat_range_vale t block hash_orig).[0])) == sigma_1_0_partial t block hash_orig))
+  =
+  sigma_1_0_partial_reveal ()
+
+let lemma_sigma_1_1_partial (t:counter) (block:block_w) (hash_orig:hash256) : Lemma
+  (requires t < size_k_w(SHA2_256))
+  (ensures (sigma256_1_1 (word_to_nat32 ((repeat_range_vale t block hash_orig).[4])) == sigma_1_1_partial t block hash_orig))
+  =
+  sigma_1_1_partial_reveal ()
+
+#reset-options "--z3rlimit 20 --max_fuel 1"
+let lemma_quads_to_block_be qs
+  =
+  reveal_opaque (`%seq_four_to_seq_BE) (seq_four_to_seq_BE #nat32);
+  reveal_opaque (`%ws) ws
+#reset-options "--max_fuel 0 --max_ifuel 0"
+
+#reset-options "--z3rlimit 20"
+let lemma_shuffle_core_properties (t:counter) (block:block_w) (hash_orig:hash256) : Lemma
+  (requires t < size_k_w_256)
+  (ensures (let hash = Spec.Loops.repeat_range 0 t (shuffle_core_opaque block) hash_orig in
+            let h = Spec.Loops.repeat_range 0 (t + 1) (shuffle_core_opaque block) hash_orig in
+            let a0 = word_to_nat32 hash.[0] in
+            let b0 = word_to_nat32 hash.[1] in
+            let c0 = word_to_nat32 hash.[2] in
+            let d0 = word_to_nat32 hash.[3] in
+            let e0 = word_to_nat32 hash.[4] in
+            let f0 = word_to_nat32 hash.[5] in
+            let g0 = word_to_nat32 hash.[6] in
+            let h0 = word_to_nat32 hash.[7] in
+            let t1 = add_wrap (add_wrap (add_wrap (add_wrap h0 (sigma256_1_1 e0)) (ch256 e0 f0 g0)) (word_to_nat32 k.[t])) (ws_opaque block t) in
+            let t2 = add_wrap (sigma256_1_0 a0) (maj256 a0 b0 c0) in
+            word_to_nat32 h.[0] == add_wrap t1 t2 /\
+            word_to_nat32 h.[1] == a0 /\
+            word_to_nat32 h.[2] == b0 /\
+            word_to_nat32 h.[3] == c0 /\
+            word_to_nat32 h.[4] == add_wrap d0 t1 /\
+            word_to_nat32 h.[5] == e0 /\
+            word_to_nat32 h.[6] == f0 /\
+            word_to_nat32 h.[7] == g0))
+  =
+  let hash = Spec.Loops.repeat_range 0 t (shuffle_core_opaque block) hash_orig in
+  let a0 = word_to_nat32 hash.[0] in
+  let b0 = word_to_nat32 hash.[1] in
+  let c0 = word_to_nat32 hash.[2] in
+  let d0 = word_to_nat32 hash.[3] in
+  let e0 = word_to_nat32 hash.[4] in
+  let f0 = word_to_nat32 hash.[5] in
+  let g0 = word_to_nat32 hash.[6] in
+  let h0 = word_to_nat32 hash.[7] in
+  ch256_reveal ();
+  maj256_reveal ();
+  lemma_add_wrap_is_add_mod h0 (sigma256_1_1 e0);
+  lemma_add_wrap_is_add_mod (add_wrap h0 (sigma256_1_1 e0)) (ch256 e0 f0 g0);
+  lemma_add_wrap_is_add_mod (add_wrap (add_wrap h0 (sigma256_1_1 e0)) (ch256 e0 f0 g0)) (word_to_nat32 k.[t]);
+  lemma_add_wrap_is_add_mod (add_wrap (add_wrap (add_wrap h0 (sigma256_1_1 e0)) (ch256 e0 f0 g0)) (word_to_nat32 k.[t])) (ws_opaque block t);
+  lemma_add_wrap_is_add_mod (sigma256_1_0 a0) (maj256 a0 b0 c0);
+  lemma_add_wrap_is_add_mod (add_wrap (add_wrap (add_wrap (add_wrap h0 (sigma256_1_1 e0)) (ch256 e0 f0 g0)) (word_to_nat32 k.[t])) (ws_opaque block t)) (add_wrap (sigma256_1_0 a0) (maj256 a0 b0 c0));
+  lemma_add_wrap_is_add_mod d0 (add_wrap (add_wrap (add_wrap (add_wrap h0 (sigma256_1_1 e0)) (ch256 e0 f0 g0)) (word_to_nat32 k.[t])) (ws_opaque block t));
+  Spec.Loops.repeat_range_induction 0 (t + 1) (shuffle_core_opaque block) hash_orig;
+  shuffle_core_properties block (Spec.Loops.repeat_range 0 t (shuffle_core_opaque block) hash_orig) t
+#reset-options "--max_fuel 0 --max_ifuel 0"
+
+#reset-options "--z3rlimit 20"
+let lemma_ws_opaque (block:block_w) (t:counter) : Lemma
+  (requires 16 <= t && t < size_k_w_256)
+  (ensures (let sigma0 = sigma256_0_0 (ws_opaque block (t - 15)) in
+            let sigma1 = sigma256_0_1 (ws_opaque block (t - 2)) in
+            ws_opaque block t == add_wrap (add_wrap (add_wrap sigma1 (ws_opaque block (t - 7))) sigma0) (ws_opaque block (t - 16))))
+  =
+  Pervasives.reveal_opaque (`%ws) ws;
+  lemma_ws_computed_is_ws block t;
+  lemma_add_wrap_is_add_mod (sigma256_0_1 (ws_opaque block (t - 2))) (ws_opaque block (t - 7));
+  lemma_add_wrap_is_add_mod (add_wrap (sigma256_0_1 (ws_opaque block (t - 2))) (ws_opaque block (t - 7))) (sigma256_0_0 (ws_opaque block (t - 15)));
+  lemma_add_wrap_is_add_mod (add_wrap (add_wrap (sigma256_0_1 (ws_opaque block (t - 2))) (ws_opaque block (t - 7))) (sigma256_0_0 (ws_opaque block (t - 15)))) (ws_opaque block (t - 16))
+#reset-options "--max_fuel 0 --max_ifuel 0"
