@@ -22,7 +22,7 @@
         "subterm_ordering_Vale.PPC64LE.Machine_s.While"
       ],
       0,
-      "fe2a1b60ba7a3574c756eb99143d9d80"
+      "c96873c72365e15f8e68113ef1d45964"
     ],
     [
       "Vale.PPC64LE.Lemmas.code_modifies_ghost",
@@ -39,7 +39,7 @@
         "projection_inverse_BoxBool_proj_0", "subterm_ordering_Prims.Cons"
       ],
       0,
-      "1cfebd66d422302dadf4a2d43df92cac"
+      "b26f219847e2f3e558d78ef565a5b012"
     ],
     [
       "Vale.PPC64LE.Lemmas.eval_ins",
@@ -69,7 +69,7 @@
         "refinement_interpretation_Tm_refine_542f9d4f129664613f2483a6c88bc7c2"
       ],
       0,
-      "acc219f029d7000851e62a88fcdd77a6"
+      "4a05619d9a1d1beb66bc74a301d1f743"
     ],
     [
       "Vale.PPC64LE.Lemmas.lemma_cmp_ne",
@@ -85,7 +85,7 @@
         "refinement_interpretation_Tm_refine_414d0a9f578ab0048252f8c8f552b99f"
       ],
       0,
-      "0e36019aab5affbcc55e9ff971adb157"
+      "17f16fa439d3a36494fbbb0250c01d42"
     ],
     [
       "Vale.PPC64LE.Lemmas.lemma_merge_total",
@@ -94,7 +94,7 @@
       0,
       [ "@query" ],
       0,
-      "f49c77d00397a250ed95f2ca38d07d76"
+      "189d2e3f3a8438f849f2b8c81d90df95"
     ],
     [
       "Vale.PPC64LE.Lemmas.lemma_whileMerge_total",
@@ -103,7 +103,7 @@
       0,
       [ "@query" ],
       0,
-      "e8a2a2e9271b7eeba57b8fa9d1de980c"
+      "1153037492077163f95e2d629e524f53"
     ]
   ]
 ]

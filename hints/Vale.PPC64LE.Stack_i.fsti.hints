@@ -1,5 +1,5 @@
 [
-  "üê´èU∫ÛÑ±‹¶l\u0000’ìM",
+  "ßw\n˙’∏já\u0000Ö#ÌñQ\u0017¨",
   [
     [
       "Vale.PPC64LE.Stack_i.lemma_same_init_r1_free_stack64",
@@ -8,7 +8,7 @@
       0,
       [ "@query" ],
       0,
-      "a52e20930719b2c6974b853253725862"
+      "63227391337bf038c6a3f11527e1a150"
     ],
     [
       "Vale.PPC64LE.Stack_i.lemma_same_init_r1_store_stack64",
@@ -17,7 +17,7 @@
       0,
       [ "@query" ],
       0,
-      "f03cb96e646b01061442700fee9c5098"
+      "6ccfe7ec4a6ea0be90dd486e3476ed79"
     ],
     [
       "Vale.PPC64LE.Stack_i.lemma_same_init_r1_free_stack128",
@@ -26,7 +26,7 @@
       0,
       [ "@query" ],
       0,
-      "72e548cef1f6b54e7551c15601571352"
+      "1b503ccc6980b1af2c0e3030ffa298e3"
     ],
     [
       "Vale.PPC64LE.Stack_i.lemma_same_init_r1_store_stack128",
@@ -35,7 +35,7 @@
       0,
       [ "@query" ],
       0,
-      "e7bda41b2682aa9b6c99fe5f12038666"
+      "f590ddb76cdaf1110e0804d4a8caac19"
     ]
   ]
 ]
