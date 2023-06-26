@@ -632,6 +632,80 @@ let bruteforce_lemma
     ) =
   ()
 
+(*** Bruteforce lemmas and tactics using reveresed bit order ***)
+
+open FStar.Seq
+
+let rec rev_vec (#n:nat) (vec:FStar.BitVector.bv_t n) : Tot (FStar.BitVector.bv_t n) =
+  if n = 0 then FStar.Seq.empty #bool
+  else if n = 1 then FStar.Seq.create 1 (index vec 0)
+  else FStar.Seq.append (rev_vec #(n - 1) (slice vec 1 n)) (FStar.Seq.create 1 (index vec 0))
+
+inline_for_extraction noextract
+val to_uint_rev (#m:IT.size_nat{m>0}) (x:u1xM m) : uint_t m
+inline_for_extraction noextract
+let to_uint_rev #m x = FStar.UInt.from_vec (rev_vec (FStar.Seq.init m (index x)))
+
+inline_for_extraction noextract
+val of_uint_rev (#m:IT.size_nat{m>0}) (p:uint_t m) : u1xM m
+inline_for_extraction noextract
+let of_uint_rev #m p = u1xM_mk _ (index (rev_vec (to_vec p)))
+
+val to_uint_of_uint_rev (#m:IT.size_nat{m>0}) (p:uint_t m) :
+  Lemma (to_uint_rev (of_uint_rev p) == p)
+  [SMTPat (to_uint_rev (of_uint_rev p))]
+let to_uint_of_uint_rev #m p = FStar.UInt.nth_lemma (to_uint_rev (of_uint_rev p)) p
+
+val of_uint_to_uint_rev (#m:IT.size_nat{m>0}) (x:u1xM m) :
+  Lemma (of_uint_rev (to_uint_rev x) == x)
+  [SMTPat (of_uint_rev (to_uint_rev x))]
+let of_uint_to_uint_rev x = xNxM_eq_intro (of_uint_rev (to_uint_rev x)) x
+
+val forall_uint_rev_lemma (#m:IT.size_nat{m>0}) (phi:u1xM m -> Type0) :
+  Lemma
+    (requires forall (i:uint_t m). phi (of_uint_rev i))
+    (ensures forall x. phi x)
+let forall_uint_rev_lemma phi =
+  FStar.Classical.forall_intro (fun x -> of_uint_to_uint_rev x <: Lemma (phi x))
+
+inline_for_extraction noextract
+val bruteforce_rev
+  (#m:IT.size_nat{m>0}) (#m':IT.size_nat{m'>0})
+  (impl:(#n:IT.size_nat -> #xN:sig n -> xNxM xN m -> xNxM xN m'){sliceable impl})
+  (spec:(uint_t m -> uint_t m'))
+  : (r:bool{
+      if r then
+        forall (n:IT.size_nat) (xN:sig n) (x:xNxM xN m) (j:nat{j<n}).
+        column j (impl x) == of_uint_rev (spec (to_uint_rev (column j x)))
+      else
+        True
+    })
+inline_for_extraction noextract
+let bruteforce_rev #m #m' impl spec =
+  let phi0 (x:u1xM m) : Type0 = impl x == (of_uint_rev (spec (to_uint_rev x)) <: u1xM m') in
+  let phi1 (i:uint_t m) : bool = u1xM_eq (impl (of_uint_rev i)) (of_uint_rev (spec i) <: u1xM m') in
+  let r = bruteforce_aux m phi1 in
+  if r then (
+    FStar.Classical.forall_intro (fun (i:uint_t m) ->
+      u1xM_eq_lemma (impl (of_uint_rev i)) (of_uint_rev (spec i) <: u1xM m')
+      <: Lemma (impl (of_uint_rev i) == (of_uint_rev (spec i) <: u1xM m'))
+    );
+    forall_uint_rev_lemma phi0;
+    true
+  ) else false
+
+let bruteforce_rev_lemma
+  (#m:IT.size_nat{m>0}) (#m':IT.size_nat{m'>0})
+  (impl:(#n:IT.size_nat -> #xN:sig n -> xNxM xN m -> xNxM xN m'){sliceable impl})
+  (spec:(uint_t m -> uint_t m')) :
+  Lemma
+    (requires bruteforce_rev impl spec == true)
+    (ensures
+      forall (n:IT.size_nat) (xN:sig n) (x:xNxM xN m) (j:nat{j<n}).
+      column j (impl x) == of_uint_rev (spec (to_uint_rev (column j x)))
+    ) =
+  ()
+
 //val nat_ind
 //  (n:pos)
 //  (phi:((i:nat{i<n}) -> Type))

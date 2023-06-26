@@ -144,10 +144,10 @@ let sub_bytes_sliceable : squash (S.sliceable sub_bytes) =
   S.reduce_output_sliceable (S.circuit_spec sub_bytes_circ) 8 sub_bytes_circ_outputs
 
 let sub_bytes_bruteforce_lemma (_:unit) : Lemma (
-    S.bruteforce sub_bytes sbox == true
+    S.bruteforce_rev sub_bytes sbox == true
   ) =
   assert (
-    S.bruteforce sub_bytes sbox == true
+    S.bruteforce_rev sub_bytes sbox == true
   ) by (
     norm [ delta; zeta; primops; iota; nbe ];
     trefl ()
@@ -156,7 +156,7 @@ let sub_bytes_bruteforce_lemma (_:unit) : Lemma (
 let sub_bytes_theorem (#n:IT.size_nat) (#xN:S.sig n) (x:S.xNxM xN 8) (j:nat{j<n})
   =
   sub_bytes_bruteforce_lemma ();
-  S.bruteforce_lemma sub_bytes sbox
+  S.bruteforce_rev_lemma sub_bytes sbox
 
 #push-options "--z3rlimit 20"
 let sub_bytes64x8 st0 st1 st2 st3 st4 st5 st6 st7 =
