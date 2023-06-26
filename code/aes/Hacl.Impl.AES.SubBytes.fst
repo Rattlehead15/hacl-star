@@ -93,8 +93,8 @@ let sub_bytes_circ_size : nat = 121
 inline_for_extraction noextract
 private let sub_bytes_circ : S.circuit 8 sub_bytes_circ_size =
 fun i -> match i with
-| 0 -> S.Input 0 | 1 -> S.Input 1 | 2 -> S.Input 2 | 3 -> S.Input 3
-| 4 -> S.Input 4 | 5 -> S.Input 5 | 6 -> S.Input 6 | 7 -> S.Input 7
+| 0 -> S.Input 7 | 1 -> S.Input 6 | 2 -> S.Input 5 | 3 -> S.Input 4
+| 4 -> S.Input 3 | 5 -> S.Input 2 | 6 -> S.Input 1 | 7 -> S.Input 0
 |   8 ->  S.Xor   3   5 |   9 ->  S.Xor   0   6 |  10 ->  S.Xor   0   3 |  11 ->  S.Xor   0   5
 |  12 ->  S.Xor   1   2 |  13 ->  S.Xor  12   7 |  14 ->  S.Xor  13   3 |  15 ->  S.Xor   9   8
 |  16 ->  S.Xor  13   0 |  17 ->  S.Xor  13   6 |  18 ->  S.Xor  17  11 |  19 ->  S.Xor   4  15
@@ -127,14 +127,14 @@ fun i -> match i with
 inline_for_extraction noextract
 let sub_bytes_circ_outputs (i:nat{i<8}) : (j:nat{j<sub_bytes_circ_size}) =
 match i with
-| 0 -> 114
-| 1 -> 117
-| 2 -> 119
-| 3 -> 107
-| 4 -> 116
-| 5 -> 120
-| 6 -> 115
-| 7 -> 111
+| 0 -> 111
+| 1 -> 115
+| 2 -> 120
+| 3 -> 116
+| 4 -> 107
+| 5 -> 119
+| 6 -> 117
+| 7 -> 114
 
 inline_for_extraction noextract
 let sub_bytes #n #xN x =

@@ -223,13 +223,9 @@ let sub_bytes_state (st:state) =
   let st5 = st.(size 5) in
   let st6 = st.(size 6) in
   let st7 = st.(size 7) in
-  let (((st0,st1),(st2,st3)),((st4,st5),(st6,st7))) =
-    Trans.transpose_bits64x8 (((st0,st1),(st2,st3)),((st4,st5),(st6,st7))) in
   let (st0,st1,st2,st3,st4,st5,st6,st7) =
     SubBytes.sub_bytes64x8 st0 st1 st2 st3 st4 st5 st6 st7
   in
-  let (((st0,st1),(st2,st3)),((st4,st5),(st6,st7))) =
-    Trans.transpose_bits64x8_inv (((st0,st1),(st2,st3)),((st4,st5),(st6,st7))) in
   let h0 = FStar.HyperStack.ST.get () in
   st.(size 0) <- st0;
   let h1 = FStar.HyperStack.ST.get () in
