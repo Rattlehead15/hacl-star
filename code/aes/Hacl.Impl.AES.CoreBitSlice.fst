@@ -110,7 +110,7 @@ let store_block0 out (inp:state) =
   let i6 = inp.(6ul) in
   let i7 = inp.(7ul) in
   let (((t0,t1),(t2,t3)),((t4,t5),(t6,t7))) =
-    Trans.transpose_bits64x8_inv (((i0,i1),(i2,i3)),((i4,i5),(i6,i7))) in
+    Trans.transpose_bits64x8 (((i0,i1),(i2,i3)),((i4,i5),(i6,i7))) in
   uint_to_bytes_le #U64 (sub out (size 0) (size 8)) t0;
   uint_to_bytes_le #U64 (sub out (size 8) (size 8)) t1
 
