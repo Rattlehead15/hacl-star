@@ -67,14 +67,16 @@ let load_key1 k b = k.(size 0) <- vec_load_le U128 1 b
 inline_for_extraction noextract
 val load_nonce:
     n: nonce
-  -> b: lbuffer uint8 16ul ->
+  -> b: lbuffer uint8 12ul ->
   Stack unit
   (requires (fun h -> live h n /\ live h b))
   (ensures (fun h0 _ h1 -> modifies1 n h0 h1))
 
 let load_nonce n b =
   push_frame();
-  n.(size 0) <- vec_load_le U128 1 b;
+  let nb = create 16ul (u8 0) in
+  copy (sub nb 0ul 12ul) b;
+  n.(size 0) <- vec_load_le U128 1 nb;
   pop_frame()
 
 
@@ -89,12 +91,11 @@ val load_state:
 
 let load_state st nonce counter =
   let counter = secret counter in
+  let counter0 = Lib.ByteBuffer.uint_to_be counter in
+  let counter1 = Lib.ByteBuffer.uint_to_be (counter +. u32 1) in
+  let counter2 = Lib.ByteBuffer.uint_to_be (counter +. u32 2) in
+  let counter3 = Lib.ByteBuffer.uint_to_be (counter +. u32 3) in
   let nonce0 = nonce.(size 0) in
-  let init_ctr = Lib.ByteBuffer.uint_to_be (vec_get #U32 #4 (cast #U128 #1 U32 4 nonce0) 3ul) in
-  let counter0 = Lib.ByteBuffer.uint_to_be (init_ctr +. counter) in
-  let counter1 = Lib.ByteBuffer.uint_to_be (init_ctr +. counter +. u32 1) in
-  let counter2 = Lib.ByteBuffer.uint_to_be (init_ctr +. counter +. u32 2) in
-  let counter3 = Lib.ByteBuffer.uint_to_be (init_ctr +. counter +. u32 3) in
   st.(size 0) <- cast U128 1 (vec_set #U32 #4 (cast #U128 #1 U32 4 nonce0) 3ul counter0);
   st.(size 1) <- cast U128 1 (vec_set #U32 #4 (cast #U128 #1 U32 4 nonce0) 3ul counter1);
   st.(size 2) <- cast U128 1 (vec_set #U32 #4 (cast #U128 #1 U32 4 nonce0) 3ul counter2);

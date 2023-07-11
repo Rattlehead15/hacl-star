@@ -135,32 +135,17 @@ let load_key1 (out:state) (k:block) =
 
 val load_nonce:
     out: nonce
-  -> nonce: lbuffer uint8 16ul ->
+  -> nonce: lbuffer uint8 12ul ->
   Stack unit
   (requires (fun h -> live h out /\ live h nonce))
   (ensures (fun h0 _ h1 -> modifies1 out h0 h1))
 
 let load_nonce out nonce =
   push_frame();
-  load_key1 out nonce;
+  let nb = create 16ul (u8 0) in
+  copy (sub nb 0ul 12ul) nonce;
+  load_key1 out nb;
   pop_frame()
-
-val restore_counter:
-  n: nonce ->
-  Stack UInt32.t
-  (requires (fun h -> live h n))
-  (ensures (fun h0 _ h1 -> True))
-
-let restore_counter n =
-  let ctr = (n.(size 0) >>. (size 60))
-            |. ((n.(size 1) >>. (size 60)) <<. size 8)
-            |. ((n.(size 2) >>. (size 60)) <<. size 16)
-            |. ((n.(size 3) >>. (size 60)) <<. size 24)
-            |. ((n.(size 4) >>. (size 60)) <<. size 32)
-            |. ((n.(size 5) >>. (size 60)) <<. size 40)
-            |. ((n.(size 6) >>. (size 60)) <<. size 48)
-            |. ((n.(size 7) >>. (size 60)) <<. size 56) in
-  to_u32 (Trans.transpose_bits64 ctr)
 
 #set-options "--z3rlimit 100"
 
@@ -175,11 +160,10 @@ val load_state:
 let load_state out nonce counter =
   push_frame();
   let ctr = create 16ul (u8 0) in
-  let init_ctr = uint_to_be (restore_counter nonce) in
-  uint_to_bytes_be #U32  (sub ctr (size 0) (size 4)) (secret (init_ctr +. counter));
-  uint_to_bytes_be #U32  (sub ctr (size 4) (size 4)) (secret (init_ctr +. counter +. 1ul));
-  uint_to_bytes_be #U32  (sub ctr (size 8) (size 4)) (secret (init_ctr +. counter +. 2ul));
-  uint_to_bytes_be #U32  (sub ctr (size 12) (size 4)) (secret (init_ctr +. counter +. 3ul));
+  uint_to_bytes_be #U32  (sub ctr (size 0) (size 4)) (secret counter);
+  uint_to_bytes_be #U32  (sub ctr (size 4) (size 4)) (secret (counter +. 1ul));
+  uint_to_bytes_be #U32  (sub ctr (size 8) (size 4)) (secret (counter +. 2ul));
+  uint_to_bytes_be #U32  (sub ctr (size 12) (size 4)) (secret (counter +. 3ul));
   load_block0 out ctr;
   let h0 = ST.get() in
   loop_nospec #h0 (size 8) out
@@ -187,8 +171,7 @@ let load_state out nonce counter =
       let u = out.(i) in
       let u = (u <<. size 12) |. (u <<. size 24) |. (u <<. size 36) |. (u <<. size 48) in
       let u = u &. u64 0xf000f000f000f000 in
-      let n = nonce.(i) &. u64 0x0fff0fff0fff0fff in
-      out.(i) <- u ^. n);
+      out.(i) <- u ^. nonce.(i));
   pop_frame ()
 
 

@@ -93,7 +93,7 @@ inline_for_extraction noextract
 val load_nonce:
     #m: m_spec
   -> n: nonce m
-  -> b: lbuffer uint8 16ul ->
+  -> b: lbuffer uint8 12ul ->
   Stack unit
   (requires (fun h -> live h n /\ live h b))
   (ensures  (fun h0 _ h1 -> modifies1 n h0 h1))

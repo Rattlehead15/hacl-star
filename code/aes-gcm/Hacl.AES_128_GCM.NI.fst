@@ -16,29 +16,25 @@ module ST = FStar.HyperStack.ST
 #set-options "--z3rlimit 50"
 type aes_gcm_ctx = lbuffer (vec_t U128 1) 22ul
 
+inline_for_extraction noextract
 val aes128_gcm_compute_iv:
     ctx: aes_gcm_ctx
   -> iv_len: size_t
   -> iv: lbuffer uint8 iv_len ->
-  Stack unit
+  Stack UInt32.t
   (requires (fun h -> live h ctx /\ live h iv))
   (ensures (fun h0 _ h1 -> modifies1 ctx h0 h1))
 
 let aes128_gcm_compute_iv ctx iv_len iv =
   push_frame();
   if (iv_len =. size 12) then (
-    let tag_iv = create 16ul (u8 0) in
     let tag_mix = create 16ul (u8 0) in
     let aes_ctx = sub ctx (size 0) (size 12) in
-    let h0 = ST.get() in
-    loop_nospec #h0 (size 12) tag_iv
-      (fun i -> tag_iv.(i) <- iv.(i));
-    uint_to_bytes_be #U32 (sub tag_iv (size 12) (size 4)) (size 1);
-    aes128_set_nonce aes_ctx tag_iv;
-    aes128_key_block tag_mix aes_ctx;
+    aes128_set_nonce aes_ctx iv;
+    aes128_key_block tag_mix aes_ctx (size 1);
     ctx.(21ul) <- vec_load_le U128 1 tag_mix;
-    uint_to_bytes_be #U32 (sub tag_iv (size 12) (size 4)) (size 2);
-    aes128_set_nonce aes_ctx tag_iv)
+    pop_frame();
+    size 2)
   else (
     let gcm_key = create 16ul (u8 0) in
     let tag_iv = create 16ul (u8 0) in
@@ -53,12 +49,13 @@ let aes128_gcm_compute_iv ctx iv_len iv =
     loop_nospec #h0 (size 16) size_iv
       (fun i -> size_iv.(i) <- tag_iv.(i) ^. size_iv.(i));
     ghash tag_iv (size 16) size_iv gcm_key;
-    aes128_set_nonce aes_ctx tag_iv;
-    aes128_key_block tag_mix aes_ctx;
+    aes128_set_nonce aes_ctx (sub tag_iv (size 0) (size 12));
+    let ctr = uint_from_bytes_be #U32 (sub tag_iv (size 12) (size 4)) in
+    aes128_key_block tag_mix aes_ctx ctr;
     ctx.(21ul) <- vec_load_le U128 1 tag_mix;
-    uint_to_bytes_be #U32 (sub tag_iv (size 12) (size 4)) ((uint_from_bytes_be #U32 (sub tag_iv (size 12) (size 4))) +. (size 1));
-    aes128_set_nonce aes_ctx tag_iv);
-  pop_frame()
+    let ctr = ctr +. (size 1) in
+    pop_frame();
+    ctr)
 
 val aes128_gcm_init:
     ctx: aes_gcm_ctx
@@ -70,11 +67,11 @@ val aes128_gcm_init:
 let aes128_gcm_init ctx key =
   push_frame();
   let gcm_key = create 16ul (u8 0) in
-  let nonce0 = create 16ul (u8 0) in
+  let nonce0 = create 12ul (u8 0) in
   let aes_ctx = sub ctx (size 0) (size 12) in //!!before it was 16
   let gcm_ctx = sub ctx (size 16) (size 5) in
   aes128_init aes_ctx key nonce0;
-  aes128_key_block gcm_key aes_ctx;
+  aes128_key_block gcm_key aes_ctx (size 0);
   gcm_init gcm_ctx gcm_key;
   pop_frame()
 
@@ -86,22 +83,29 @@ val aes128_gcm_encrypt:
   -> out: lbuffer uint8 (len +. 16ul)
   -> text: lbuffer uint8 len
   -> aad_len: size_t
-  -> aad: lbuffer uint8 aad_len ->
+  -> aad: lbuffer uint8 aad_len
+  -> iv_len: size_t
+  -> iv: lbuffer uint8 iv_len ->
   Stack unit
-  (requires (fun h -> live h out /\ live h text /\ live h aad /\ live h ctx
+  (requires (fun h -> live h out /\ live h text /\ live h aad /\ live h iv /\ live h ctx
                  /\ disjoint out ctx
                  /\ disjoint out text
                  /\ disjoint out aad
                  /\ disjoint ctx text
-                 /\ disjoint ctx aad))
+                 /\ disjoint ctx aad
+                 /\ disjoint iv out
+                 /\ disjoint iv text
+                 /\ disjoint iv aad
+                 /\ disjoint iv ctx))
   (ensures (fun h0 _ h1 -> modifies2 out ctx h0 h1))
 
-let aes128_gcm_encrypt ctx len out text aad_len aad =
+let aes128_gcm_encrypt ctx len out text aad_len aad iv_len iv =
   admit();
   push_frame();
+  let ctr = aes128_gcm_compute_iv ctx iv_len iv in
   let cip = sub out (size 0) len in
   let aes_ctx = sub ctx (size 0) (size 12) in //!!before it was 16
-  aes128_ctr len cip text aes_ctx;
+  aes128_ctr len cip text aes_ctx ctr;
   let gcm_ctx = sub ctx (size 16) (size 5) in
   let tag_mix = ctx.(21ul) in
   gcm_update_padded gcm_ctx aad_len aad;
@@ -124,17 +128,23 @@ val aes128_gcm_decrypt:
   -> out: lbuffer uint8 len
   -> cipher: lbuffer uint8 (len +. 16ul)
   -> aad_len: size_t
-  -> aad: lbuffer uint8 aad_len ->
+  -> aad: lbuffer uint8 aad_len
+  -> iv_len: size_t
+  -> iv: lbuffer uint8 iv_len ->
   Stack bool
-  (requires (fun h -> live h out /\ live h cipher /\ live h aad /\ live h ctx
+  (requires (fun h -> live h out /\ live h cipher /\ live h aad /\ live h iv /\ live h ctx
                  /\ disjoint out ctx
                  /\ disjoint out cipher
                  /\ disjoint out aad
                  /\ disjoint ctx cipher
-                 /\ disjoint ctx aad))
+                 /\ disjoint ctx aad
+                 /\ disjoint iv out
+                 /\ disjoint iv cipher
+                 /\ disjoint iv aad
+                 /\ disjoint iv ctx))
   (ensures (fun h0 r h1 -> modifies2 out ctx h0 h1))
 
-let aes128_gcm_decrypt ctx len out cipher aad_len aad =
+let aes128_gcm_decrypt ctx len out cipher aad_len aad iv_len iv =
   admit();
   push_frame();
   let scratch = create 18ul (u8 0) in
@@ -147,6 +157,7 @@ let aes128_gcm_decrypt ctx len out cipher aad_len aad =
   let gcm_ctx = sub ctx (size 16) (size 5) in
   let tag_mix = ctx.(21ul) in
   let h1 = ST.get () in
+  let ctr = aes128_gcm_compute_iv ctx iv_len iv in
   gcm_update_padded gcm_ctx aad_len aad;
   gcm_update_padded gcm_ctx len ciphertext;
   uint_to_bytes_be #U64 (sub text (size 0) (size 8)) (to_u64 (aad_len *. size 8));
@@ -164,7 +175,7 @@ let aes128_gcm_decrypt ctx len out cipher aad_len aad =
   let res8 = result.(0ul) in
   let r =
     if Lib.RawIntTypes.u8_to_UInt8 res8 = 0uy then (
-      aes128_ctr len out ciphertext aes_ctx;
+      aes128_ctr len out ciphertext aes_ctx ctr;
       true)
     else (
       let h9 = ST.get () in

@@ -21,7 +21,7 @@ type aes_gcm_ctx = lbuffer (vec_t U128 1) 22ul
 val aes256_gcm_init:
     ctx: aes_gcm_ctx
   -> key: lbuffer uint8 32ul
-  -> nonce: lbuffer uint8 16ul ->
+  -> nonce: lbuffer uint8 12ul ->
   Stack unit
   (requires (fun h -> live h ctx /\ live h key /\ live h nonce))
   (ensures (fun h0 _ h1 -> modifies1 ctx h0 h1))
@@ -30,13 +30,13 @@ let aes256_gcm_init ctx key nonce =
   push_frame();
   let gcm_key = create 16ul (u8 0) in
   let tag_mix = create 16ul (u8 0) in
-  let nonce0 = create 16ul (u8 0) in
+  let nonce0 = create 12ul (u8 0) in
   let aes_ctx = sub ctx (size 0) (size 16) in
   let gcm_ctx = sub ctx (size 16) (size 5) in
   aes256_init aes_ctx key nonce0;
-  aes256_key_block gcm_key aes_ctx;
+  aes256_key_block gcm_key aes_ctx (size 0);
   aes256_set_nonce aes_ctx nonce;
-  aes256_key_block tag_mix aes_ctx;
+  aes256_key_block tag_mix aes_ctx (size 1);
   gcm_init gcm_ctx gcm_key;
   ctx.(21ul) <- vec_load_le U128 1 tag_mix;
   pop_frame()
@@ -64,7 +64,7 @@ let aes256_gcm_encrypt ctx len out text aad_len aad =
   push_frame();
   let cip = sub out (size 0) len in
   let aes_ctx = sub ctx (size 0) (size 16) in
-  aes256_ctr len cip text aes_ctx;
+  aes256_ctr len cip text aes_ctx (size 2);
   let gcm_ctx = sub ctx (size 16) (size 5) in
   let tag_mix = ctx.(21ul) in
   gcm_update_padded gcm_ctx aad_len aad;
@@ -126,7 +126,7 @@ let aes256_gcm_decrypt ctx len out cipher aad_len aad =
   let res8 = result.(0ul) in
   let r =
     if Lib.RawIntTypes.u8_to_UInt8 res8 = 0uy then (
-      aes256_ctr len out ciphertext aes_ctx;
+      aes256_ctr len out ciphertext aes_ctx (size 2);
       true)
     else (
       let h9 = ST.get () in
