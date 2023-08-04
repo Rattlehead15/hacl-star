@@ -84,13 +84,12 @@ inline_for_extraction noextract
 val load_state:
     st: state
   -> nonce: nonce
-  -> counter: size_t ->
+  -> counter: uint32 ->
   Stack unit
   (requires (fun h -> live h st /\ live h nonce))
   (ensures (fun h0 _ h1 -> modifies1 st h0 h1))
 
 let load_state st nonce counter =
-  let counter = secret counter in
   let counter0 = Lib.ByteBuffer.uint_to_be counter in
   let counter1 = Lib.ByteBuffer.uint_to_be (counter +. u32 1) in
   let counter2 = Lib.ByteBuffer.uint_to_be (counter +. u32 2) in

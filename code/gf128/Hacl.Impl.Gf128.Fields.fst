@@ -24,31 +24,31 @@ type field_spec = gf128_spec
 inline_for_extraction noextract
 let elem_t (s:field_spec) =
   match s with
-  | PreComp -> uint64
+  | CT64 -> uint64
   | NI -> vec_t U128 1
 
 inline_for_extraction noextract
 let elem_zero (s:field_spec) : elem_t s =
   match s with
-  | PreComp -> u64 0
+  | CT64 -> u64 0
   | NI -> vec_zero U128 1
 
 inline_for_extraction noextract
 let felem_len (s:field_spec) =
   match s with
-  | PreComp -> 2ul
+  | CT64 -> 2ul
   | NI -> 1ul
 
 inline_for_extraction noextract
 let felem4_len (s:field_spec) =
   match s with
-  | PreComp -> 8ul
+  | CT64 -> 8ul
   | NI -> 4ul
 
 inline_for_extraction noextract
 let precomp_len (s:field_spec) =
   match s with
-  | PreComp -> 264ul
+  | CT64 -> 16ul
   | NI -> 4ul
 
 inline_for_extraction noextract
@@ -70,14 +70,14 @@ noextract
 val feval: #s:field_spec -> h:mem -> e:felem s -> GTot elem
 let feval #s h e =
   match s with
-  | PreComp -> Hacl.Impl.Gf128.FieldPreComp.feval h e
+  | CT64 -> Hacl.Impl.Gf128.CT64.feval h e
   | NI -> Hacl.Impl.Gf128.FieldNI.feval h e
 
 noextract
 val feval4: #s:field_spec -> h:mem -> e:felem4 s -> GTot elem4
 let feval4 #s h e =
   match s with
-  | PreComp -> Hacl.Impl.Gf128.FieldPreComp.feval4 h e
+  | CT64 -> Hacl.Impl.Gf128.CT64.feval4 h e
   | NI -> Hacl.Impl.Gf128.FieldNI.feval4 h e
 
 noextract
@@ -88,23 +88,15 @@ noextract
 val get_r1: #s:field_spec -> h:mem -> p:precomp s -> GTot S.elem
 let get_r1 #s h pre =
   match s with
-  | PreComp -> feval h (gsub pre 6ul 2ul)
+  | CT64 -> feval h (gsub pre 6ul 2ul)
   | NI -> feval h (gsub pre 3ul 1ul)
-
-
-noextract
-val get_r4: #s:field_spec -> h:mem -> p:precomp s -> GTot S.elem
-let get_r4 #s h pre =
-  match s with
-  | PreComp -> feval h (gsub pre 0ul 2ul)
-  | NI -> feval h (gsub pre 0ul 1ul)
 
 
 noextract
 val get_r4321: #s:field_spec -> h:mem -> p:precomp s -> GTot elem4
 let get_r4321 #s h pre =
   match s with
-  | PreComp -> feval4 h (gsub pre 0ul 8ul)
+  | CT64 -> feval4 h (gsub pre 0ul 8ul)
   | NI -> feval4 h pre
 
 
@@ -112,7 +104,7 @@ noextract
 val precomp_inv_t: #s:field_spec -> h:mem -> pre:precomp s -> Type0
 let precomp_inv_t #s h pre =
   match s with
-  | PreComp -> Hacl.Impl.Gf128.FieldPreComp.load_precomp_r_inv h pre
+  | CT64 -> Hacl.Impl.Gf128.CT64.load_precomp_r_inv h pre
   | NI -> get_r4321 h pre == load_precompute_r (get_r1 h pre)
 
 
@@ -126,7 +118,7 @@ val create_felem: s:field_spec ->
 
 let create_felem s =
   match s with
-  | PreComp -> Hacl.Impl.Gf128.FieldPreComp.create_felem ()
+  | CT64 -> Hacl.Impl.Gf128.CT64.create_felem ()
   | NI -> Hacl.Impl.Gf128.FieldNI.create_felem ()
 
 
@@ -142,7 +134,7 @@ val copy_felem:
 
 let copy_felem #s f1 f2 =
   match s with
-  | PreComp -> Hacl.Impl.Gf128.FieldPreComp.copy_felem f1 f2
+  | CT64 -> Hacl.Impl.Gf128.CT64.copy_felem f1 f2
   | NI -> Hacl.Impl.Gf128.FieldNI.copy_felem f1 f2
 
 
@@ -157,7 +149,7 @@ val felem_set_zero:
 
 let felem_set_zero #s f =
   match s with
-  | PreComp -> Hacl.Impl.Gf128.FieldPreComp.felem_set_zero f
+  | CT64 -> Hacl.Impl.Gf128.CT64.felem_set_zero f
   | NI -> Hacl.Impl.Gf128.FieldNI.felem_set_zero f
 
 
@@ -171,7 +163,7 @@ val create_felem4: s:field_spec ->
 
 let create_felem4 s =
   match s with
-  | PreComp -> Hacl.Impl.Gf128.FieldPreComp.create_felem4 ()
+  | CT64 -> Hacl.Impl.Gf128.CT64.create_felem4 ()
   | NI -> Hacl.Impl.Gf128.FieldNI.create_felem4 ()
 
 
@@ -187,7 +179,7 @@ val load_felem:
 
 let load_felem #s x y =
   match s with
-  | PreComp -> Hacl.Impl.Gf128.FieldPreComp.load_felem x y
+  | CT64 -> Hacl.Impl.Gf128.CT64.load_felem x y
   | NI -> Hacl.Impl.Gf128.FieldNI.load_felem x y
 
 
@@ -203,7 +195,7 @@ val load_felem4:
 
 let load_felem4 #s x y =
   match s with
-  | PreComp -> Hacl.Impl.Gf128.FieldPreComp.load_felem4 x y
+  | CT64 -> Hacl.Impl.Gf128.CT64.load_felem4 x y
   | NI -> Hacl.Impl.Gf128.FieldNI.load_felem4 x y
 
 
@@ -219,7 +211,7 @@ val store_felem:
 
 let store_felem #s x y =
   match s with
-  | PreComp -> Hacl.Impl.Gf128.FieldPreComp.store_felem x y
+  | CT64 -> Hacl.Impl.Gf128.CT64.store_felem x y
   | NI -> Hacl.Impl.Gf128.FieldNI.store_felem x y
 
 
@@ -236,7 +228,7 @@ val load_precompute_r:
 
 let load_precompute_r #s pre key =
   match s with
-  | PreComp -> Hacl.Impl.Gf128.FieldPreComp.load_precompute_r pre key
+  | CT64 -> Hacl.Impl.Gf128.CT64.load_precompute_r pre key
   | NI -> Hacl.Impl.Gf128.FieldNI.load_precompute_r pre key
 
 
@@ -252,7 +244,7 @@ val fadd:
 
 let fadd #s x y =
   match s with
-  | PreComp -> Hacl.Impl.Gf128.FieldPreComp.fadd x y
+  | CT64 -> Hacl.Impl.Gf128.CT64.fadd x y
   | NI -> Hacl.Impl.Gf128.FieldNI.fadd x y
 
 
@@ -268,7 +260,7 @@ val fadd4:
 
 let fadd4 #s x y =
   match s with
-  | PreComp -> Hacl.Impl.Gf128.FieldPreComp.fadd4 x y
+  | CT64 -> Hacl.Impl.Gf128.CT64.fadd4 x y
   | NI -> Hacl.Impl.Gf128.FieldNI.fadd4 x y
 
 
@@ -284,44 +276,8 @@ val fmul:
 
 let fmul #s x y =
   match s with
-  | PreComp -> Hacl.Impl.Gf128.FieldPreComp.fmul x y
+  | CT64 -> Hacl.Impl.Gf128.CT64.fmul x y
   | NI -> Hacl.Impl.Gf128.FieldNI.fmul x y
-
-
-inline_for_extraction noextract
-val fmul_pre:
-    #s:field_spec
-  -> x:felem s
-  -> y:precomp s ->
-  Stack unit
-  (requires fun h ->
-    live h x /\ live h y /\ disjoint x y /\
-    precomp_inv_t h y)
-  (ensures  fun h0 _ h1 -> modifies1 x h0 h1 /\
-    feval h1 x == GF.fmul_be #S.gf128 (feval h0 x) (get_r4 h0 y))
-
-let fmul_pre #s x y =
-  match s with
-  | PreComp -> Hacl.Impl.Gf128.FieldPreComp.fmul_pre x y
-  | NI -> Hacl.Impl.Gf128.FieldNI.fmul_pre x y
-
-
-inline_for_extraction noextract
-val fmul_r4:
-    #s:field_spec
-  -> x:felem4 s
-  -> y:precomp s ->
-  Stack unit
-  (requires fun h ->
-    live h x /\ live h y /\ disjoint x y /\
-    precomp_inv_t h y)
-  (ensures  fun h0 _ h1 -> modifies1 x h0 h1 /\
-    feval4 h1 x == fmul4 (feval4 h0 x) (LSeq.create 4 (get_r4 h0 y)))
-
-let fmul_r4 #s x pre =
-  match s with
-  | PreComp -> Hacl.Impl.Gf128.FieldPreComp.fmul_r4 x pre
-  | NI -> Hacl.Impl.Gf128.FieldNI.fmul_r4 x pre
 
 
 inline_for_extraction noextract
@@ -337,7 +293,7 @@ val fadd_acc4:
 
 let fadd_acc4 #s x acc =
   match s with
-  | PreComp -> Hacl.Impl.Gf128.FieldPreComp.fadd_acc4 x acc
+  | CT64 -> Hacl.Impl.Gf128.CT64.fadd_acc4 x acc
   | NI -> Hacl.Impl.Gf128.FieldNI.fadd_acc4 x acc
 
 
@@ -357,5 +313,5 @@ val normalize4:
 
 let normalize4 #s acc x pre =
   match s with
-  | PreComp -> Hacl.Impl.Gf128.FieldPreComp.normalize4 acc x pre
+  | CT64 -> Hacl.Impl.Gf128.CT64.normalize4 acc x pre
   | NI -> Hacl.Impl.Gf128.FieldNI.normalize4 acc x pre

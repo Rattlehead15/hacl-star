@@ -152,7 +152,7 @@ let load_nonce out nonce =
 val load_state:
     out: state
   -> nonce: nonce
-  -> counter: size_t ->
+  -> counter: uint32 ->
   Stack unit
   (requires (fun h -> live h out /\ live h nonce))
   (ensures (fun h0 _ h1 -> modifies1 out h0 h1))
@@ -160,10 +160,10 @@ val load_state:
 let load_state out nonce counter =
   push_frame();
   let ctr = create 16ul (u8 0) in
-  uint_to_bytes_be #U32  (sub ctr (size 0) (size 4)) (secret counter);
-  uint_to_bytes_be #U32  (sub ctr (size 4) (size 4)) (secret (counter +. 1ul));
-  uint_to_bytes_be #U32  (sub ctr (size 8) (size 4)) (secret (counter +. 2ul));
-  uint_to_bytes_be #U32  (sub ctr (size 12) (size 4)) (secret (counter +. 3ul));
+  uint_to_bytes_be #U32 (sub ctr (size 0) (size 4)) counter;
+  uint_to_bytes_be #U32 (sub ctr (size 4) (size 4)) (counter +. u32 1);
+  uint_to_bytes_be #U32 (sub ctr (size 8) (size 4)) (counter +. u32 2);
+  uint_to_bytes_be #U32 (sub ctr (size 12) (size 4)) (counter +. u32 3);
   load_block0 out ctr;
   let h0 = ST.get() in
   loop_nospec #h0 (size 8) out

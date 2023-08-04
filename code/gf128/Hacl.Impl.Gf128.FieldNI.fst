@@ -233,42 +233,6 @@ let load_precompute_r pre key =
   fmul r3 r2;
   fmul r4 r3
 
-
-val fmul_pre:
-    x:felem
-  -> y:precomp ->
-  Stack unit
-  (requires fun h -> live h x /\ live h y)
-  (ensures  fun h0 _ h1 -> modifies1 x h0 h1 /\
-    feval h1 x == GF.fmul_be #S.gf128 (feval h0 x) (feval h0 (gsub y 0ul 1ul)))
-
-[@CInline]
-let fmul_pre x pre =
-  let r = sub pre (size 0) (size 1) in
-  fmul x r
-
-
-val fmul_r4:
-    x:felem4
-  -> pre:precomp ->
-  Stack unit
-  (requires fun h -> live h x /\ live h pre /\ disjoint x pre)
-  (ensures  fun h0 _ h1 -> modifies1 x h0 h1 /\
-    (let r4 = feval h0 (gsub pre 0ul 1ul) in
-    feval4 h1 x == Vec.fmul4 (feval4 h0 x) (LSeq.create 4 r4)))
-
-[@CInline]
-let fmul_r4 x pre =
-  let h0 = ST.get () in
-  fmul (sub x (size 0) (size 1)) (sub pre (size 0) (size 1));
-  fmul (sub x (size 1) (size 1)) (sub pre (size 0) (size 1));
-  fmul (sub x (size 2) (size 1)) (sub pre (size 0) (size 1));
-  fmul (sub x (size 3) (size 1)) (sub pre (size 0) (size 1));
-  let h1 = ST.get () in
-  LSeq.eq_intro (feval4 h1 x)
-    (Vec.fmul4 (feval4 h0 x) (LSeq.create 4 (feval h0 (gsub pre 0ul 1ul))))
-
-
 inline_for_extraction noextract
 val fadd_acc4:
     x:felem4

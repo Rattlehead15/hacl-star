@@ -103,7 +103,7 @@ val load_state:
     #m: m_spec
   -> st: state m
   -> nonce: nonce m
-  -> counter: size_t ->
+  -> counter: uint32 ->
   Stack unit
   (requires (fun h -> live h st /\ live h nonce))
   (ensures  (fun h0 _ h1 -> modifies1 st h0 h1))

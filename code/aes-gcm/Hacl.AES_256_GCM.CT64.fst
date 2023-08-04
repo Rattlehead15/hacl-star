@@ -1,49 +1,49 @@
-module Hacl.AES_128_GCM.M32
+module Hacl.AES_256_GCM.CT64
 open FStar.HyperStack
 open FStar.HyperStack.All
 open Lib.IntTypes
 open Lib.Buffer
 open Lib.ByteBuffer
 
-open Hacl.AES_128.BitSlice
-open Hacl.Gf128.PreComp
+open Hacl.AES_256.CTR32.BitSlice
+open Hacl.Gf128.CT64
 
 module ST = FStar.HyperStack.ST
 
 
 #reset-options "--z3rlimit 1500 --max_fuel 1"
 
-let aes_gcm_ctx_len = 396ul
+let aes_gcm_ctx_len = 148ul
 
 type aes_gcm_ctx = lbuffer uint64 aes_gcm_ctx_len
 
 inline_for_extraction noextract
-val aes128_gcm_compute_iv:
+val aes256_gcm_compute_iv:
     ctx: aes_gcm_ctx
   -> iv_len: size_t
   -> iv: lbuffer uint8 iv_len ->
-  Stack UInt32.t
+  Stack uint32
   (requires (fun h -> live h ctx /\ live h iv))
   (ensures (fun h0 _ h1 -> modifies1 ctx h0 h1))
 
-let aes128_gcm_compute_iv ctx iv_len iv =
+let aes256_gcm_compute_iv ctx iv_len iv =
   push_frame();
   if (iv_len =. size 12) then (
     let tag_mix = create 16ul (u8 0) in
     let aes_ctx = sub ctx (size 0) (size 128) in
-    aes128_set_nonce aes_ctx iv;
-    aes128_key_block tag_mix aes_ctx (size 1);
-    ctx.(394ul) <- uint_from_bytes_le #U64 (sub tag_mix 0ul 8ul);
-    ctx.(395ul) <- uint_from_bytes_le #U64 (sub tag_mix 8ul 8ul);
+    aes256_set_nonce aes_ctx iv;
+    aes256_key_block tag_mix aes_ctx (u32 1);
+    ctx.(146ul) <- uint_from_bytes_le #U64 (sub tag_mix 0ul 8ul);
+    ctx.(147ul) <- uint_from_bytes_le #U64 (sub tag_mix 8ul 8ul);
     pop_frame();
-    size 2)
+    u32 2)
   else (
     let gcm_key = create 16ul (u8 0) in
     let tag_iv = create 16ul (u8 0) in
     let size_iv = create 16ul (u8 0) in
     let tag_mix = create 16ul (u8 0) in
     let aes_ctx = sub ctx (size 0) (size 128) in
-    let gcm_ctx = sub ctx (size 128) (size 266) in
+    let gcm_ctx = sub ctx (size 128) (size 18) in
     uint_to_bytes_be #U64 (sub gcm_key (size 8) (size 8)) gcm_ctx.(size 8);
     uint_to_bytes_be #U64 (sub gcm_key (size 0) (size 8)) gcm_ctx.(size 9);
     ghash tag_iv iv_len iv gcm_key;
@@ -52,36 +52,36 @@ let aes128_gcm_compute_iv ctx iv_len iv =
     loop_nospec #h0 (size 16) size_iv
       (fun i -> size_iv.(i) <- tag_iv.(i) ^. size_iv.(i));
     ghash tag_iv (size 16) size_iv gcm_key;
-    aes128_set_nonce aes_ctx (sub tag_iv (size 0) (size 12));
+    aes256_set_nonce aes_ctx (sub tag_iv (size 0) (size 12));
     let ctr = uint_from_bytes_be #U32 (sub tag_iv (size 12) (size 4)) in
-    aes128_key_block tag_mix aes_ctx ctr;
-    ctx.(394ul) <- uint_from_bytes_le #U64 (sub tag_mix 0ul 8ul);
-    ctx.(395ul) <- uint_from_bytes_le #U64 (sub tag_mix 8ul 8ul);
-    let ctr = ctr +. (size 1) in
+    aes256_key_block tag_mix aes_ctx ctr;
+    ctx.(146ul) <- uint_from_bytes_le #U64 (sub tag_mix 0ul 8ul);
+    ctx.(147ul) <- uint_from_bytes_le #U64 (sub tag_mix 8ul 8ul);
+    let ctr = ctr +. u32 1 in
     pop_frame();
     ctr)
 
-val aes128_gcm_init:
+val aes256_gcm_init:
     ctx: aes_gcm_ctx
-  -> key: lbuffer uint8 16ul ->
+  -> key: lbuffer uint8 32ul ->
   Stack unit
   (requires (fun h -> live h ctx /\ live h key))
   (ensures (fun h0 _ h1 -> modifies1 ctx h0 h1))
 
-let aes128_gcm_init ctx key =
+let aes256_gcm_init ctx key =
   push_frame();
   let gcm_key = create 16ul (u8 0) in
   let nonce0 = create 12ul (u8 0) in
   let aes_ctx = sub ctx (size 0) (size 128) in
-  let gcm_ctx = sub ctx (size 128) (size 266) in
+  let gcm_ctx = sub ctx (size 128) (size 18) in
   admit();
-  aes128_init aes_ctx key nonce0;
-  aes128_key_block gcm_key aes_ctx (size 0);
+  aes256_init aes_ctx key nonce0;
+  aes256_key_block gcm_key aes_ctx (u32 0);
   gcm_init gcm_ctx gcm_key;
   pop_frame()
 
 
-val aes128_gcm_encrypt:
+val aes256_gcm_encrypt:
     ctx: aes_gcm_ctx
   -> len: size_t{v len + 16 <= max_size_t}
   -> out: lbuffer uint8 (len +. 16ul)
@@ -103,16 +103,18 @@ val aes128_gcm_encrypt:
                  /\ disjoint iv ctx))
   (ensures (fun h0 _ h1 -> modifies2 out ctx h0 h1))
 
-let aes128_gcm_encrypt ctx len out text aad_len aad iv_len iv =
+let aes256_gcm_encrypt ctx len out text aad_len aad iv_len iv =
+  admit();
   push_frame();
   let tmp = create 16ul (u8 0) in
   let cip = sub out (size 0) len in
   let aes_ctx = sub ctx (size 0) (size 128) in
-  let gcm_ctx = sub ctx (size 128) (size 266) in
-  let tag_mix = sub ctx (size 394) (size 2) in
-  admit();
-  let ctr = aes128_gcm_compute_iv ctx iv_len iv in
-  aes128_ctr len cip text aes_ctx ctr;
+  let gcm_ctx = sub ctx (size 128) (size 18) in
+  let tag_mix = sub ctx (size 146) (size 2) in
+  let ctr = aes256_gcm_compute_iv ctx iv_len iv in
+  aes256_ctr len cip text aes_ctx ctr;
+  gcm_ctx.(0ul) <- u64 0;
+  gcm_ctx.(1ul) <- u64 0;
   gcm_update_blocks_padded gcm_ctx aad_len aad;
   gcm_update_blocks_padded gcm_ctx len cip;
   uint_to_bytes_be #U64 (sub tmp (size 0) (size 8)) (to_u64 (aad_len *. 8ul));
@@ -125,14 +127,12 @@ let aes128_gcm_encrypt ctx len out text aad_len aad iv_len iv =
   let tmp1 = tmp1 ^. tag_mix.(1ul) in
   uint_to_bytes_le #U64 (sub out len 8ul) tmp0;
   uint_to_bytes_le #U64 (sub out (len +. 8ul) 8ul) tmp1;
-  gcm_ctx.(0ul) <- u64 0;
-  gcm_ctx.(1ul) <- u64 0;
   pop_frame()
 
 
 #reset-options "--z3rlimit 1500 --max_fuel 1"
 
-val aes128_gcm_decrypt:
+val aes256_gcm_decrypt:
     ctx: aes_gcm_ctx
   -> len: size_t{v len + 16 <= max_size_t}
   -> out: lbuffer uint8 len
@@ -154,7 +154,7 @@ val aes128_gcm_decrypt:
                  /\ disjoint iv ctx))
   (ensures (fun h0 r h1 -> modifies2 out ctx h0 h1))
 
-let aes128_gcm_decrypt ctx len out cipher aad_len aad iv_len iv =
+let aes256_gcm_decrypt ctx len out cipher aad_len aad iv_len iv =
   admit();
   push_frame();
   let scratch = create 18ul (u8 0) in
@@ -163,11 +163,13 @@ let aes128_gcm_decrypt ctx len out cipher aad_len aad iv_len iv =
   let result = sub scratch 17ul 1ul in
   let ciphertext = sub cipher 0ul len in
   let tag = sub cipher len (size 16) in
+  let ctr = aes256_gcm_compute_iv ctx iv_len iv in
   let aes_ctx = sub ctx (size 0) (size 128) in
-  let gcm_ctx = sub ctx (size 128) (size 266) in
-  let tag_mix = sub ctx (size 394) (size 2) in
+  let gcm_ctx = sub ctx (size 128) (size 18) in
+  let tag_mix = sub ctx (size 146) (size 2) in
   let h1 = ST.get () in
-  let ctr = aes128_gcm_compute_iv ctx iv_len iv in
+  gcm_ctx.(0ul) <- u64 0;
+  gcm_ctx.(1ul) <- u64 0;
   gcm_update_blocks_padded gcm_ctx aad_len aad;
   gcm_update_blocks_padded gcm_ctx len ciphertext;
   uint_to_bytes_be #U64 (sub text (size 0) (size 8)) (to_u64 (aad_len *. size 8));
@@ -188,7 +190,7 @@ let aes128_gcm_decrypt ctx len out cipher aad_len aad iv_len iv =
   let res8 = result.(0ul) in
   let r =
     if Lib.RawIntTypes.u8_to_UInt8 res8 = 0uy then (
-      aes128_ctr len out ciphertext aes_ctx ctr;
+      aes256_ctr len out ciphertext aes_ctx ctr;
       true)
     else (
       let h9 = ST.get () in

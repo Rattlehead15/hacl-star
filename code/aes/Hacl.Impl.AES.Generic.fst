@@ -396,7 +396,7 @@ val aes_key_block:
   -> #v: Spec.variant
   -> kb: lbuffer uint8 16ul
   -> ctx: aes_ctx m v
-  -> counter: size_t ->
+  -> counter: uint32 ->
   Stack unit
   (requires (fun h -> live h kb /\ live h ctx))
   (ensures (fun h0 _ h1 -> modifies (loc kb) h0 h1))
@@ -419,7 +419,7 @@ val aes_update4:
   -> out: lbuffer uint8 64ul
   -> inp: lbuffer uint8 64ul
   -> ctx: aes_ctx m v
-  -> counter: size_t
+  -> counter: uint32
   -> Stack unit
   (requires (fun h -> live h out /\ live h inp /\ live h ctx))
   (ensures (fun h0 b h1 -> modifies (loc out) h0 h1))
@@ -443,7 +443,7 @@ val aes_ctr_:
   -> out: lbuffer uint8 len
   -> inp: lbuffer uint8 len
   -> ctx: aes_ctx m v
-  -> counter: size_t
+  -> counter: uint32
   -> Stack unit
   (requires (fun h -> live h out /\ live h inp /\ live h ctx))
   (ensures (fun h0 _ h1 -> modifies (loc out) h0 h1))
@@ -454,13 +454,13 @@ let aes_ctr_ #m #v len out inp ctx counter =
   let h0 = ST.get() in
   loop_nospec #h0 blocks64 out
     (fun i ->
-      let ctr = counter +. (i *. size 4) in
+      let ctr = counter +. ((to_u32 i) *. u32 4) in
       let ib = sub inp (i *. size 64) (size 64) in
       let ob = sub out (i *. size 64) (size 64) in
       aes_update4 #m #v ob ib ctx ctr);
   let rem = len %. size 64 in
   if (rem >. size 0) then (
-    let ctr = counter +. (blocks64 *. size 4) in
+    let ctr = counter +. ((to_u32 blocks64) *. u32 4) in
     let ib = sub inp (blocks64 *. size 64) rem in
     let ob = sub out (blocks64 *. size 64) rem in
     let last = create 64ul (u8 0) in
@@ -476,7 +476,7 @@ val aes128_ctr_bitslice:
   -> out: lbuffer uint8 len
   -> inp: lbuffer uint8 len
   -> ctx: aes_ctx M32 Spec.AES128
-  -> counter: size_t
+  -> counter: uint32
   -> Stack unit
   (requires (fun h -> live h out /\ live h inp /\ live h ctx))
   (ensures (fun h0 _ h1 -> modifies (loc out) h0 h1))
@@ -489,7 +489,7 @@ val aes128_ctr_ni:
   -> out: lbuffer uint8 len
   -> inp: lbuffer uint8 len
   -> ctx: aes_ctx MAES Spec.AES128
-  -> counter: size_t
+  -> counter: uint32
   -> Stack unit
   (requires (fun h -> live h out /\ live h inp /\ live h ctx))
   (ensures (fun h0 _ h1 -> modifies (loc out) h0 h1))
@@ -503,7 +503,7 @@ val aes256_ctr_ni:
   -> out: lbuffer uint8 len
   -> inp: lbuffer uint8 len
   -> ctx: aes_ctx MAES Spec.AES256
-  -> counter: size_t
+  -> counter: uint32
   -> Stack unit
   (requires (fun h -> live h out /\ live h inp /\ live h ctx))
   (ensures (fun h0 _ h1 -> modifies (loc out) h0 h1))
@@ -515,7 +515,7 @@ val aes256_ctr_bitslice:
   -> out: lbuffer uint8 len
   -> inp: lbuffer uint8 len
   -> ctx: aes_ctx M32 Spec.AES256
-  -> counter: size_t
+  -> counter: uint32
   -> Stack unit
   (requires (fun h -> live h out /\ live h inp /\ live h ctx))
   (ensures (fun h0 _ h1 -> modifies (loc out) h0 h1))
@@ -531,7 +531,7 @@ val aes_ctr:
   -> out: lbuffer uint8 len
   -> inp: lbuffer uint8 len
   -> ctx: aes_ctx m v
-  -> counter: size_t
+  -> counter: uint32
   -> Stack unit
   (requires (fun h -> live h out /\ live h inp /\ live h ctx))
   (ensures (fun h0 _ h1 -> modifies (loc out) h0 h1))
@@ -554,7 +554,7 @@ val aes_ctr_encrypt:
   -> inp: lbuffer uint8 len
   -> k:skey v
   -> n:lbuffer uint8 12ul
-  -> counter:size_t
+  -> counter:uint32
   -> Stack unit
   (requires (fun h -> live h out /\ live h inp /\ live h k /\ live h n))
   (ensures (fun h0 _ h1 -> modifies (loc out) h0 h1))
@@ -578,7 +578,7 @@ val aes_ctr_decrypt:
   -> inp: lbuffer uint8 len
   -> k:skey v
   -> n:lbuffer uint8 12ul
-  -> counter:size_t
+  -> counter:uint32
   -> Stack unit
   (requires (fun h -> live h out /\ live h inp /\ live h k /\ live h n))
   (ensures (fun h0 _ h1 -> modifies (loc out) h0 h1))
