@@ -6,7 +6,10 @@ module S = FStar.Seq
 
 #set-options "--max_fuel 0 --max_ifuel 0"
 
-let vale_alg_of_alg (a: alg { a = AES128_GCM \/ a = AES256_GCM }) =
+inline_for_extraction noextract
+let aes_gcm_alg = a:alg { a = AES128_GCM \/ a = AES256_GCM }
+
+let vale_alg_of_alg (a:aes_gcm_alg) =
   match a with
   | AES128_GCM -> Vale.AES.AES_s.AES_128
   | AES256_GCM -> Vale.AES.AES_s.AES_256

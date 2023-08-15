@@ -41,10 +41,10 @@ let supported_alg_of_impl (i: impl): supported_alg =
   | Hacl_CHACHA20 -> CHACHA20_POLY1305
 
 inline_for_extraction noextract
-let alg_of_vale_impl (i: vale_impl) =
-  match i with
-  | Vale_AES128 -> AES128_GCM
-  | Vale_AES256 -> AES256_GCM
+let vale_impl_of_alg (a: aes_gcm_alg) : vale_impl =
+  match a with
+  | AES128_GCM -> Vale_AES128
+  | AES256_GCM -> Vale_AES256
 
 noeq
 type state_s a =
@@ -117,10 +117,10 @@ let create_in_chacha20_poly1305: create_in_st CHACHA20_POLY1305 = fun r dst k ->
 #pop-options
 
 inline_for_extraction noextract
-let create_in_aes_gcm (i: vale_impl):
-  create_in_st (alg_of_vale_impl i) =
+let create_in_aes_gcm (a: aes_gcm_alg):
+  create_in_st a =
 fun r dst k ->
-  let a = alg_of_vale_impl i in
+  let i = vale_impl_of_alg a in
   let h0 = ST.get () in
   let kv: G.erased (kv a) = G.hide (B.as_seq h0 k) in
   let has_aesni = EverCrypt.AutoConfig2.has_aesni () in
@@ -146,8 +146,8 @@ fun r dst k ->
   ) else
     UnsupportedAlgorithm
 
-let create_in_aes128_gcm: create_in_st AES128_GCM = create_in_aes_gcm Vale_AES128
-let create_in_aes256_gcm: create_in_st AES256_GCM = create_in_aes_gcm Vale_AES256
+let create_in_aes128_gcm: create_in_st AES128_GCM = create_in_aes_gcm AES128_GCM
+let create_in_aes256_gcm: create_in_st AES256_GCM = create_in_aes_gcm AES256_GCM
 
 let create_in #a r dst k =
   match a with
@@ -172,10 +172,10 @@ let alloca_chacha20_poly1305: alloca_st CHACHA20_POLY1305 =
 #pop-options
 
 inline_for_extraction noextract
-let alloca_aes_gcm (i: vale_impl):
-  alloca_st (alg_of_vale_impl i) =
+let alloca_aes_gcm (a: aes_gcm_alg):
+  alloca_st a =
   fun k ->
-  let a = alg_of_vale_impl i in
+  let i = vale_impl_of_alg a in
   let h0 = ST.get () in
   let kv: G.erased (kv a) = G.hide (B.as_seq h0 k) in
   let ek = B.alloca 0uy (concrete_xkey_len i + 176ul) in
@@ -187,11 +187,11 @@ let alloca_aes_gcm (i: vale_impl):
 
 inline_for_extraction noextract
 let alloca_aes128_gcm: alloca_st AES128_GCM =
-  alloca_aes_gcm Vale_AES128
+  alloca_aes_gcm AES128_GCM
 
 inline_for_extraction noextract
 let alloca_aes256_gcm: alloca_st AES256_GCM =
-  alloca_aes_gcm Vale_AES256
+  alloca_aes_gcm AES256_GCM
 
 let alloca #a k =
   match a with
@@ -200,7 +200,7 @@ let alloca #a k =
   | CHACHA20_POLY1305 -> alloca_chacha20_poly1305 k
 
 inline_for_extraction noextract
-let aes_gcm_encrypt (i: vale_impl):
+let vale_aes_gcm_encrypt (i: vale_impl):
   Vale.Wrapper.X64.GCMencryptOpt.encrypt_opt_stdcall_st (vale_alg_of_vale_impl i) =
   match i with
   | Vale_AES128 -> Vale.Wrapper.X64.GCMencryptOpt.gcm128_encrypt_opt_stdcall
@@ -208,12 +208,12 @@ let aes_gcm_encrypt (i: vale_impl):
 
 #reset-options "--z3rlimit 100 --max_fuel 0 --max_ifuel 0 --using_facts_from '* -FStar.Seq.Properties.slice_slice'"
 inline_for_extraction noextract
-let encrypt_aes_gcm (i: vale_impl): encrypt_st (alg_of_vale_impl i) =
+let encrypt_aes_gcm (a: aes_gcm_alg): encrypt_st a =
 fun s iv iv_len ad ad_len plain plain_len cipher tag ->
   if B.is_null s then
     InvalidKey
   else
-    let a = alg_of_vale_impl i in
+    let i = vale_impl_of_alg a in
     // This condition is never satisfied in F* because of the iv_length precondition on iv.
     // We keep it here to be defensive when extracting to C
     if iv_len = 0ul then
@@ -274,7 +274,7 @@ fun s iv iv_len ad ad_len plain plain_len cipher tag ->
 
       let h0 = get() in
 
-      aes_gcm_encrypt i
+      vale_aes_gcm_encrypt i
         (let k = G.reveal kv in
         let k_nat = Vale.Def.Words.Seq_s.seq_uint8_to_seq_nat8 k in
         let k_w = Vale.Def.Words.Seq_s.seq_nat8_to_seq_nat32_LE k_nat in G.hide k_w)
@@ -315,7 +315,7 @@ let encrypt_aes128_gcm (_: squash (EverCrypt.TargetConfig.hacl_can_compile_vale)
   encrypt_st AES128_GCM =
   fun s iv iv_len ad ad_len plain plain_len cipher tag ->
     if EverCrypt.TargetConfig.hacl_can_compile_vale then
-      encrypt_aes_gcm Vale_AES128 s iv iv_len ad ad_len plain plain_len cipher tag
+      encrypt_aes_gcm AES128_GCM s iv iv_len ad ad_len plain plain_len cipher tag
     else
       let () = false_elim () in
       LowStar.Failure.failwith "statically unreachable"
@@ -324,7 +324,7 @@ let encrypt_aes256_gcm (_: squash (EverCrypt.TargetConfig.hacl_can_compile_vale)
   encrypt_st AES256_GCM =
   fun s iv iv_len ad ad_len plain plain_len cipher tag ->
     if EverCrypt.TargetConfig.hacl_can_compile_vale then
-      encrypt_aes_gcm Vale_AES256 s iv iv_len ad ad_len plain plain_len cipher tag
+      encrypt_aes_gcm AES256_GCM s iv iv_len ad ad_len plain plain_len cipher tag
     else
       let () = false_elim () in
       LowStar.Failure.failwith "statically unreachable"
@@ -354,12 +354,12 @@ let encrypt #a s iv iv_len ad ad_len plain plain_len cipher tag =
         end
 
 inline_for_extraction noextract
-let encrypt_expand_aes_gcm (i: vale_impl): encrypt_expand_st false (alg_of_vale_impl i) =
+let encrypt_expand_aes_gcm (a: aes_gcm_alg): encrypt_expand_st false a =
   fun k iv iv_len ad ad_len plain plain_len cipher tag ->
   push_frame ();
   (* Allocate the state *)
-  let s : B.pointer_or_null (state_s (alg_of_vale_impl i)) = alloca k in
-  let r = encrypt_aes_gcm i s iv iv_len ad ad_len plain plain_len cipher tag in
+  let s : B.pointer_or_null (state_s a) = alloca k in
+  let r = encrypt_aes_gcm a s iv iv_len ad ad_len plain plain_len cipher tag in
   assert(r == Success);
   pop_frame ();
   Success
@@ -367,14 +367,14 @@ let encrypt_expand_aes_gcm (i: vale_impl): encrypt_expand_st false (alg_of_vale_
 let encrypt_expand_aes128_gcm_no_check : encrypt_expand_st false AES128_GCM =
   fun k iv iv_len ad ad_len plain plain_len cipher tag ->
   if EverCrypt.TargetConfig.hacl_can_compile_vale then
-    encrypt_expand_aes_gcm Vale_AES128 k iv iv_len ad ad_len plain plain_len cipher tag
+    encrypt_expand_aes_gcm AES128_GCM k iv iv_len ad ad_len plain plain_len cipher tag
   else
     LowStar.Failure.failwith "EverCrypt was compiled on a system which doesn't support Vale"
 
 let encrypt_expand_aes256_gcm_no_check : encrypt_expand_st false AES256_GCM =
   fun k iv iv_len ad ad_len plain plain_len cipher tag ->
   if EverCrypt.TargetConfig.hacl_can_compile_vale then
-    encrypt_expand_aes_gcm Vale_AES256 k iv iv_len ad ad_len plain plain_len cipher tag
+    encrypt_expand_aes_gcm AES256_GCM k iv iv_len ad ad_len plain plain_len cipher tag
   else
     LowStar.Failure.failwith "EverCrypt was compiled on a system which doesn't support Vale"
 
@@ -387,7 +387,7 @@ let encrypt_expand_aes128_gcm : encrypt_expand_st true AES128_GCM =
   let has_aesni = EverCrypt.AutoConfig2.has_aesni () in
   if EverCrypt.TargetConfig.hacl_can_compile_vale &&
      (has_aesni && has_pclmulqdq && has_avx && has_sse && has_movbe) then
-    encrypt_expand_aes_gcm Vale_AES128 k iv iv_len ad ad_len plain plain_len cipher tag
+    encrypt_expand_aes_gcm AES128_GCM k iv iv_len ad ad_len plain plain_len cipher tag
   else
     UnsupportedAlgorithm
 
@@ -400,7 +400,7 @@ let encrypt_expand_aes256_gcm : encrypt_expand_st true AES256_GCM =
   let has_aesni = EverCrypt.AutoConfig2.has_aesni () in
   if EverCrypt.TargetConfig.hacl_can_compile_vale &&
      (has_aesni && has_pclmulqdq && has_avx && has_sse && has_movbe) then
-    encrypt_expand_aes_gcm Vale_AES256 k iv iv_len ad ad_len plain plain_len cipher tag
+    encrypt_expand_aes_gcm AES256_GCM k iv iv_len ad ad_len plain plain_len cipher tag
   else
     UnsupportedAlgorithm
 
@@ -425,7 +425,7 @@ let encrypt_expand #a k iv iv_len ad ad_len plain plain_len cipher tag =
     encrypt_expand_chacha20_poly1305 k iv iv_len ad ad_len plain plain_len cipher tag
 
 inline_for_extraction noextract
-let aes_gcm_decrypt (i: vale_impl):
+let vale_aes_gcm_decrypt (i: vale_impl):
   Vale.Wrapper.X64.GCMdecryptOpt.decrypt_opt_stdcall_st (vale_alg_of_vale_impl i) =
   match i with
   | Vale_AES128 -> Vale.Wrapper.X64.GCMdecryptOpt.gcm128_decrypt_opt_stdcall
@@ -433,7 +433,7 @@ let aes_gcm_decrypt (i: vale_impl):
 
 #reset-options "--z3rlimit 100 --max_fuel 0 --max_ifuel 0 --using_facts_from '* -FStar.Seq.Properties.slice_slice'"
 inline_for_extraction noextract
-let decrypt_aes_gcm (i: vale_impl): decrypt_st (alg_of_vale_impl i) =
+let decrypt_aes_gcm (a: aes_gcm_alg): decrypt_st a =
 fun s iv iv_len ad ad_len cipher cipher_len tag dst ->
   if B.is_null s then
     InvalidKey
@@ -443,7 +443,7 @@ fun s iv iv_len ad ad_len cipher cipher_len tag dst ->
     if iv_len = 0ul then
       InvalidIVLength
     else
-      let a = alg_of_vale_impl i in
+      let i = vale_impl_of_alg a in
       let open LowStar.BufferOps in
       let Ek _ kv ek = !*s in
         assert (
@@ -497,7 +497,7 @@ fun s iv iv_len ad ad_len cipher cipher_len tag dst ->
           tmp_iv tmp_iv
           hkeys_b;
 
-        let r = aes_gcm_decrypt i
+        let r = vale_aes_gcm_decrypt i
           (let k = G.reveal kv in
           let k_nat = Vale.Def.Words.Seq_s.seq_uint8_to_seq_nat8 k in
           let k_w = Vale.Def.Words.Seq_s.seq_nat8_to_seq_nat32_LE k_nat in G.hide k_w)
@@ -549,7 +549,7 @@ let decrypt_aes128_gcm (_: squash (EverCrypt.TargetConfig.hacl_can_compile_vale)
   decrypt_st AES128_GCM =
   fun s iv iv_len ad ad_len cipher cipher_len tag dst ->
     if EverCrypt.TargetConfig.hacl_can_compile_vale then
-      decrypt_aes_gcm Vale_AES128 s iv iv_len ad ad_len cipher cipher_len tag dst
+      decrypt_aes_gcm AES128_GCM s iv iv_len ad ad_len cipher cipher_len tag dst
     else
       let () = false_elim () in
       LowStar.Failure.failwith "statically unreachable"
@@ -558,7 +558,7 @@ let decrypt_aes256_gcm (_: squash (EverCrypt.TargetConfig.hacl_can_compile_vale)
   decrypt_st AES256_GCM =
   fun s iv iv_len ad ad_len cipher cipher_len tag dst ->
     if EverCrypt.TargetConfig.hacl_can_compile_vale then
-      decrypt_aes_gcm Vale_AES256 s iv iv_len ad ad_len cipher cipher_len tag dst
+      decrypt_aes_gcm AES256_GCM s iv iv_len ad ad_len cipher cipher_len tag dst
     else
       let () = false_elim () in
       LowStar.Failure.failwith "statically unreachable"
@@ -611,26 +611,26 @@ let decrypt #a s iv iv_len ad ad_len cipher cipher_len tag dst =
         decrypt_chacha20_poly1305 s iv iv_len ad ad_len cipher cipher_len tag dst
 
 inline_for_extraction noextract
-let decrypt_expand_aes_gcm (i: vale_impl): decrypt_expand_st false (alg_of_vale_impl i) =
+let decrypt_expand_aes_gcm (a: aes_gcm_alg): decrypt_expand_st false a =
   fun k iv iv_len ad ad_len cipher cipher_len tag dst ->
   push_frame ();
   (* Allocate the state *)
-  let s : B.pointer_or_null (state_s (alg_of_vale_impl i)) = alloca k in
-  let r = decrypt_aes_gcm i s iv iv_len ad ad_len cipher cipher_len tag dst in
+  let s : B.pointer_or_null (state_s a) = alloca k in
+  let r = decrypt_aes_gcm a s iv iv_len ad ad_len cipher cipher_len tag dst in
   pop_frame ();
   r
 
 let decrypt_expand_aes128_gcm_no_check : decrypt_expand_st false AES128_GCM =
   fun k iv iv_len ad ad_len cipher cipher_len tag dst ->
   if EverCrypt.TargetConfig.hacl_can_compile_vale then
-    decrypt_expand_aes_gcm Vale_AES128 k iv iv_len ad ad_len cipher cipher_len tag dst
+    decrypt_expand_aes_gcm AES128_GCM k iv iv_len ad ad_len cipher cipher_len tag dst
   else
     LowStar.Failure.failwith "EverCrypt was compiled on a system which doesn't support Vale"
 
 let decrypt_expand_aes256_gcm_no_check : decrypt_expand_st false AES256_GCM =
   fun k iv iv_len ad ad_len cipher cipher_len tag dst ->
   if EverCrypt.TargetConfig.hacl_can_compile_vale then
-    decrypt_expand_aes_gcm Vale_AES256 k iv iv_len ad ad_len cipher cipher_len tag dst
+    decrypt_expand_aes_gcm AES256_GCM k iv iv_len ad ad_len cipher cipher_len tag dst
   else
     LowStar.Failure.failwith "EverCrypt was compiled on a system which doesn't support Vale"
 
@@ -643,7 +643,7 @@ let decrypt_expand_aes128_gcm : decrypt_expand_st true AES128_GCM =
   let has_aesni = EverCrypt.AutoConfig2.has_aesni () in
   if EverCrypt.TargetConfig.hacl_can_compile_vale &&
      (has_aesni && has_pclmulqdq && has_avx && has_sse && has_movbe) then
-    decrypt_expand_aes_gcm Vale_AES128 k iv iv_len ad ad_len cipher cipher_len tag dst
+    decrypt_expand_aes_gcm AES128_GCM k iv iv_len ad ad_len cipher cipher_len tag dst
   else
     UnsupportedAlgorithm
 
@@ -656,7 +656,7 @@ let decrypt_expand_aes256_gcm : decrypt_expand_st true AES256_GCM =
   let has_aesni = EverCrypt.AutoConfig2.has_aesni () in
   if EverCrypt.TargetConfig.hacl_can_compile_vale &&
      (has_aesni && has_pclmulqdq && has_avx && has_sse && has_movbe) then
-    decrypt_expand_aes_gcm Vale_AES256 k iv iv_len ad ad_len cipher cipher_len tag dst
+    decrypt_expand_aes_gcm AES256_GCM k iv iv_len ad ad_len cipher cipher_len tag dst
   else
     UnsupportedAlgorithm
 
