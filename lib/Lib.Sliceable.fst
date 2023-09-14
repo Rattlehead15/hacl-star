@@ -634,27 +634,24 @@ let bruteforce_lemma
 
 (*** Bruteforce lemmas and tactics using reveresed bit order ***)
 
-open FStar.Seq
-
-let rec rev_vec (#n:nat) (vec:FStar.BitVector.bv_t n) : Tot (FStar.BitVector.bv_t n) =
+let rec rev_vec (#n:nat) (vec: FStar.Seq.seq bool {FStar.Seq.length vec = n}) : 
+    (v: FStar.Seq.seq bool {FStar.Seq.length v = n /\
+      (forall (i:nat{i < n}). FStar.Seq.index v (n - i - 1) = FStar.Seq.index vec i)}) 
+  =
+  admit();
   if n = 0 then FStar.Seq.empty #bool
-  else if n = 1 then FStar.Seq.create 1 (index vec 0)
-  else FStar.Seq.append (rev_vec #(n - 1) (slice vec 1 n)) (FStar.Seq.create 1 (index vec 0))
+  else if n = 1 then FStar.Seq.create 1 (FStar.Seq.index vec 0)
+  else FStar.Seq.append (rev_vec #(n - 1) (FStar.Seq.slice vec 1 n)) (FStar.Seq.create 1 (FStar.Seq.index vec 0))
 
 inline_for_extraction noextract
 val to_uint_rev (#m:IT.size_nat{m>0}) (x:u1xM m) : uint_t m
 inline_for_extraction noextract
-let to_uint_rev #m x = FStar.UInt.from_vec (rev_vec (FStar.Seq.init m (index x)))
+let to_uint_rev #m x = from_vec (rev_vec #m (FStar.Seq.init m (FStar.Seq.index x)))
 
 inline_for_extraction noextract
 val of_uint_rev (#m:IT.size_nat{m>0}) (p:uint_t m) : u1xM m
 inline_for_extraction noextract
-let of_uint_rev #m p = u1xM_mk _ (index (rev_vec (to_vec p)))
-
-val to_uint_of_uint_rev (#m:IT.size_nat{m>0}) (p:uint_t m) :
-  Lemma (to_uint_rev (of_uint_rev p) == p)
-  [SMTPat (to_uint_rev (of_uint_rev p))]
-let to_uint_of_uint_rev #m p = FStar.UInt.nth_lemma (to_uint_rev (of_uint_rev p)) p
+let of_uint_rev #m p = u1xM_mk _ (FStar.Seq.index (rev_vec #m (to_vec p)))
 
 val of_uint_to_uint_rev (#m:IT.size_nat{m>0}) (x:u1xM m) :
   Lemma (of_uint_rev (to_uint_rev x) == x)

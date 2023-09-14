@@ -22,7 +22,15 @@ let vec_t t w =
 
 let reveal_vec_1 _ = ()
 
+let vec_t_v #t #w x = admit()
+
 let vec_v #t #w x = admit()
+
+let lemma_of_vec_t #t #w f = admit()
+
+let lemma_of_vec_v_t #t #w f = admit()
+
+let lemma_create_index_vec_w1 #t f = admit()
 
 let vecv_extensionality #t #w f1 f2 = admit()
 
