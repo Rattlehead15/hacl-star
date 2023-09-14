@@ -8,6 +8,8 @@ open Lib.IntTypes
 open Lib.Buffer
 open Lib.IntVector
 
+open Hacl.Spec.GF128.Poly_s
+
 module ST = FStar.HyperStack.ST
 module LSeq = Lib.Sequence
 module BSeq = Lib.ByteSequence

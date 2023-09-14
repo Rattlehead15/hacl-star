@@ -1,0 +1,44 @@
+module Hacl.Spec.GF128.PolyLemmas
+
+open Lib.IntVector
+
+open Vale.Math.Poly2_s
+open Vale.Math.Poly2
+open Vale.Math.Poly2.Bits_s
+
+open Hacl.Spec.GF128.Poly_s
+
+val lemma_of_to_uint_128 (a:poly) : Lemma
+  (requires degree a < 128)
+  (ensures of_uint 128 (to_uint 128 a) == a)
+  [SMTPat (of_uint 128 (to_uint 128 a))]
+
+val lemma_to_of_vec128 (q:vec128) : Lemma
+  (ensures to_vec128 (of_vec128 q) == q)
+  [SMTPat (to_vec128 (of_vec128 q))]
+
+val lemma_of_to_vec128 (a:poly) : Lemma
+  (requires degree a < 128)
+  (ensures of_vec128 (to_vec128 a) == a)
+  [SMTPat (of_vec128 (to_vec128 a))]
+
+val lemma_vec128_zero (_:unit) : Lemma
+  (of_vec128 (uint_to_vec128 0) == zero /\ uint_to_vec128 0 == to_vec128 zero)
+
+val lemma_vec128_ones (_:unit) : Lemma
+  (let q = (uint_to_vec128 0xffffffffffffffffffffffffffffffff) in
+    of_vec128 q == ones 128 /\ q == to_vec128 (ones 128))
+
+val lemma_add128 (a b:poly) : Lemma
+  (requires degree a <= 127 /\ degree b <= 127)
+  (ensures to_vec128 (a +. b) == to_vec128 a ^| to_vec128 b)
+
+val lemma_add_vec128 (a b:vec128) : Lemma
+  (ensures of_vec128 a +. of_vec128 b == of_vec128 (a ^| b))
+
+val lemma_and128 (a b:poly) : Lemma
+  (requires degree a <= 127 /\ degree b <= 127)
+  (ensures to_vec128 (poly_and a b) == (to_vec128 a &| to_vec128 b))
+
+val lemma_and_vec128 (a b:vec128) : Lemma
+  (ensures poly_and (of_vec128 a) (of_vec128 b) == of_vec128 (a &| b))

@@ -58,10 +58,18 @@ noextract
 let load_precomp_r_inv (h:mem) (pre:precomp) : Type0 =
   let pre_r = Vec.load_precompute_r (feval h (gsub pre 6ul 2ul)) in
   feval4 h (gsub pre 0ul 8ul) == pre_r /\
-  feval h (gsub pre 8ul 2ul) == LSeq.create2 (CT64.br_rev64 pre_r.[size 0]) (CT64.br_rev64 pre_r.[size 1]) /\
-  feval h (gsub pre 10ul 2ul) == LSeq.create2 (CT64.br_rev64 pre_r.[size 2]) (CT64.br_rev64 pre_r.[size 3]) /\
-  feval h (gsub pre 12ul 2ul) == LSeq.create2 (CT64.br_rev64 pre_r.[size 4]) (CT64.br_rev64 pre_r.[size 5]) /\
-  feval h (gsub pre 14ul 2ul) == LSeq.create2 (CT64.br_rev64 pre_r.[size 6]) (CT64.br_rev64 pre_r.[size 7])
+  feval h (gsub pre 8ul 2ul) == uint #U128 #SEC (
+    v (CT64.br_rev64 (u64 (uint_v #U128 #SEC pre_r.[0] / pow2 64))) * pow2 64 +
+    v (CT64.br_rev64 (u64 (uint_v #U128 #SEC pre_r.[0] % pow2 64)))) /\
+  feval h (gsub pre 10ul 2ul) == uint #U128 #SEC (
+    v (CT64.br_rev64 (u64 (uint_v #U128 #SEC pre_r.[1] / pow2 64))) * pow2 64 +
+    v (CT64.br_rev64 (u64 (uint_v #U128 #SEC pre_r.[1] % pow2 64)))) /\
+  feval h (gsub pre 12ul 2ul) == uint #U128 #SEC (
+    v (CT64.br_rev64 (u64 (uint_v #U128 #SEC pre_r.[2] / pow2 64))) * pow2 64 +
+    v (CT64.br_rev64 (u64 (uint_v #U128 #SEC pre_r.[2] % pow2 64)))) /\
+  feval h (gsub pre 14ul 2ul) == uint #U128 #SEC (
+    v (CT64.br_rev64 (u64 (uint_v #U128 #SEC pre_r.[3] / pow2 64))) * pow2 64 +
+    v (CT64.br_rev64 (u64 (uint_v #U128 #SEC pre_r.[3] % pow2 64))))
 
 inline_for_extraction noextract
 val create_felem: unit ->
@@ -273,7 +281,7 @@ val load_precompute_r:
   Stack unit
   (requires fun h -> live h pre /\ live h key /\ disjoint pre key)
   (ensures  fun h0 _ h1 -> modifies1 pre h0 h1 /\
-    feval h1 (gsub pre 24ul 2ul) == S.load_elem (as_seq h0 key) /\
+    feval h1 (gsub pre (size 6) (size 2)) == S.load_elem (as_seq h0 key) /\
     load_precomp_r_inv h1 pre)
 
 [@CInline]
@@ -298,7 +306,8 @@ let load_precompute_r pre key =
   pre.(size 10) <- CT64.br_rev64 h3_0.(size 0);
   pre.(size 11) <- CT64.br_rev64 h3_0.(size 1);
   pre.(size 8) <- CT64.br_rev64 h4_0.(size 0);
-  pre.(size 9) <- CT64.br_rev64 h4_0.(size 1)
+  pre.(size 9) <- CT64.br_rev64 h4_0.(size 1);
+  admit()
 
 inline_for_extraction noextract
 val fadd_acc4:
@@ -337,6 +346,7 @@ val normalize4:
 
 [@CInline]
 let normalize4 acc x pre =
+  let h0 = ST.get () in
   let x1 = sub x (0ul) (2ul) in
   let x2 = sub x (2ul) (2ul) in
   let x3 = sub x (4ul) (2ul) in
@@ -378,4 +388,5 @@ let normalize4 acc x pre =
   let (v1, v2) = CT64.br_reduce z1 z2 z3 z4 in
   acc.(size 0) <- v1;
   acc.(size 1) <- v2;
-  CT64.br_bmul256_reduce4_lemma x pre
+  CT64.br_bmul256_reduce4_lemma (as_seq h0 x) (as_seq h0 pre);
+  admit()

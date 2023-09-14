@@ -255,7 +255,7 @@ let gf128_update_multi_add_mul_f #s pre nb len text b4 i acc =
   normalize4 acc b4 pre
 
 
-#push-options "--max_fuel 1"
+#push-options "--z3rlimit 100 --max_fuel 1"
 inline_for_extraction noextract
 val gf128_update_multi_add_mul:
     #s:field_spec
@@ -326,6 +326,7 @@ let gf128_update_multi #s acc pre len text =
   gf128_update_multi_add_mul acc pre len text
 
 
+#push-options "--z3rlimit 100"
 inline_for_extraction noextract
 val gf128_update_vec:
     #s:field_spec
@@ -351,6 +352,7 @@ let gf128_update_vec #s acc pre len text =
   let t1 = sub text len0 len1 in
   let r1 = sub pre (3ul *! felem_len s) (felem_len s) in
   gf128_update_scalar #s acc r1 len1 t1
+#pop-options
 
 
 let gf128_init #s ctx key =

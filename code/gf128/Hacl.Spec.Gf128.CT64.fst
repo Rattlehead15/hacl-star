@@ -12,16 +12,16 @@ module Vec = Hacl.Spec.GF128.Vec
 module Lemmas = Hacl.Spec.GF128.Lemmas
 
 inline_for_extraction noextract
-let br_rms (x:uint64) (m:uint64) (s:uint8) : uint64 =
+let br_rms (x:uint64) (m:uint64) (s:shiftval U32) : uint64 =
   ((x &. m) <<. s) |. ((x >>. s) &. m)
 
 inline_for_extraction
 let br_rev64 (x:uint64) : uint64 =
-  let x = br_rms x (u64 0x5555555555555555) (u8 1) in
-  let x = br_rms x (u64 0x3333333333333333) (u8 2) in
-  let x = br_rms x (u64 0x0F0F0F0F0F0F0F0F) (u8 4) in
-  let x = br_rms x (u64 0x00FF00FF00FF00FF) (u8 8) in
-  let x = br_rms x (u64 0x0000FFFF0000FFFF) (u8 16) in
+  let x = br_rms x (u64 0x5555555555555555) (1ul) in
+  let x = br_rms x (u64 0x3333333333333333) (2ul) in
+  let x = br_rms x (u64 0x0F0F0F0F0F0F0F0F) (4ul) in
+  let x = br_rms x (u64 0x00FF00FF00FF00FF) (8ul) in
+  let x = br_rms x (u64 0x0000FFFF0000FFFF) (16ul) in
   (x <<. 32ul) |. (x >>. 32ul)
 
 inline_for_extraction noextract
@@ -139,5 +139,6 @@ val br_bmul256_reduce4_lemma:
             pre.[10] == br_rev64 pre.[2] /\ pre.[11] == br_rev64 pre.[3] /\
             pre.[12] == br_rev64 pre.[4] /\ pre.[13] == br_rev64 pre.[5] /\
             pre.[14] == br_rev64 pre.[6] /\ pre.[15] == br_rev64 pre.[7])
-   (ensures to_elem_128 (br_bmul256_reduce4 x pre) == Vec.normalize4 (to_elem4 (sub pre (size 0) (size 8))) (to_elem4 x))
+   (ensures (let (v1, v2) = br_bmul256_reduce4 x pre in
+            to_elem_128 v1 v2 == Vec.normalize4 (to_elem4 (sub pre 0 8)) (to_elem4 x)))
 let br_bmul256_reduce4_lemma x pre = admit()

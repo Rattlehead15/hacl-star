@@ -9,7 +9,6 @@ open Hacl.AES_128.CTR32.BitSlice
 open Hacl.Gf128.CT64
 
 module ST = FStar.HyperStack.ST
-module B = LowStar.Buffer
 module M = LowStar.Modifies
 
 #reset-options "--z3rlimit 1500 --max_fuel 1"
@@ -202,28 +201,30 @@ let aes128_gcm_decrypt ctx len out cipher aad_len aad iv_len iv =
   pop_frame();
   r
 
+open LowStar.Buffer
+
 val aes128_gcm_malloc:
     r:rid
-  -> ST.ST (lbuffer (uint_t U64 SEC) aes_gcm_ctx_len)
+  -> ST.ST (s:buffer uint64 { length s = UInt32.v aes_gcm_ctx_len })
   (requires (fun _ ->
     ST.is_eternal_region r))
   (ensures (fun h0 s h1 ->
     live h1 s /\
     M.(modifies loc_none h0 h1) /\
-    B.fresh_loc (loc_addr_of_buffer s) h0 h1 /\
+    fresh_loc (loc_addr_of_buffer s) h0 h1 /\
     (M.loc_includes (M.loc_region_only true r) (loc_addr_of_buffer s)) /\
     freeable s))
 
 let aes128_gcm_malloc r =
-  B.malloc r (u64 0) aes_gcm_ctx_len
+  malloc r (u64 0) aes_gcm_ctx_len
 
 val aes128_gcm_free:
-    s:B.buffer (uint_t U64 SEC) { B.length s = UInt32.v aes_gcm_ctx_len }
+    s:buffer uint64 { length s = UInt32.v aes_gcm_ctx_len }
   -> ST.ST unit
   (requires fun h0 ->
-    B.freeable s /\ B.live h0 s)
+    freeable s /\ live h0 s)
   (ensures fun h0 _ h1 ->
-    M.modifies (B.loc_buffer s) h0 h1)
+    M.modifies (loc_addr_of_buffer s) h0 h1)
 
 let aes128_gcm_free s =
-  B.free s
+  free s

@@ -6,14 +6,14 @@ open Lib.IntTypes
 open Lib.IntVector
 open Lib.Sequence
 
+open Hacl.Spec.GF128.Poly_s
+open Hacl.Spec.GF128.PolyLemmas
+
 module S = Spec.GF128
 module GF = Spec.GaloisField
 module Vec = Hacl.Spec.GF128.Vec
 
 #set-options "--z3rlimit 50 --max_fuel 0 --max_ifuel 0"
-
-inline_for_extraction noextract
-let vec128 = vec_t U128 1
 
 inline_for_extraction noextract
 let to_elem (s:vec128) : S.elem =
@@ -23,10 +23,15 @@ inline_for_extraction noextract
 let to_elem4 (x1:vec128) (x2:vec128) (x3:vec128) (x4:vec128) : Vec.elem4 =
   create4 (vec_v x1).[0] (vec_v x2).[0] (vec_v x3).[0] (vec_v x4).[0]
 
-
 inline_for_extraction
 let cl_add (x:vec128) (y:vec128) : Tot vec128 = vec_xor x y
 
+val lemma_cl_add (x:vec128) (y:vec128) : Lemma
+  (ensures cl_add x y == to_vec128 (Vale.Math.Poly2_s.add (of_vec128 x) (of_vec128 y)))
+
+let lemma_cl_add x y =
+  lemma_add_vec128 x y;
+  ()
 
 inline_for_extraction
 let clmul_wide (x:vec128) (y:vec128) : Tot (vec128 & vec128) =
