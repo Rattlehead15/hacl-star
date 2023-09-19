@@ -6,6 +6,12 @@ open Lib.IntTypes
 open Lib.IntVector
 open Lib.Sequence
 
+open Vale.Math.Poly2_s
+open Vale.Math.Poly2
+open Vale.Math.Poly2.Lemmas
+open Vale.AES.GF128
+open Vale.AES.GHash_BE
+
 open Hacl.Spec.GF128.Poly_s
 open Hacl.Spec.GF128.PolyLemmas
 
@@ -17,17 +23,17 @@ module Vec = Hacl.Spec.GF128.Vec
 
 inline_for_extraction noextract
 let to_elem (s:vec128) : S.elem =
-  (vec_v s).[0]
+  index (vec_v s) 0
 
 inline_for_extraction noextract
 let to_elem4 (x1:vec128) (x2:vec128) (x3:vec128) (x4:vec128) : Vec.elem4 =
-  create4 (vec_v x1).[0] (vec_v x2).[0] (vec_v x3).[0] (vec_v x4).[0]
+  create4 (index (vec_v x1) 0) (index (vec_v x2) 0) (index (vec_v x3) 0) (index (vec_v x4) 0)
 
 inline_for_extraction
 let cl_add (x:vec128) (y:vec128) : Tot vec128 = vec_xor x y
 
 val lemma_cl_add (x:vec128) (y:vec128) : Lemma
-  (ensures cl_add x y == to_vec128 (Vale.Math.Poly2_s.add (of_vec128 x) (of_vec128 y)))
+  (ensures cl_add x y == to_vec128 (add (of_vec128 x) (of_vec128 y)))
 
 let lemma_cl_add x y =
   lemma_add_vec128 x y;
@@ -40,12 +46,69 @@ let clmul_wide (x:vec128) (y:vec128) : Tot (vec128 & vec128) =
   let m2 = vec_clmul_lo_hi x y in
   let hi = vec_clmul_hi_hi x y in
   let m1 = cl_add m1 m2 in
-  let m2 = vec_shift_left m1 (size 64) in
-  let m1 = vec_shift_right m1 (size 64) in
+  let m2 = vec_shift_left m1 64ul in
+  let m1 = vec_shift_right m1 64ul in
   let lo = cl_add lo m2 in
   let hi = cl_add hi m1 in
   (hi,lo)
 
+val lemma_clmul_wide (x:vec128) (y:vec128) : Lemma
+  (ensures (
+    let (hi, lo) = clmul_wide x y in
+    mul (of_vec128 x) (of_vec128 y) == add (shift (of_vec128 hi) 128) (of_vec128 lo)
+  ))
+
+let lemma_clmul_wide x y =
+  (* vec128 variables *)
+  let lo = vec_clmul_lo_lo x y in
+  let m1 = vec_clmul_hi_lo x y in
+  let m2 = vec_clmul_lo_hi x y in
+  let hi = vec_clmul_hi_hi x y in
+  let m12 = cl_add m1 m2 in
+  let m12_0 = vec_shift_left m12 64ul in
+  let m12_1 = vec_shift_right m12 64ul in
+  let lo_m = cl_add lo m12_0 in
+  let hi_m = cl_add hi m12_1 in
+  (* poly variables *)
+  let ab = of_vec128 x in
+  let cd = of_vec128 y in
+  let n = monomial 64 in
+  let a = div ab n in
+  let b = mod ab n in
+  let c = div cd n in
+  let d = mod cd n in
+  let ac = mul a c in
+  let ad = mul a d in
+  let bc = mul b c in
+  let bd = mul b d in
+  (* vec128 lemmas *)
+  vec_clmul_lo_lo_lemma x y;
+  vec_clmul_hi_lo_lemma x y;
+  vec_clmul_lo_hi_lemma x y;
+  vec_clmul_hi_hi_lemma x y;
+  lemma_cl_add m1 m2;
+  lemma_vec128_double_shift (of_vec128 m12);
+  lemma_cl_add lo m12_0;
+  lemma_cl_add hi m12_1;
+  (* poly lemmas *)
+  lemma_shift_is_div ab 64;
+  lemma_shift_is_div cd 64;
+  lemma_div_distribute ad bc n;
+  lemma_add_commute (div ad n) (div bc n);
+  lemma_add_associate ac (div bc n) (div ad n);
+  lemma_mod_distribute ad bc n;
+  lemma_mul_commute (add (mod ad n) (mod bc n)) n;
+  lemma_mul_distribute n (mod ad n) (mod bc n);
+  lemma_mul_commute n (mod ad n);
+  lemma_mul_commute n (mod bc n);
+  lemma_add_commute (mul (mod ad n) n) (mul (mod bc n) n);
+  lemma_add_commute bd (add (mul (mod bc n) n) (mul (mod ad n) n));
+  assert (add (add ac (div bc n)) (div ad n) == of_vec128 hi_m); //OBSERVE
+  assert (add (add (mul (mod bc n) n) (mul (mod ad n) n)) bd == of_vec128 lo_m); //OBSERVE
+  lemma_split_define ab 64;
+  lemma_split_define cd 64;
+  lemma_gf128_mul a b c d 64;
+  ()
 
 inline_for_extraction
 let clmul_wide4
@@ -85,8 +148,8 @@ let clmul_wide4
   let hi = cl_add hi hi3 in
   let hi = cl_add hi hi4 in
 
-  let m1 = vec_shift_left m (size 64) in
-  let m2 = vec_shift_right m (size 64) in
+  let m1 = vec_shift_left m 64ul in
+  let m2 = vec_shift_right m 64ul in
   let lo = cl_add lo m1 in
   let hi = cl_add hi m2 in
   (hi, lo)
@@ -127,18 +190,18 @@ let clmul_wide4
 inline_for_extraction
 let gf128_reduce (hi:vec128) (lo:vec128) : Tot vec128 =
   (* LEFT SHIFT [hi:lo] by 1 *)
-  let lo1 = cast U128 1 (vec_shift_right (cast U64 2 lo) (size 63)) in
-  let lo2 = vec_shift_left lo1 (size 64) in
-  let lo3 = cast U128 1 (vec_shift_left (cast U64 2 lo) (size 1)) in
+  let lo1 = cast U128 1 (vec_shift_right (cast U64 2 lo) 63ul) in
+  let lo2 = vec_shift_left lo1 64ul in
+  let lo3 = cast U128 1 (vec_shift_left (cast U64 2 lo) 1ul) in
   let lo3 = vec_xor lo3 lo2 in
 
-  let hi1 = cast U128 1 (vec_shift_right (cast U64 2 hi) (size 63)) in
-  let hi1 = vec_shift_left hi1 (size 64) in
-  let hi2 = cast U128 1 (vec_shift_left (cast U64 2 hi) (size 1)) in
+  let hi1 = cast U128 1 (vec_shift_right (cast U64 2 hi) 63ul) in
+  let hi1 = vec_shift_left hi1 64ul in
+  let hi2 = cast U128 1 (vec_shift_left (cast U64 2 hi) 1ul) in
   let hi2 = vec_xor hi2 hi1 in
 
-  let lo1 = cast U128 1 (vec_shift_right (cast U64 2 lo) (size 63)) in
-  let lo1 = vec_shift_right lo1 (size 64) in
+  let lo1 = cast U128 1 (vec_shift_right (cast U64 2 lo) 63ul) in
+  let lo1 = vec_shift_right lo1 64ul in
   let hi2 = vec_xor hi2 lo1 in
 
   let lo = lo3 in
@@ -150,20 +213,20 @@ let gf128_reduce (hi:vec128) (lo:vec128) : Tot vec128 =
     let hi = vec128_xor hi lo1 in
 *)
   (* LEFT SHIFT [x0:0] BY 63,62,57 and xor with [x1:x0] *)
-  let lo1 = cast U128 1 (vec_shift_left (cast U64 2 lo) (size 63)) in
-  let lo2 = cast U128 1 (vec_shift_left (cast U64 2 lo) (size 62)) in
-  let lo3 = cast U128 1 (vec_shift_left (cast U64 2 lo) (size 57)) in
+  let lo1 = cast U128 1 (vec_shift_left (cast U64 2 lo) 63ul) in
+  let lo2 = cast U128 1 (vec_shift_left (cast U64 2 lo) 62ul) in
+  let lo3 = cast U128 1 (vec_shift_left (cast U64 2 lo) 57ul) in
   let lo1 = vec_xor lo1 lo2 in
   let lo1 = vec_xor lo1 lo3 in
-  let lo2 = vec_shift_right lo1 (size 64) in
-  let lo3 = vec_shift_left lo1 (size 64) in
+  let lo2 = vec_shift_right lo1 64ul in
+  let lo3 = vec_shift_left lo1 64ul in
   let lo =  vec_xor lo lo3 in
   let lo' = lo2 in
 
   (* RIGHT SHIFT [x1:x0] BY 1,2,7 and xor with [x1:x0] *)
-  let lo1 = cast U128 1 (vec_shift_right (cast U64 2 lo) (size 1)) in
-  let lo2 = cast U128 1 (vec_shift_right (cast U64 2 lo) (size 2)) in
-  let lo3 = cast U128 1 (vec_shift_right (cast U64 2 lo) (size 7)) in
+  let lo1 = cast U128 1 (vec_shift_right (cast U64 2 lo) 1ul) in
+  let lo2 = cast U128 1 (vec_shift_right (cast U64 2 lo) 2ul) in
+  let lo3 = cast U128 1 (vec_shift_right (cast U64 2 lo) 7ul) in
   let lo1 = vec_xor lo1 lo2 in
   let lo1 = vec_xor lo1 lo3 in
 

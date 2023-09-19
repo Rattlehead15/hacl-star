@@ -1,10 +1,13 @@
 module Hacl.Spec.GF128.PolyLemmas
 
+open FStar.Mul
+
 open Lib.IntVector
 
 open Vale.Math.Poly2_s
 open Vale.Math.Poly2
 open Vale.Math.Poly2.Bits_s
+open Vale.Math.Poly2.Lemmas
 
 open Hacl.Spec.GF128.Poly_s
 
@@ -31,10 +34,10 @@ val lemma_vec128_ones (_:unit) : Lemma
 
 val lemma_add128 (a b:poly) : Lemma
   (requires degree a <= 127 /\ degree b <= 127)
-  (ensures to_vec128 (a +. b) == to_vec128 a ^| to_vec128 b)
+  (ensures to_vec128 (add a b) == to_vec128 a ^| to_vec128 b)
 
 val lemma_add_vec128 (a b:vec128) : Lemma
-  (ensures of_vec128 a +. of_vec128 b == of_vec128 (a ^| b))
+  (ensures add (of_vec128 a) (of_vec128 b) == of_vec128 (a ^| b))
 
 val lemma_and128 (a b:poly) : Lemma
   (requires degree a <= 127 /\ degree b <= 127)
@@ -42,3 +45,11 @@ val lemma_and128 (a b:poly) : Lemma
 
 val lemma_and_vec128 (a b:vec128) : Lemma
   (ensures poly_and (of_vec128 a) (of_vec128 b) == of_vec128 (a &| b))
+
+val lemma_vec128_double_shift (a:poly) : Lemma
+  (requires degree a <= 127)
+  (ensures (
+    let q = to_vec128 a in
+    q <<| 64ul == to_vec128 (mul (mod a (monomial 64)) (monomial 64)) /\
+    q >>| 64ul == to_vec128 (div a (monomial 64))
+  ))

@@ -54,3 +54,16 @@ let lemma_and128 a b =
 let lemma_and_vec128 a b =
   lemma_and128 (of_vec128 a) (of_vec128 b);
   ()
+
+let lemma_vec128_double_shift a =
+  lemma_bitwise_all ();
+  assert (of_vec128 (to_vec128 a <<| 64ul) ==
+      of_uint 128 (FStar.UInt.shift_left (to_uint 128 a) 64));
+  lemma_equal (shift (mask a 64) 64) (of_vec128 (to_vec128 a <<| 64ul));
+  lemma_mask_is_mod a 64;
+  lemma_shift_is_mul (a %. monomial 64) 64;
+  assert (of_vec128 (to_vec128 a >>| 64ul) ==
+      of_uint 128 (FStar.UInt.shift_right (to_uint 128 a) 64));
+  lemma_equal (shift a (-64)) (of_vec128 (to_vec128 a >>| 64ul));
+  lemma_shift_is_div a 64;
+  ()
