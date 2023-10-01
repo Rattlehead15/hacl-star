@@ -332,6 +332,9 @@ let vec_interleave_high_n_lemma_uint64_4_2 v1 v2 = admit()
 
 let vec_shift_right_uint128_small2 v1 s = admit()
 
+let vec_cast_uint128 v1 = admit()
+let vec_cast_2_uint64 v1 = admit()
+
 let vec_rotate_right_lanes (#t:v_inttype) (#w:width) (x:vec_t t w) (y:rotval t) =
   match t,w with
   | U32,4 -> vec128_rotate_right_lanes32 x y
