@@ -14,6 +14,7 @@ open Vale.AES.GHash_BE
 
 open Hacl.Spec.GF128.Poly_s
 open Hacl.Spec.GF128.PolyLemmas
+open Hacl.Spec.GF128.PolyLemmas_helpers
 
 module S = Spec.GF128
 module GF = Spec.GaloisField
@@ -236,6 +237,163 @@ let gf128_reduce (hi:vec128) (lo:vec128) : Tot vec128 =
   let lo = vec_xor lo hi in
   lo
 
+val lemma_gf128_reduce (h:vec128) (l:vec128) : Lemma
+  (requires degree (of_vec128 h) <= 126 /\ degree (of_vec128 l) <= 127)
+  (ensures (
+    let mm = monomial 128 in
+    let g = add mm gf128_low in
+    let a = shift (add (mul (of_vec128 h) mm) (of_vec128 l)) 1 in
+    let x = reverse a 255 in
+    gf128_reduce h l == to_vec128 (reverse (mod x g) 127)
+  ))
+
+let lemma_gf128_reduce h l =
+  let n = monomial 64 in
+  let nn = monomial 128 in
+  let g = reverse gf128_low_shift 63 in
+  let lo = of_vec128 l in
+  let hi = of_vec128 h in
+  let l0_r63 = shift (mod lo n) (-63) in
+  let l1_r63 = shift (div lo n) (-63) in
+  let l0_l1 = mod (shift (mod lo n) 1) n in
+  let l1_l1 = mod (shift (div lo n) 1) n in
+  let h0_r63 = shift (mod hi n) (-63) in
+  let h1_r63 = shift (div hi n) (-63) in
+  let h0_l1 = mod (shift (mod hi n) 1) n in
+  let h1_l1 = mod (shift (div hi n) 1) n in
+
+  lemma_vec128_shift_right_64 l 63ul;
+  let lo1 = add (shift l1_r63 64) l0_r63 in
+  lemma_vec128_double_shift lo1;
+  lemma_shift_is_mul (mod lo1 n) 64;
+  lemma_shift_left_cancel lo1 l0_r63 l1_r63;
+  let lo2 = shift l0_r63 64 in
+  lemma_vec128_shift_left_64 l 1ul;
+  let lo3 = add (shift l1_l1 64) l0_l1 in
+  lemma_cl_add (to_vec128 lo3) (to_vec128 lo2);
+  lemma_add_left_shift l0_l1 l1_l1 l0_r63;
+  let lo3 = add (shift (add l1_l1 l0_r63) 64) l0_l1 in
+
+  lemma_vec128_shift_right_64 h 63ul;
+  let hi1 = add (shift h1_r63 64) h0_r63 in
+  lemma_vec128_double_shift hi1;
+  lemma_shift_is_mul (mod hi1 n) 64;
+  lemma_shift_left_cancel hi1 h0_r63 h1_r63;
+  let hi1 = shift h0_r63 64 in
+  lemma_vec128_shift_left_64 h 1ul;
+  let hi2 = add (shift h1_l1 64) h0_l1 in
+  lemma_cl_add (to_vec128 hi2) (to_vec128 hi1);
+  lemma_add_left_shift h0_l1 h1_l1 h0_r63;
+  let hi2 = add (shift (add h1_l1 h0_r63) 64) h0_l1 in
+
+  lemma_shift_is_div lo1 64;
+  lemma_shift_right_cancel lo1 l0_r63 l1_r63;
+  let lo1 = l1_r63 in
+  lemma_cl_add (to_vec128 hi2) (to_vec128 lo1);
+  lemma_add_associate (shift (add h1_l1 h0_r63) 64) h0_l1 l1_r63;
+  let hi2 = add (shift (add h1_l1 h0_r63) 64) (add h0_l1 l1_r63) in
+
+  let lo = lo3 in
+  let hi = hi2 in
+
+  lemma_mul_x (of_vec128 h) (of_vec128 l);
+  assert (shift (add (mul (of_vec128 h) nn) (of_vec128 l)) 1 == add (mul hi nn) lo); //OBSERVE
+
+  let l0_l63 = mod (shift (mod lo n) 63) n in
+  let l1_l63 = mod (shift (div lo n) 63) n in
+  let l0_l62 = mod (shift (mod lo n) 62) n in
+  let l1_l62 = mod (shift (div lo n) 62) n in
+  let l0_l57 = mod (shift (mod lo n) 57) n in
+  let l1_l57 = mod (shift (div lo n) 57) n in
+  lemma_vec128_shift_left_64 (to_vec128 lo) 63ul;
+  lemma_vec128_shift_left_64 (to_vec128 lo) 62ul;
+  lemma_vec128_shift_left_64 (to_vec128 lo) 57ul;
+  let lo1 = add (shift l1_l63 64) l0_l63 in
+  let lo2 = add (shift l1_l62 64) l0_l62 in
+  let lo3 = add (shift l1_l57 64) l0_l57 in
+  lemma_cl_add (to_vec128 lo1) (to_vec128 lo2);
+  lemma_add_left_shift_double l0_l63 l1_l63 l0_l62 l1_l62;
+  let lo1 = add (shift (add l1_l63 l1_l62) 64) (add l0_l63 l0_l62) in
+  lemma_cl_add (to_vec128 lo1) (to_vec128 lo3);
+  lemma_add_left_shift_double (add l0_l63 l0_l62) (add l1_l63 l1_l62) l0_l57 l1_l57;
+  lemma_mul_h_shift_right_mod (mod lo n) g;
+  lemma_mul_h_shift_right_mod (div lo n) g;
+  let lo1 = add (shift (mod (mul (div lo n) g) n) 64)
+    (mod (mul (mod lo n) g) n) in
+  lemma_vec128_double_shift lo1;
+  lemma_shift_is_div lo1 64;
+  lemma_shift_right_cancel lo1 (mod (mul (mod lo n) g) n)
+    (mod (mul (div lo n) g) n);
+  let lo2 = mod (mul (div lo n) g) n in
+  lemma_shift_is_mul (mod lo1 n) 64;
+  lemma_shift_left_cancel lo1 (mod (mul (mod lo n) g) n)
+    (mod (mul (div lo n) g) n);
+  let lo3 = shift (mod (mul (mod lo n) g) n) 64 in
+  lemma_div_mod lo n;
+  lemma_shift_is_mul (div lo n) 64;
+  lemma_cl_add (to_vec128 lo) (to_vec128 lo3);
+  lemma_add_left_shift (mod lo n) (div lo n) (mod (mul (mod lo n) g) n);
+
+  let l_o = lo in
+  let lo =  add (shift (add (div lo n) (mod (mul (mod lo n) g) n)) 64)
+    (mod lo n) in
+  let lo' = lo2 in
+
+  let l0_r1 = shift (mod lo n) (-1) in
+  let l1_r1 = shift (div lo n) (-1) in
+  let l0_r2 = shift (mod lo n) (-2) in
+  let l1_r2 = shift (div lo n) (-2) in
+  let l0_r7 = shift (mod lo n) (-7) in
+  let l1_r7 = shift (div lo n) (-7) in
+  lemma_vec128_shift_right_64 (to_vec128 lo) 1ul;
+  lemma_vec128_shift_right_64 (to_vec128 lo) 2ul;
+  lemma_vec128_shift_right_64 (to_vec128 lo) 7ul;
+  let lo1 = add (shift l1_r1 64) l0_r1 in
+  let lo2 = add (shift l1_r2 64) l0_r2 in
+  let lo3 = add (shift l1_r7 64) l0_r7 in
+  lemma_cl_add (to_vec128 lo1) (to_vec128 lo2);
+  lemma_add_left_shift_double l0_r1 l1_r1 l0_r2 l1_r2;
+  let lo1 = add (shift (add l1_r1 l1_r2) 64) (add l0_r1 l0_r2) in
+  lemma_cl_add (to_vec128 lo1) (to_vec128 lo3);
+  lemma_add_left_shift_double (add l0_r1 l0_r2) (add l1_r1 l1_r2) l0_r7 l1_r7;
+  lemma_mul_h_shift_left (mod lo n) g;
+  lemma_mul_h_shift_left (div lo n) g;
+  let lo1 = add (shift (div (mul (div lo n) g) n) 64)
+    (div (mul (mod lo n) g) n) in
+  
+  lemma_cl_add (to_vec128 lo1) (to_vec128 lo');
+  lemma_add_associate (shift (div (mul (div lo n) g) n) 64)
+    (div (mul (mod lo n) g) n) (mod (mul (div l_o n) g) n);
+  let lo1 = add (shift (div (mul (div lo n) g) n) 64)
+    (add (div (mul (mod lo n) g) n) (mod (mul (div l_o n) g) n)) in
+  lemma_div_mod lo n;
+  lemma_shift_is_mul (div lo n) 64;
+  lemma_cl_add (to_vec128 lo) (to_vec128 lo1);
+  lemma_add_left_shift_double (mod lo n) (div lo n)
+    (add (div (mul (mod lo n) g) n) (mod (mul (div l_o n) g) n))
+    (div (mul (div lo n) g) n);
+  lemma_shift_is_mul (add (div l_o n) (mod (mul (mod l_o n) g) n)) 64;
+  lemma_div_mod_unique lo n (add (div l_o n) (mod (mul (mod l_o n) g) n)) (mod l_o n);
+  let lo = add (shift (add (add (div l_o n) (mod (mul (mod l_o n) g) n))
+    (div (mul (add (div l_o n) (mod (mul (mod l_o n) g) n)) g) n)) 64)
+      (add (mod l_o n)
+      (add (div (mul (mod l_o n) g) n) (mod (mul (div l_o n) g) n))) in
+
+  lemma_reduce_helper l_o g;
+  let y_10c = add (swap l_o 64) (mul (mask l_o 64) g) in
+  assert (lo == add (swap y_10c 64) (mul (mask y_10c 64) g)); //OBSERVE
+
+  lemma_add_commute (mul hi nn) l_o;
+  lemma_shift_is_mul hi 128;
+  lemma_cl_add (to_vec128 lo) (to_vec128 hi);
+
+  lemma_gf128_degree ();
+  lemma_reduce_rev_helper l_o hi gf128_low 64;
+  let lo = add (add (swap y_10c 64) (mul (mask y_10c 64) g)) hi in
+  let a = shift (add (mul (of_vec128 h) nn) (of_vec128 l)) 1 in
+  let x = reverse a 255 in
+  assert (lo == reverse (mod x (add nn gf128_low)) 127); //OBSERVE
+  ()
 
 val gf128_clmul_wide_reduce_lemma: x:vec128 -> y:vec128 -> Lemma
   (let (hi, lo) = clmul_wide x y in

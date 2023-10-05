@@ -268,10 +268,10 @@ let lemma_vec128_shift_right_64 p s =
 
   let n = monomial 64 in
   let a = of_vec128 p in
-  let a0 = P.mod (P.shift (P.mod a n) (-(v s))) n in
-  let a1 = P.mod (P.shift (P.div a n) (-(v s))) n in
-  let p0 = (((to_uint 128 a) % pow2 64) / pow2 (v s)) % pow2 64 in
-  let p1 = ((((to_uint 128 a) / pow2 64) % pow2 64) / pow2 (v s)) % pow2 64 in
+  let a0 = P.shift (P.mod a n) (-(v s)) in
+  let a1 = P.shift (P.div a n) (-(v s)) in
+  let p0 = ((to_uint 128 a) % pow2 64) / pow2 (v s) in
+  let p1 = (((to_uint 128 a) / pow2 64) % pow2 64) / pow2 (v s) in
   let t = T.add
           (T.shift_left (to_u128 (shift_right_i s (to_u64 (T.shift_right #U128 #SEC p 64ul)))) 64ul)
           (to_u128 (shift_right_i s (to_u64 #U128 #SEC p))) in
@@ -284,25 +284,24 @@ let lemma_vec128_shift_right_64 p s =
   small_mod ((to_uint 128 a) / pow2 64) (pow2 64);
   lemma_shift_is_div a 64;
   lemma_eq_poly_uint_shift_right (P.div a n) (((to_uint 128 a) / pow2 64) % pow2 64) (v s);
-  lemma_eq_poly_uint_mod_64 (P.shift (P.div a n) (-(v s))) 
-    ((((to_uint 128 a) / pow2 64) % pow2 64) / pow2 (v s));
-  lemma_eq_poly_uint_shift_left (P.mod (P.shift (P.div a n) (-(v s))) n) 
-    (((((to_uint 128 a) / pow2 64) % pow2 64) / pow2 (v s)) % pow2 64) 64;
+  lemma_eq_poly_uint_shift_left (P.shift (P.div a n) (-(v s))) 
+    ((((to_uint 128 a) / pow2 64) % pow2 64) / pow2 (v s)) 64;
+  lemma_mod_lt ((to_uint 128 a) / pow2 64) (pow2 64);
+  lemma_div_lt (((to_uint 128 a) / pow2 64) % pow2 64) 64 (v s);
+  small_mod ((((to_uint 128 a) / pow2 64) % pow2 64) / pow2 (v s)) (pow2 (64 - (v s)));
   pow2_multiplication_modulo_lemma_2
-    (((((to_uint 128 a) / pow2 64) % pow2 64) / pow2 (v s)) % pow2 64) 128 64;
-  pow2_modulo_modulo_lemma_1 ((((to_uint 128 a) / pow2 64) % pow2 64) / pow2 (v s)) 64 64;
+    ((((to_uint 128 a) / pow2 64) % pow2 64) / pow2 (v s)) 128 64;
+  pow2_modulo_modulo_lemma_2 ((((to_uint 128 a) / pow2 64) % pow2 64) / pow2 (v s)) 64 (64 - (v s));
   assert (P.shift a1 64 == of_uint 128 (p1 * pow2 64)); //OBSERVE
 
   lemma_eq_poly_uint_mod_64 a (to_uint 128 a);
   lemma_eq_poly_uint_shift_right (P.mod a n)
     ((to_uint 128 a) % pow2 64) (v s);
-  lemma_eq_poly_uint_mod_64 (P.shift (P.mod a n) (-(v s)))
-    (((to_uint 128 a) % pow2 64) / pow2 (v s));
   assert (a0 == of_uint 128 p0); //OBSERVE
 
   lemma_eq_poly_uint_add (P.shift a1 64) a0 (p1 * pow2 64) p0;
   lemma_mod_lt (((to_uint 128 a) % pow2 64) / pow2 (v s)) (pow2 64);
-  multiple_modulo_lemma (((((to_uint 128 a) / pow2 64) % pow2 64) / pow2 (v s)) % pow2 64) (pow2 64);
+  multiple_modulo_lemma ((((to_uint 128 a) / pow2 64) % pow2 64) / pow2 (v s)) (pow2 64);
   logxor_disjoint #128 (p1 * pow2 64) p0 64;
   assert (P.add (P.shift a1 64) a0 == of_uint 128 (p1 * pow2 64 + p0));
   ()

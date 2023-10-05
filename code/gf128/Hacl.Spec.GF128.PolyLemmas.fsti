@@ -69,8 +69,8 @@ val lemma_vec128_shift_right_64 (p:vec128) (s:shiftval U64) : Lemma
   (ensures (
     let n = monomial 64 in
     let a = of_vec128 p in
-    let a0 = mod (shift (mod a n) (-(v s))) n in
-    let a1 = mod (shift (div a n) (-(v s))) n in
+    let a0 = shift (mod a n) (-(v s)) in
+    let a1 = shift (div a n) (-(v s)) in
     cast U128 1 (vec_shift_right (cast U64 2 p) s) ==
       to_vec128 (add (shift a1 64) a0)
   ))
