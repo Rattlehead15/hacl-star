@@ -35,7 +35,7 @@
         "typing_Spec.Hash.Definitions.word_length"
       ],
       0,
-      "84064fd2d3a10e2dc8ad678ca6f302d8"
+      "57d5844b0011ee8a4ce4bbff2eebfb28"
     ],
     [
       "EverCrypt.HMAC.compute_st",
@@ -70,7 +70,7 @@
         "typing_Spec.Hash.Definitions.less_than_max_input_length"
       ],
       0,
-      "44cb6b2289235ef4a508ceb7a0bd5c46"
+      "33dacbb8cb3764841caa2355193d01ab"
     ],
     [
       "EverCrypt.HMAC.compute",
@@ -88,7 +88,7 @@
         "typing_Spec.Hash.Definitions.is_shake"
       ],
       0,
-      "9a2b47ad22e7d1e269b05dd51d382efa"
+      "8e13c9a27e5dcfb28db71157c2387a67"
     ]
   ]
 ]

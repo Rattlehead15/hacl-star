@@ -102,7 +102,7 @@
         "typing_tok_Lib.Buffer.MUT@tok"
       ],
       0,
-      "0a860bed88661d22c01fa2b0a0bd8e84"
+      "9501d7eeded6a589ab7d8ae4aefd5d5c"
     ],
     [
       "Hacl.Impl.Ed25519.PointConstants.make_g",
@@ -233,7 +233,7 @@
         "typing_tok_Lib.IntTypes.U64@tok"
       ],
       0,
-      "18bc74d1cdf53137004f4245a4404c5b"
+      "25c97e85ffae41b0e22d01d851a59096"
     ]
   ]
 ]

@@ -30,7 +30,7 @@
         "typing_FStar.Seq.Base.length", "typing_Spec.Poly1305.size_key"
       ],
       0,
-      "9c06d1cf38d81e7ba3bab50907e6d654"
+      "76e73ed8075428dfa250c5146e1b13ee"
     ],
     [
       "Vale.Poly1305.Equiv.lemma_poly1305_equiv",
@@ -67,7 +67,7 @@
         "typing_tok_Lib.IntTypes.SEC@tok"
       ],
       0,
-      "03f713438f87ef39ea12060a07280726"
+      "37fee9f7955b7877adb07b1ce2cde427"
     ]
   ]
 ]

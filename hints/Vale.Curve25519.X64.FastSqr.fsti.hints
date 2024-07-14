@@ -12,7 +12,7 @@
         "refinement_interpretation_Tm_refine_542f9d4f129664613f2483a6c88bc7c2"
       ],
       0,
-      "cd846c930b7584a9653283c49fc24e70"
+      "d0c7286860c0850bfeeac0b9e4e526fe"
     ],
     [
       "Vale.Curve25519.X64.FastSqr.va_wp_Fast_sqr",
@@ -25,7 +25,7 @@
         "refinement_interpretation_Tm_refine_542f9d4f129664613f2483a6c88bc7c2"
       ],
       0,
-      "1fabac5af15f9311ae46c123028a74f8"
+      "c7af491cae85d34c9725d631ff85e8c5"
     ],
     [
       "Vale.Curve25519.X64.FastSqr.va_quick_Fast_sqr",
@@ -37,7 +37,7 @@
         "fuel_guarded_inversion_FStar.Pervasives.Native.tuple3"
       ],
       0,
-      "a4c265b17d4e98fae6fe12d720792684"
+      "7f8793bcbb02263959accb91802b847f"
     ],
     [
       "Vale.Curve25519.X64.FastSqr.va_lemma_Fast_sqr_stdcall",
@@ -60,7 +60,7 @@
         "refinement_interpretation_Tm_refine_c1424615841f28cac7fc34e92b7ff33c"
       ],
       0,
-      "f5f2f1a44d6a4000e7d88ec72499f4b3"
+      "e4c1bf9f4277018a8b0dc177d7a57160"
     ],
     [
       "Vale.Curve25519.X64.FastSqr.va_wp_Fast_sqr_stdcall",
@@ -75,7 +75,7 @@
         "refinement_interpretation_Tm_refine_c1424615841f28cac7fc34e92b7ff33c"
       ],
       0,
-      "01d20ea5ab8a03f48f91e9919f940da8"
+      "4d7f12c41399a314558341c1a3b5aab0"
     ],
     [
       "Vale.Curve25519.X64.FastSqr.va_quick_Fast_sqr_stdcall",
@@ -87,7 +87,7 @@
         "fuel_guarded_inversion_FStar.Pervasives.Native.tuple3"
       ],
       0,
-      "ea767fc614143212312cfa69031e3e10"
+      "b66b983c32d594aefcfca2409849ab7a"
     ],
     [
       "Vale.Curve25519.X64.FastSqr.va_lemma_Sqr2_stdcall",
@@ -110,7 +110,7 @@
         "refinement_interpretation_Tm_refine_c1424615841f28cac7fc34e92b7ff33c"
       ],
       0,
-      "941371850caa2c1e9ac3a2fd269d5c01"
+      "3a7542cdf8982c18c795291a82ab7c1c"
     ],
     [
       "Vale.Curve25519.X64.FastSqr.va_wp_Sqr2_stdcall",
@@ -125,7 +125,7 @@
         "refinement_interpretation_Tm_refine_c1424615841f28cac7fc34e92b7ff33c"
       ],
       0,
-      "f6fb4f96a7aeeb2c5f179adba9f7724e"
+      "10999f41594656d3a7f7923cc4e7111f"
     ],
     [
       "Vale.Curve25519.X64.FastSqr.va_quick_Sqr2_stdcall",
@@ -137,7 +137,7 @@
         "fuel_guarded_inversion_FStar.Pervasives.Native.tuple3"
       ],
       0,
-      "ce91f057323f293754202d4a8c0d6d6b"
+      "ebabefc5a57b0c47cdbf704789f38fd0"
     ]
   ]
 ]

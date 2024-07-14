@@ -24,7 +24,7 @@
         "refinement_interpretation_Tm_refine_414d0a9f578ab0048252f8c8f552b99f"
       ],
       0,
-      "bef53ec7b2098a5c6f412b367421c291"
+      "b884ee5cbebf46d5ad362b1f55317ea7"
     ],
     [
       "Vale.X64.Memory.v_of_typ",
@@ -69,7 +69,7 @@
         "refinement_interpretation_Tm_refine_f13070840248fced9d9d60d77bdae3ec"
       ],
       0,
-      "8bd5181eff71d8ad64241322dcb79dce"
+      "8d5415ae2ae9af52cc223547a2a2f3b2"
     ],
     [
       "Vale.X64.Memory.v_to_typ",
@@ -115,7 +115,7 @@
         "refinement_interpretation_Tm_refine_f13070840248fced9d9d60d77bdae3ec"
       ],
       0,
-      "f2830d24e7311502c3fe4faf1d2125db"
+      "6a80551b5d25ed820c1263ae6706fac7"
     ],
     [
       "Vale.X64.Memory.lemma_v_to_of_typ",
@@ -148,7 +148,7 @@
         "refinement_interpretation_Tm_refine_f13070840248fced9d9d60d77bdae3ec"
       ],
       0,
-      "171fcb839dc770bc37b2c27cf6be3941"
+      "ec77a5a24f4c002b00f7d35855fb408b"
     ],
     [
       "Vale.X64.Memory.uint_view",
@@ -189,7 +189,7 @@
         "projection_inverse_LowStar.BufferView.Up.View_n"
       ],
       0,
-      "6d7a1148727b494c8e3dece2b24242d6"
+      "9adff12b251f97d404e2a23a312ad6f1"
     ],
     [
       "Vale.X64.Memory.buffer_as_seq",
@@ -202,7 +202,7 @@
         "refinement_interpretation_Tm_refine_efd4ef517629f7c86a95b395d9e0faca"
       ],
       0,
-      "a3ab8e79afa033d73ee3e4a9bfc06e6f"
+      "7b94e0fb1f63e86f9a06a127eba4427f"
     ],
     [
       "Vale.X64.Memory.buffer_length",
@@ -215,7 +215,7 @@
         "refinement_interpretation_Tm_refine_efd4ef517629f7c86a95b395d9e0faca"
       ],
       0,
-      "c8bdba4e7b3c8974836b8339f540dfca"
+      "474f05c283521a448215f768ad011b2c"
     ],
     [
       "Vale.X64.Memory.modifies",
@@ -224,7 +224,7 @@
       1,
       [ "@query" ],
       0,
-      "47f10e673ef8579b571a56299e07e6e5"
+      "bdb70bffe14c37fbde4de05a176d3610"
     ],
     [
       "Vale.X64.Memory.index64_heap_aux",
@@ -309,7 +309,7 @@
         "typing_Vale.Def.Words_s.natN", "typing_Vale.Interop.Views.get64"
       ],
       0,
-      "09c4396afcd2c24e24c411eb2482b7f0"
+      "9e9d7dfe188bd3c177947a0ae1aa1562"
     ],
     [
       "Vale.X64.Memory.index_helper",
@@ -318,7 +318,7 @@
       1,
       [ "@query" ],
       0,
-      "86a409bbd73d2b66f592ebe50d17020c"
+      "9d511232d7afb82bd6d12d983c309aca"
     ],
     [
       "Vale.X64.Memory.index_mul_helper",
@@ -330,7 +330,7 @@
         "primitive_Prims.op_Multiply", "projection_inverse_BoxInt_proj_0"
       ],
       0,
-      "14b0c95cb9a004e3bdef1d01d9c111e6"
+      "693135c55daaa90b1a7128538df182f9"
     ],
     [
       "Vale.X64.Memory.index64_get_heap_val64",
@@ -437,7 +437,7 @@
         "typing_tok_Vale.Arch.HeapTypes_s.TUInt64@tok"
       ],
       0,
-      "f62aac2b273d0b9210530797a40a5515"
+      "71dc60c271048228386136db86537f05"
     ],
     [
       "Vale.X64.Memory.index128_get_heap_val128_aux",
@@ -500,7 +500,7 @@
         "typing_Vale.Def.Words.Seq_s.seq_uint8_to_seq_nat8"
       ],
       0,
-      "b4dbe2d1226d468eb69794e5a5e4bb87"
+      "d62536c16166e2882fd26389b422b6cc"
     ],
     [
       "Vale.X64.Memory.index128_get_heap_val128",
@@ -605,7 +605,7 @@
         "typing_tok_Vale.Arch.HeapTypes_s.TUInt128@tok"
       ],
       0,
-      "1db603d0c76648837deb22d84ba49892"
+      "dd9abbefab056c356cf9637e950ea56c"
     ],
     [
       "Vale.X64.Memory.lemma_modifies_goal_directed",
@@ -614,7 +614,7 @@
       0,
       [ "@query", "equation_Vale.X64.Memory.modifies_goal_directed" ],
       0,
-      "feb002419cc83258c4ce668d751d3265"
+      "74f78ef3dea554597377e6b264d27ef9"
     ],
     [
       "Vale.X64.Memory.buffer_length_buffer_as_seq",
@@ -668,7 +668,7 @@
         "typing_Vale.X64.Memory.uint_view"
       ],
       0,
-      "6485366ef999ce935b009693b0425cf4"
+      "7a09d64df55cff348bc2eb9ec457078a"
     ],
     [
       "Vale.X64.Memory.same_underlying_seq",
@@ -701,8 +701,8 @@
         "proj_equation_Vale.Interop.Heap_s.InteropHeap_hs",
         "proj_equation_Vale.Interop.Types.Buffer_src",
         "projection_inverse_BoxInt_proj_0",
-        "refinement_interpretation_Tm_refine_3adf8fd18b269295ed0d52ef3873b1b7",
         "refinement_interpretation_Tm_refine_414d0a9f578ab0048252f8c8f552b99f",
+        "refinement_interpretation_Tm_refine_4e980147d64dab510c234d765b2a58ec",
         "refinement_interpretation_Tm_refine_542f9d4f129664613f2483a6c88bc7c2",
         "refinement_interpretation_Tm_refine_76e59c7a065e37ed8356ffe7fa5f9837",
         "refinement_interpretation_Tm_refine_8ae5e7ec51c01b06a6c5c069c9bd60bc",
@@ -722,7 +722,7 @@
         "typing_Vale.X64.Memory.uint_view", "well-founded-ordering-on-nat"
       ],
       0,
-      "005916991ee8435aa10710ded0ef5cfb"
+      "4039418c5195fe9863da5a2888f6b181"
     ],
     [
       "Vale.X64.Memory.modifies_buffer_elim",
@@ -769,7 +769,7 @@
         "typing_Vale.X64.Memory.buffer_as_seq"
       ],
       0,
-      "b9d9c691dca337fce427f0161d658279"
+      "d38e4ff5218d87f4fa107d45f625e339"
     ],
     [
       "Vale.X64.Memory.modifies_buffer_addr",
@@ -782,7 +782,7 @@
         "function_token_typing_Vale.Interop.Heap_s.__proj__InteropHeap__item__addrs"
       ],
       0,
-      "7fe6ba9a516c8fc41990c6f113ae0c77"
+      "0b3d2ced3cc3b603173473e63587ceb4"
     ],
     [
       "Vale.X64.Memory.modifies_buffer_readable",
@@ -794,7 +794,7 @@
         "equation_Vale.X64.Memory.modifies"
       ],
       0,
-      "b11db4d22f24c3fbf5c18d801a09ffe8"
+      "74513bc7255c85faa791890b66815951"
     ],
     [
       "Vale.X64.Memory.loc_disjoint_none_r",
@@ -806,7 +806,7 @@
         "equation_Vale.X64.Memory.loc_none"
       ],
       0,
-      "ffe5434ef33cf37c0321de5cc5df0351"
+      "f6dabd5bbfa1b396cb1e407db32a5f36"
     ],
     [
       "Vale.X64.Memory.loc_disjoint_union_r",
@@ -818,7 +818,7 @@
         "equation_Vale.X64.Memory.loc_union"
       ],
       0,
-      "b392bde1b8294e6d1d970ac9b5d54810"
+      "caf8b2aac7ed75783805c13512d1fd4a"
     ],
     [
       "Vale.X64.Memory.loc_includes_refl",
@@ -827,7 +827,7 @@
       0,
       [ "@query", "equation_Vale.X64.Memory.loc_includes" ],
       0,
-      "4a979972ec8c8a15d38725138704c02d"
+      "18798b4a096a6c9e111679824a2c3d97"
     ],
     [
       "Vale.X64.Memory.loc_includes_trans",
@@ -836,7 +836,7 @@
       0,
       [ "@query", "equation_Vale.X64.Memory.loc_includes" ],
       0,
-      "b722063bf757d6485e780f39f89a8a65"
+      "49c24b42172cf0fd88bc0365ee0677c1"
     ],
     [
       "Vale.X64.Memory.loc_includes_union_r",
@@ -848,7 +848,7 @@
         "equation_Vale.X64.Memory.loc_union"
       ],
       0,
-      "2768699293909792813eb43718f1fb98"
+      "be1d4eb4637ee222b8e7863142013910"
     ],
     [
       "Vale.X64.Memory.loc_includes_union_l",
@@ -860,7 +860,7 @@
         "equation_Vale.X64.Memory.loc_union"
       ],
       0,
-      "e0d4cbef7337b186444d408f32efeb59"
+      "0abdc0d6eefed9b15249e0e4a953f4df"
     ],
     [
       "Vale.X64.Memory.loc_includes_union_l_buffer",
@@ -872,7 +872,7 @@
         "equation_Vale.X64.Memory.loc_union"
       ],
       0,
-      "fb5319612b22abf39a46efec36cd510b"
+      "b8b72cef9ba44e9358108d797ba8da41"
     ],
     [
       "Vale.X64.Memory.loc_includes_none",
@@ -884,7 +884,7 @@
         "equation_Vale.X64.Memory.loc_none"
       ],
       0,
-      "9f1bc8b432187e7acb623bb0a1cdf81a"
+      "ebc2d7bafe554bdad2d97d307a3a0e72"
     ],
     [
       "Vale.X64.Memory.modifies_refl",
@@ -911,7 +911,7 @@
         "typing_Vale.Interop.Base.__proj__InteropHeap__item__hs"
       ],
       0,
-      "c710928183da2d38448eeaaf63cb44b6"
+      "844cce0ef5ae8930b59ad48f52eeb903"
     ],
     [
       "Vale.X64.Memory.modifies_goal_directed_refl",
@@ -926,7 +926,7 @@
         "lemma_Vale.X64.Memory.modifies_refl"
       ],
       0,
-      "0cf5558c2f999477dc3afb440d33971f"
+      "f41a209eae7d67b6357b5552f25de394"
     ],
     [
       "Vale.X64.Memory.modifies_loc_includes",
@@ -941,7 +941,7 @@
         "fuel_guarded_inversion_Vale.Interop.Base.interop_heap"
       ],
       0,
-      "b3b32724c15f943a290f8ad27991bbb1"
+      "1634ac9de80a7af51d81e92ea78ca409"
     ],
     [
       "Vale.X64.Memory.modifies_trans",
@@ -960,7 +960,7 @@
         "typing_Vale.Interop.Base.__proj__InteropHeap__item__hs"
       ],
       0,
-      "729b9179f898dd35f964ad099935117f"
+      "293a9da9e0dd66b83a02114c0261d253"
     ],
     [
       "Vale.X64.Memory.modifies_goal_directed_trans",
@@ -973,7 +973,7 @@
         "lemma_Vale.X64.Memory.loc_includes_union_r"
       ],
       0,
-      "8e680b0f4c3be51f1bdc770d2ad02cd7"
+      "c8fd644f868a29c93cf1b96b18df71ac"
     ],
     [
       "Vale.X64.Memory.modifies_goal_directed_trans2",
@@ -982,7 +982,7 @@
       0,
       [ "@query", "equation_Vale.X64.Memory.modifies_goal_directed" ],
       0,
-      "fa870cea5c9e90ba8bb08697d75a0b7e"
+      "6dc4b5b8cf55527a9acf14467bdb6638"
     ],
     [
       "Vale.X64.Memory.default_of_typ",
@@ -1019,7 +1019,7 @@
         "refinement_interpretation_Tm_refine_c1424615841f28cac7fc34e92b7ff33c"
       ],
       0,
-      "dbbc097b7563951aeefe657f3c80cd08"
+      "0dcbb186abdab6d5c3e6d974fddf6136"
     ],
     [
       "Vale.X64.Memory.buffer_read",
@@ -1028,7 +1028,7 @@
       0,
       [ "@query", "lemma_Vale.X64.Memory.buffer_length_buffer_as_seq" ],
       0,
-      "b14230d270e201075ba9254d0aa01db9"
+      "57ea890154668f878739fd4f1624e85e"
     ],
     [
       "Vale.X64.Memory.buffer_read",
@@ -1049,7 +1049,7 @@
         "refinement_interpretation_Tm_refine_7c64067490892c791d00e02d4d1ae606"
       ],
       0,
-      "c3a5a58e519da45bd52bd7d2edf577e9"
+      "ed0059f6ec69cc0d94770e3939b58dbc"
     ],
     [
       "Vale.X64.Memory.seq_upd",
@@ -1095,7 +1095,7 @@
         "well-founded-ordering-on-nat"
       ],
       0,
-      "585d4675fdf99bf21c1756fa8e26c5f4"
+      "bc25dacae366d34104cacc1a241acd62"
     ],
     [
       "Vale.X64.Memory.buffer_write",
@@ -1104,7 +1104,7 @@
       0,
       [ "@query", "lemma_Vale.X64.Memory.buffer_length_buffer_as_seq" ],
       0,
-      "a8a51657e83d2b08a0fc0e7cee4f1239"
+      "a3f57c3b44efb3da0fde9345199a7205"
     ],
     [
       "Vale.X64.Memory.buffer_write",
@@ -1205,7 +1205,7 @@
         "typing_Vale.X64.Memory.uint_view", "typing_Vale.X64.Memory.v_of_typ"
       ],
       0,
-      "4e691996ee56f39c72550fd2549fd2c2"
+      "95bdae364ebe61963bbf4135369f53ed"
     ],
     [
       "Vale.X64.Memory.addr_in_ptr",
@@ -1234,7 +1234,7 @@
         "typing_tok_Prims.LexTop@tok", "well-founded-ordering-on-nat"
       ],
       0,
-      "1229efcb4fc06ba7221e8bbf01a3a062"
+      "322308fb6c83e77f013c1839e98563eb"
     ],
     [
       "Vale.X64.Memory.get_addr_in_ptr",
@@ -1265,7 +1265,7 @@
         "well-founded-ordering-on-nat"
       ],
       0,
-      "51ad584b2385a57a411b3093d7823308"
+      "bef33443c3c86dc1094ba5bc35ee0e0c"
     ],
     [
       "Vale.X64.Memory.valid_buffer",
@@ -1278,7 +1278,7 @@
         "projection_inverse_BoxInt_proj_0"
       ],
       0,
-      "08b64e7be0e11afea112113b120dd0d8"
+      "7639d7c1105a54835150eef811f53357"
     ],
     [
       "Vale.X64.Memory.valid_mem_aux",
@@ -1331,7 +1331,7 @@
         "projection_inverse_Prims.Cons_tl", "projection_inverse_Prims.Nil_a",
         "refinement_interpretation_Tm_refine_05e15190c946858f68c69156f585f95a",
         "refinement_interpretation_Tm_refine_61ad87a48c5493622a87dee22c6da699",
-        "refinement_interpretation_Tm_refine_8830aa1b6e15967641ef4f87cfefe30a",
+        "refinement_interpretation_Tm_refine_9ec1e31cb746455cf864c0e5f4fe3e19",
         "refinement_interpretation_Tm_refine_ad5f9e9e07a5ab25763e7f2290e5f84c",
         "refinement_interpretation_Tm_refine_efd4ef517629f7c86a95b395d9e0faca",
         "subterm_ordering_Prims.Cons", "typing_FStar.Map.contains",
@@ -1343,7 +1343,7 @@
         "typing_Vale.X64.Memory.valid_mem_aux"
       ],
       0,
-      "12348336a9a6ae3cef00f4fcc3199404"
+      "0ec6810f385e246e6130dfc9f008a53d"
     ],
     [
       "Vale.X64.Memory.valid_mem",
@@ -1355,7 +1355,7 @@
         "equation_Vale.X64.Memory.b8", "equation_Vale.X64.Memory.sub_list"
       ],
       0,
-      "3111564272b6ea3c4951daf62876a8a4"
+      "c6f59c866a284551cf7c03e726bbdd24"
     ],
     [
       "Vale.X64.Memory.find_valid_buffer_aux",
@@ -1420,7 +1420,7 @@
         "typing_Vale.X64.Memory.valid_mem_aux"
       ],
       0,
-      "825dc3f5672b8b648398ad12c4c72bbf"
+      "edb932d2cc4439847cc4198af170bcc9"
     ],
     [
       "Vale.X64.Memory.find_valid_buffer_aux",
@@ -1434,7 +1434,7 @@
         "typing_Vale.Arch.HeapImpl.buffer"
       ],
       0,
-      "2ed36ba7b8d9ebea320a2e5060816e4e"
+      "02455d2b72dfa727ec9c639158d51e10"
     ],
     [
       "Vale.X64.Memory.find_valid_buffer",
@@ -1446,7 +1446,7 @@
         "equation_Vale.X64.Memory.b8", "equation_Vale.X64.Memory.sub_list"
       ],
       0,
-      "c5a803b0e028cfa859a704cd22eb039b"
+      "73ad5535cebcffbac40a7d76b96b6db0"
     ],
     [
       "Vale.X64.Memory.find_valid_buffer_aux_ps",
@@ -1519,7 +1519,7 @@
         "typing_Vale.X64.Memory.scale_by"
       ],
       0,
-      "efd168f6e3306e4ed70bd3bb054f5c6e"
+      "9db03a4e17fadf9fd4094a62752b3577"
     ],
     [
       "Vale.X64.Memory.find_valid_buffer_aux_ps",
@@ -1531,7 +1531,7 @@
         "refinement_interpretation_Tm_refine_76427ccb6b3d3e653d87f92b6258eca8"
       ],
       0,
-      "6662b9cd23c3ca8ed5d5124f9dc10b1a"
+      "dc973be77de911bcf96814ac3d1446cb"
     ],
     [
       "Vale.X64.Memory.find_valid_buffer_ps",
@@ -1546,7 +1546,7 @@
         "int_inversion"
       ],
       0,
-      "8b25e881e4f754a14ab4e734cacc5dcf"
+      "8a32e7d790b207581eebec0c01890e3b"
     ],
     [
       "Vale.X64.Memory.find_valid_buffer_valid_offset",
@@ -1608,7 +1608,7 @@
         "typing_tok_Vale.Arch.HeapTypes_s.TUInt8@tok"
       ],
       0,
-      "b5df52f05deaefd984a8c70b7f5dca43"
+      "e8a036408dd15c26d4119a6bc2a8c815"
     ],
     [
       "Vale.X64.Memory.writeable_mem_aux",
@@ -1666,8 +1666,8 @@
         "projection_inverse_Prims.Cons_tl", "projection_inverse_Prims.Nil_a",
         "refinement_interpretation_Tm_refine_05e15190c946858f68c69156f585f95a",
         "refinement_interpretation_Tm_refine_257f34044a0ca6d5caaa8860ef678921",
-        "refinement_interpretation_Tm_refine_41c660ce979a48ebdbc51431e2b3143e",
         "refinement_interpretation_Tm_refine_61ad87a48c5493622a87dee22c6da699",
+        "refinement_interpretation_Tm_refine_eb7c5571fc9b7a3ac30751da93a00955",
         "refinement_interpretation_Tm_refine_efd4ef517629f7c86a95b395d9e0faca",
         "refinement_interpretation_Tm_refine_fb46804529de36a0e6813ea1066a078a",
         "subterm_ordering_Prims.Cons", "typing_FStar.Map.contains",
@@ -1687,7 +1687,7 @@
         "typing_tok_Vale.Arch.HeapTypes_s.TUInt8@tok"
       ],
       0,
-      "494e598c869848012c7c0128b49f91be"
+      "f87a1735215790f73681b0af75c610df"
     ],
     [
       "Vale.X64.Memory.writeable_mem",
@@ -1699,7 +1699,7 @@
         "equation_Vale.X64.Memory.b8", "equation_Vale.X64.Memory.sub_list"
       ],
       0,
-      "75b2bab749f24e60279df024a43071ef"
+      "aba8e5bf4e166d3652ece5aa557452f5"
     ],
     [
       "Vale.X64.Memory.find_writeable_buffer_aux",
@@ -1765,7 +1765,7 @@
         "typing_Vale.X64.Memory.writeable_mem_aux"
       ],
       0,
-      "44e6606cff952819be881e6294438e24"
+      "2fbab237c52e6a613539c5833e60e1c0"
     ],
     [
       "Vale.X64.Memory.find_writeable_buffer_aux",
@@ -1779,7 +1779,7 @@
         "typing_Vale.Arch.HeapImpl.buffer"
       ],
       0,
-      "7da9b846855d4cbedc766339d544cab4"
+      "727ef9193fdc8e1731ec3628d67a7829"
     ],
     [
       "Vale.X64.Memory.find_writeable_buffer",
@@ -1791,7 +1791,7 @@
         "equation_Vale.X64.Memory.b8", "equation_Vale.X64.Memory.sub_list"
       ],
       0,
-      "a2356d76da5a466d23f0c168eb130210"
+      "7d61e3e23de9bcbdcea948a98b70d0eb"
     ],
     [
       "Vale.X64.Memory.load_mem",
@@ -1841,7 +1841,7 @@
         "typing_Vale.X64.Memory.find_valid_buffer_aux"
       ],
       0,
-      "155dcd4a711d061b02ff6c34549f5a2f"
+      "e09a8fe33b9853b337149940d1d14054"
     ],
     [
       "Vale.X64.Memory.length_t_eq",
@@ -1878,7 +1878,7 @@
         "typing_Vale.X64.Memory.uint_view"
       ],
       0,
-      "76732b58ef6e7ac9ed00be2b92442a05"
+      "60fc3841ddfae6f81905b02270b8c815"
     ],
     [
       "Vale.X64.Memory.get_addr_ptr",
@@ -1906,7 +1906,7 @@
         "typing_Vale.X64.Memory.valid_mem"
       ],
       0,
-      "300a74bdb48b977a0b84b5f52eea563b"
+      "a45ea62ec9cee46ae10133628ffa7fc7"
     ],
     [
       "Vale.X64.Memory.load_buffer_read",
@@ -2106,7 +2106,7 @@
         "equation_Vale.X64.Memory.b8", "equation_Vale.X64.Memory.sub_list"
       ],
       0,
-      "50d0e1fe145194d08b16122a18ee8aa8"
+      "a17e85b576a0b319f40d8e5f6ea17cdf"
     ],
     [
       "Vale.X64.Memory.writeable_mem128",
@@ -2118,7 +2118,7 @@
         "equation_Vale.X64.Memory.b8", "equation_Vale.X64.Memory.sub_list"
       ],
       0,
-      "a428e7fd94e57dce736fb8ebe88a2048"
+      "d5a395919c67a8919f597168a84722af"
     ],
     [
       "Vale.X64.Memory.lemma_valid_mem64",
@@ -2171,7 +2171,7 @@
         "typing_tok_Vale.Arch.HeapTypes_s.TUInt64@tok"
       ],
       0,
-      "88a6521fa7814a9b5bb54ce256ef2a06"
+      "4a2e58ccdf3f4fa8f86d3d041776524e"
     ],
     [
       "Vale.X64.Memory.lemma_writeable_mem64",
@@ -2214,7 +2214,7 @@
         "typing_tok_Vale.Arch.HeapTypes_s.TUInt64@tok"
       ],
       0,
-      "a735b1c7c4a07dc8924f9293b019f9e4"
+      "80066906d2b71e730b8176dab4e3ae1e"
     ],
     [
       "Vale.X64.Memory.lemma_store_mem",
@@ -2329,7 +2329,7 @@
         "typing_tok_Vale.Arch.HeapTypes_s.TUInt8@tok"
       ],
       0,
-      "84b15a3987073f0b58fd7149c188c7a8"
+      "f0632b17d9b42d8dcf88c2814e2cf4c8"
     ],
     [
       "Vale.X64.Memory.lemma_load_mem64",
@@ -2348,7 +2348,7 @@
         "refinement_interpretation_Tm_refine_c1424615841f28cac7fc34e92b7ff33c"
       ],
       0,
-      "e086f05869c86126da1f762616731711"
+      "5d55cd74db7021c4c5ee0baef08af832"
     ],
     [
       "Vale.X64.Memory.lemma_load_mem64",
@@ -2473,7 +2473,7 @@
         "typing_tok_Vale.Arch.HeapTypes_s.TUInt64@tok"
       ],
       0,
-      "dc9775e2b6fe439e64a3b421f54736da"
+      "99de593e33a8f982cf95716f7a24b96c"
     ],
     [
       "Vale.X64.Memory.lemma_store_mem64",
@@ -2485,7 +2485,7 @@
         "refinement_interpretation_Tm_refine_c24553ea4e95119ca5e5ba5c8a0f9268"
       ],
       0,
-      "3bf94c95ff8a1146b08469f075cdb241"
+      "28442e0a6b757200eca4672d046eb8b9"
     ],
     [
       "Vale.X64.Memory.lemma_store_mem64",
@@ -2531,7 +2531,7 @@
         "typing_tok_Vale.Arch.HeapTypes_s.TUInt64@tok"
       ],
       0,
-      "725b401b9f4e803f63e2157206af790c"
+      "b515f9f6a7e9f3d2befbf8bc384ecc61"
     ],
     [
       "Vale.X64.Memory.lemma_valid_mem128",
@@ -2583,7 +2583,7 @@
         "typing_tok_Vale.Arch.HeapTypes_s.TUInt128@tok"
       ],
       0,
-      "d9f58a36fe0cc3f63ac76e38fe8be735"
+      "cb97b9e85eef34345149dd977d0bba14"
     ],
     [
       "Vale.X64.Memory.lemma_writeable_mem128",
@@ -2625,7 +2625,7 @@
         "typing_tok_Vale.Arch.HeapTypes_s.TUInt128@tok"
       ],
       0,
-      "2208162e23f8c4dcb2f6fbced1e6da67"
+      "9862a5776dc5ab21a58dc2160650110a"
     ],
     [
       "Vale.X64.Memory.lemma_load_mem128",
@@ -2744,7 +2744,7 @@
         "typing_tok_Vale.Arch.HeapTypes_s.TUInt128@tok"
       ],
       0,
-      "12b9c67533c21e9fbcfaf5cb30882f11"
+      "c473cc5ae9daa660abe6c7d24fddf843"
     ],
     [
       "Vale.X64.Memory.lemma_store_mem128",
@@ -2756,7 +2756,7 @@
         "refinement_interpretation_Tm_refine_2c66238fc338918f9f5863005dada10f"
       ],
       0,
-      "f1f7d840d895f90f985e5a2ba8549900"
+      "d8cc77e8a40e52da6e47ab57686389db"
     ],
     [
       "Vale.X64.Memory.lemma_store_mem128",
@@ -2801,7 +2801,7 @@
         "typing_tok_Vale.Arch.HeapTypes_s.TUInt128@tok"
       ],
       0,
-      "475d2ad225d748036faf6db1250175fb"
+      "b5d57d268a5285e16998daddba0e6b39"
     ],
     [
       "Vale.X64.Memory.apply_taint_buf",
@@ -2819,7 +2819,7 @@
         "refinement_interpretation_Tm_refine_542f9d4f129664613f2483a6c88bc7c2"
       ],
       0,
-      "0a92cd2c59248fe50d80d9611f34c10c"
+      "7f00044cf881fb5ebf833e94949d2f2b"
     ],
     [
       "Vale.X64.Memory.lemma_valid_taint64",
@@ -2843,7 +2843,7 @@
         "refinement_interpretation_Tm_refine_ed56f0a463ff0657a36c83fe878c0439"
       ],
       0,
-      "13099e69288ded2d0874e8ed95f1f517"
+      "93ea3c869b3d2dee8ffd227008d0d404"
     ],
     [
       "Vale.X64.Memory.lemma_valid_taint128",
@@ -2863,7 +2863,7 @@
         "refinement_interpretation_Tm_refine_c1351167a99542736ca91bc659666fba"
       ],
       0,
-      "6f1ca89daa17e4f7fbc1da0754b198c1"
+      "14e49fc37478a9985c66421d3a5b6413"
     ],
     [
       "Vale.X64.Memory.same_memTaint",
@@ -2891,7 +2891,7 @@
         "typing_tok_Vale.Arch.HeapTypes_s.Public@tok"
       ],
       0,
-      "1fd0ca477833b051cfee2281e9ab4624"
+      "9e7d0eaf52e9565306a7a08495a95d76"
     ],
     [
       "Vale.X64.Memory.modifies_valid_taint",
@@ -2914,7 +2914,7 @@
         "refinement_interpretation_Tm_refine_efd4ef517629f7c86a95b395d9e0faca"
       ],
       0,
-      "cd54c84c71a9c7ade420274caf27d53c"
+      "d8585430eb8ef868fc5cba884cf573ca"
     ],
     [
       "Vale.X64.Memory.modifies_same_heaplet_id",
@@ -2926,7 +2926,7 @@
         "equation_Vale.X64.Memory.modifies"
       ],
       0,
-      "09aba47b2851f36b6be1b00b2506f028"
+      "46fa90859e1a203789745243240bc1c5"
     ],
     [
       "Vale.X64.Memory.init_heaplets_req",
@@ -2935,7 +2935,7 @@
       1,
       [ "@query" ],
       0,
-      "01d4f313445834ce0e888e2d16ddedc6"
+      "213b611b3d251c7e3b82eeaacd44a5b0"
     ],
     [
       "Vale.X64.Memory.loc_mutable_buffers",
@@ -2959,7 +2959,7 @@
         "typing_Vale.Arch.HeapImpl.__proj__Mkbuffer_info__item__bi_mutable"
       ],
       0,
-      "44f53597a193938f09292b2fc6f50e3c"
+      "6d426ef56fadc0bbad9825489000acb1"
     ],
     [
       "Vale.X64.Memory.write_taint_lemma",
@@ -3033,7 +3033,7 @@
         "well-founded-ordering-on-nat"
       ],
       0,
-      "9b4862ed14d5cb88cfe887c86db2a26e"
+      "1fed91f51f697f7832e0667a823aeae2"
     ],
     [
       "Vale.X64.Memory.write_taint_lemma",
@@ -3045,7 +3045,7 @@
         "refinement_interpretation_Tm_refine_981860b74262e4a2207bade242a7d65f"
       ],
       0,
-      "c55d22dad3ffff5e34c7ce8f812129b4"
+      "7d8d6506b6fafde2261313c6a2d3832c"
     ],
     [
       "Vale.X64.Memory.valid_memtaint",
@@ -3145,7 +3145,7 @@
         "typing_tok_Vale.Arch.HeapTypes_s.Public@tok"
       ],
       0,
-      "4c4135a8e4baa6ddf34ed4885b67bd28"
+      "50171d3c207557e88c90a0ca8899a469"
     ],
     [
       "Vale.X64.Memory.valid_layout_data_buffer",
@@ -3161,7 +3161,7 @@
         "typing_Vale.Interop.Types.view_n"
       ],
       0,
-      "ffdd3ce054255d2b7841fabde6fecfec"
+      "2b6e885af086d63958ae0e3f0afd7ae8"
     ],
     [
       "Vale.X64.Memory.valid_layout_buffer_id",
@@ -3179,7 +3179,7 @@
         "typing_FStar.Pervasives.Native.uu___is_Some"
       ],
       0,
-      "c6afaf60bcfa90de1f19ac3f363d0bf8"
+      "504d11a51008fbd960b6a8c07a91fd5d"
     ],
     [
       "Vale.X64.Memory.inv_heaplet",
@@ -3188,7 +3188,7 @@
       1,
       [ "@query" ],
       0,
-      "419ed3a2c218e76341e098d76f94bf87"
+      "4087ba551defead61a0c4f307cbb01db"
     ],
     [
       "Vale.X64.Memory.inv_heaplets",
@@ -3197,7 +3197,7 @@
       1,
       [ "@query" ],
       0,
-      "90c243c06905b17f6e33aa1f5b00cc61"
+      "45999392cd85e408079d84292f7157b6"
     ],
     [
       "Vale.X64.Memory.heaps_match",
@@ -3210,7 +3210,7 @@
         "refinement_interpretation_Tm_refine_e5f0372e4b8607a08675a75fa5d733cc"
       ],
       0,
-      "9c0d25eb09459b58dec1875a32d45cc1"
+      "44d36c6060934461c56a86c1081cd6ca"
     ],
     [
       "Vale.X64.Memory.lemma_heaps_match",
@@ -3225,7 +3225,7 @@
         "refinement_interpretation_Tm_refine_efd4ef517629f7c86a95b395d9e0faca"
       ],
       0,
-      "dd20299b7229fbc440a9ecc8878301f7"
+      "a0fdad75a0fdf61971e2b37e4177dc2a"
     ],
     [
       "Vale.X64.Memory.lemma_heaps_match",
@@ -3238,7 +3238,7 @@
         "proj_equation_Vale.Arch.HeapImpl.Mkbuffer_info_bi_heaplet"
       ],
       0,
-      "976472d4fc48b0336f7ecf1569a66924"
+      "633a8366eff3a5b1c2b5e2d56e001010"
     ]
   ]
 ]

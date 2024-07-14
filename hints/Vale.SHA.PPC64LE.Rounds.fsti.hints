@@ -67,7 +67,7 @@
         "typing_tok_Vale.Arch.HeapTypes_s.TUInt128@tok"
       ],
       0,
-      "cddb5a01e3609113c58b3fffc7e068b5"
+      "f9c457c7a5243b149f282b2f53d746ea"
     ],
     [
       "Vale.SHA.PPC64LE.Rounds.va_wp_Loop_rounds_0_15",
@@ -133,7 +133,7 @@
         "typing_tok_Vale.Arch.HeapTypes_s.TUInt128@tok"
       ],
       0,
-      "7f4e7067ec1a99a490db138d7a9caa71"
+      "5f968e4135e87492f33f4c6b5220983e"
     ],
     [
       "Vale.SHA.PPC64LE.Rounds.va_quick_Loop_rounds_0_15",
@@ -145,7 +145,7 @@
         "fuel_guarded_inversion_FStar.Pervasives.Native.tuple3"
       ],
       0,
-      "78904c789c79d36db7e56775615e72c7"
+      "180362a592b4195f7bd71524065309ee"
     ],
     [
       "Vale.SHA.PPC64LE.Rounds.va_lemma_Loop_rounds_16_47",
@@ -164,7 +164,7 @@
         "refinement_interpretation_Tm_refine_dbe0a814395dd45197dd2b50fdf08081"
       ],
       0,
-      "4b9dd7107a43ef3a47013a7c219a2a9a"
+      "7818f99a5e44c4c33f4a5907d82b5ddd"
     ],
     [
       "Vale.SHA.PPC64LE.Rounds.va_wp_Loop_rounds_16_47",
@@ -179,7 +179,7 @@
         "refinement_interpretation_Tm_refine_dbe0a814395dd45197dd2b50fdf08081"
       ],
       0,
-      "fd85231073fc2864ae617b72515bae5b"
+      "e3ffbb483847766346023144f3d881e6"
     ],
     [
       "Vale.SHA.PPC64LE.Rounds.va_quick_Loop_rounds_16_47",
@@ -191,7 +191,7 @@
         "fuel_guarded_inversion_FStar.Pervasives.Native.tuple3"
       ],
       0,
-      "ddddef66e5b7d5ce9fda68c8cc8623df"
+      "4b986c0a86c2d9c2d60ae294fca912a4"
     ],
     [
       "Vale.SHA.PPC64LE.Rounds.va_lemma_Loop_rounds_48_63",
@@ -209,7 +209,7 @@
         "projection_inverse_BoxInt_proj_0"
       ],
       0,
-      "75188fc471549630de7bee6f7b13578f"
+      "3a8ff07c2ae9e1338dd8535e9a5530e4"
     ],
     [
       "Vale.SHA.PPC64LE.Rounds.va_wp_Loop_rounds_48_63",
@@ -226,7 +226,7 @@
         "projection_inverse_BoxInt_proj_0"
       ],
       0,
-      "4bc4e8cfc1184fb388af77510cc819c7"
+      "31ab22d0f15c8e30e71b05592b42c42e"
     ],
     [
       "Vale.SHA.PPC64LE.Rounds.va_quick_Loop_rounds_48_63",
@@ -238,7 +238,7 @@
         "fuel_guarded_inversion_FStar.Pervasives.Native.tuple3"
       ],
       0,
-      "87baaae4344fbe75e376cb177080b250"
+      "f7ddc7a84b625bae5475508a8a0b6f01"
     ]
   ]
 ]

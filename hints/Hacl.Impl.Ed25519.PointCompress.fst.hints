@@ -82,7 +82,7 @@
         "typing_tok_Lib.IntTypes.U64@tok"
       ],
       0,
-      "fbba083565bdc74c626bb7b88d71d0a4"
+      "a44f0ee77e311273b52798dd82281a43"
     ],
     [
       "Hacl.Impl.Ed25519.PointCompress.lemma_fits_in_prime_last_byte",
@@ -141,7 +141,7 @@
         "typing_tok_Lib.IntTypes.U8@tok"
       ],
       0,
-      "b63378834534f92be64079b96469cc7d"
+      "9a7ca4cd1ee6ca0c25bcb6d46529b6f9"
     ],
     [
       "Hacl.Impl.Ed25519.PointCompress.lemma_fits_in_prime_last_byte",
@@ -200,7 +200,7 @@
         "typing_tok_Lib.IntTypes.U8@tok"
       ],
       0,
-      "6e4b1aadd65fcd33e9b531c7cb46456c"
+      "30dc81b9ed8d3e14d40e6759bb3301d9"
     ],
     [
       "Hacl.Impl.Ed25519.PointCompress.add_sign",
@@ -314,7 +314,7 @@
         "typing_tok_Lib.IntTypes.U64@tok", "typing_tok_Lib.IntTypes.U8@tok"
       ],
       0,
-      "c254217a5eb8d892dabbd6ab5dc6b502"
+      "18e39b47076d64121fe49727111b64f3"
     ],
     [
       "Hacl.Impl.Ed25519.PointCompress.point_compress_",
@@ -362,7 +362,7 @@
         "typing_tok_Lib.Buffer.MUT@tok"
       ],
       0,
-      "cf8c1c5953a2c1dba70ff45cdf5aad92"
+      "208b57e8d095398b68d2f6eb67e2f0f4"
     ],
     [
       "Hacl.Impl.Ed25519.PointCompress.point_compress_",
@@ -485,7 +485,7 @@
         "typing_tok_Lib.IntTypes.U64@tok"
       ],
       0,
-      "3d2d25f08ca87a5b82ddbce43f3a0a3d"
+      "b1492a907f88896b0836a9d65d9d6b78"
     ],
     [
       "Hacl.Impl.Ed25519.PointCompress.point_compress",
@@ -520,7 +520,7 @@
         "typing_tok_Lib.Buffer.MUT@tok"
       ],
       0,
-      "e3bebc93748a3c6f552d0b669c6eb77f"
+      "88a512365c8c4e1e518ab07e86b81859"
     ],
     [
       "Hacl.Impl.Ed25519.PointCompress.point_compress",
@@ -713,7 +713,7 @@
         "typing_tok_Lib.IntTypes.U32@tok", "typing_tok_Lib.IntTypes.U64@tok"
       ],
       0,
-      "c240850c7390dc7baf85a977ac756fdd"
+      "2b8f074974528e1813ea22c11aa757ff"
     ]
   ]
 ]

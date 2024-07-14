@@ -29,7 +29,7 @@
         "typing_Spec.Salsa20.size_key"
       ],
       0,
-      "39b271b4820e44ea4184651aaf19e9ff"
+      "79fc23d8c305c55f9c46cfc56a89ede8"
     ],
     [
       "Spec.Salsa20.Test.test_row_round",
@@ -143,7 +143,7 @@
         "refinement_interpretation_Tm_refine_d8d83307254a8900dd20598654272e42"
       ],
       0,
-      "8f90385ebdb6be234067b3dad7a037ed"
+      "fe5f1c50d54e8f711c2ccb78eb5f3d49"
     ]
   ]
 ]

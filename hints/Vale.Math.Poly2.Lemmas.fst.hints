@@ -8,7 +8,7 @@
       0,
       [ "@query" ],
       0,
-      "dd5c12e2b236ae1e6c6ecba0a3ef17c3"
+      "83dc37dad1bec36aa0d2b7c855006653"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_shift_define_forward",
@@ -23,7 +23,7 @@
         "typing_Vale.Math.Poly2_s.poly_index"
       ],
       0,
-      "d421dabf9250d05f449cd9a7d785d7b2"
+      "0eaba860457cc8c61d87fd729c2b4645"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_mask_define",
@@ -32,7 +32,7 @@
       0,
       [ "@query" ],
       0,
-      "5589319d15cf2f1e7d2ded71be6d3256"
+      "bddd96e055b28787ec450b74eb706ff4"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_degree_negative",
@@ -46,7 +46,7 @@
         "typing_Vale.Math.Poly2_s.zero"
       ],
       0,
-      "0b5988b3942608c48537d2c6e9d316c6"
+      "7192d7eb7e3b461439044f8e5399a2db"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_degree_is",
@@ -59,7 +59,7 @@
         "projection_inverse_BoxInt_proj_0", "typing_Vale.Math.Poly2_s.degree"
       ],
       0,
-      "bf68bee9db271d8844956f935a5b06d2"
+      "605fc65c7186c7c4af2264e5b278a501"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_zero_degree",
@@ -71,7 +71,7 @@
         "typing_Vale.Math.Poly2_s.zero"
       ],
       0,
-      "31a1f9b7b49b9c534f34fac4903a427a"
+      "e9664f7404be0a12502996ae7ed84968"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_one_degree",
@@ -86,7 +86,7 @@
         "projection_inverse_BoxInt_proj_0"
       ],
       0,
-      "937182760e56911f71ea47298c9f317a"
+      "c0ed7e44b7c4a4679da87f0339e724fb"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_monomial_degree",
@@ -103,7 +103,7 @@
         "refinement_interpretation_Tm_refine_542f9d4f129664613f2483a6c88bc7c2"
       ],
       0,
-      "bd3b2ae2a7d77b2d67730a81e0a2d438"
+      "dc9ef1c2db6b24dccfbc74e2777632eb"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_ones_degree",
@@ -119,7 +119,7 @@
         "refinement_interpretation_Tm_refine_542f9d4f129664613f2483a6c88bc7c2"
       ],
       0,
-      "02f306fe1d95e24e80a1e09e8a3a731a"
+      "9249eb2f8f51774a2c5a93652afab78c"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_shift_degree",
@@ -140,7 +140,7 @@
         "typing_Vale.Math.Poly2_s.zero"
       ],
       0,
-      "0590cd906ac89df44b044a259d61b366"
+      "c56633f154c7201b5e2835bb329479e9"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_and_degree",
@@ -154,7 +154,7 @@
         "typing_Vale.Math.Poly2.poly_and", "typing_Vale.Math.Poly2_s.degree"
       ],
       0,
-      "f3ff7aaff0163fa0f23b86a67d98f1a1"
+      "cf0e651a3059de6bf35e4c195fd1fca6"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_or_degree",
@@ -173,7 +173,7 @@
         "typing_Vale.Math.Poly2_s.poly_index"
       ],
       0,
-      "0cc9cf618cfeb611de2cae581523edb7"
+      "80e0fbce6cdd4c8f56ef05b100a44a35"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_mask_degree",
@@ -189,7 +189,7 @@
         "typing_Vale.Math.Poly2.mask", "typing_Vale.Math.Poly2_s.degree"
       ],
       0,
-      "cb1dde4bf7c6e90cd3bdcf25eb20215b"
+      "fd626ec880e31af7672bfa5064a8f433"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_reverse_degree",
@@ -205,7 +205,7 @@
         "typing_Vale.Math.Poly2_s.degree", "typing_Vale.Math.Poly2_s.reverse"
       ],
       0,
-      "4a51e3525def4ba682525a3ab4c56771"
+      "f7af6c5ed28b41f7dd953911aa79cb13"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_of_list_degree",
@@ -224,7 +224,7 @@
         "typing_FStar.List.Tot.Base.length"
       ],
       0,
-      "fad1585164ed20514ca3d3f38660ed01"
+      "11cffdbe86907d9d5f0a57665dacc3d2"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_of_list_degree",
@@ -266,7 +266,7 @@
         "typing_Vale.Math.Poly2_s.poly_index"
       ],
       0,
-      "090e7f3ed1790bbe01bef9490346b129"
+      "9fdd28ef6124c33778dfb8662756db5d"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_add_zero_left",
@@ -275,7 +275,7 @@
       0,
       [ "@query" ],
       0,
-      "e9542270787e231c9437a4861992cc66"
+      "aa2874cd77ead232781b42e71fcd5264"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_add_all",
@@ -284,7 +284,7 @@
       0,
       [ "@query" ],
       0,
-      "0b472013313cd14ce71a463a903241f1"
+      "c3f61b834e87a6c44e2485383d35ec41"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_bitwise_all",
@@ -293,7 +293,7 @@
       0,
       [ "@query" ],
       0,
-      "ef7ce0b1bf040411b4ae8f0aad3c6673"
+      "d01cf3f8878056e3062c8cb38f947405"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_monomial_add_degree",
@@ -318,7 +318,7 @@
         "typing_Vale.Math.Poly2_s.poly_index"
       ],
       0,
-      "f6db4f5fbafc147babb631b9572e3fb8"
+      "4e8a38e847bcf83be021618ac1661fb5"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_and_zero",
@@ -331,7 +331,7 @@
         "typing_Vale.Math.Poly2_s.zero"
       ],
       0,
-      "f29b01aad47824be9946084c3b868207"
+      "3b80ea8545ad3a98116514040d02c72f"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_and_ones",
@@ -348,7 +348,7 @@
         "typing_Vale.Math.Poly2.ones", "typing_Vale.Math.Poly2_s.poly_index"
       ],
       0,
-      "fddbd35ad9c4689fcaab6821360ee3cd"
+      "aeb8c9c51c7269477a4425e63539f68b"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_and_consts",
@@ -364,7 +364,7 @@
         "refinement_interpretation_Tm_refine_542f9d4f129664613f2483a6c88bc7c2"
       ],
       0,
-      "88f6a0cde2ad16f40a42bd105f74b814"
+      "bfbcaefee9fa0b4c934f5a62f64d2379"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_or_zero",
@@ -377,7 +377,7 @@
         "typing_Vale.Math.Poly2_s.zero"
       ],
       0,
-      "7fa7d8168a6e5bfa0f3ae9b7c230ed31"
+      "a161c5760bf1ca4baf47230cea1fdf2d"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_or_ones",
@@ -396,7 +396,7 @@
         "typing_Vale.Math.Poly2_s.poly_index"
       ],
       0,
-      "1fad58b43e217ea49c6ad5d53f57fbe2"
+      "c6124f8e8e0f85213bea8c2bb0df306f"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_or_consts",
@@ -412,7 +412,7 @@
         "refinement_interpretation_Tm_refine_e8199a6d21a43b2ed4819f7f1b47fb19"
       ],
       0,
-      "8ce3292868df7273aeff7cdbaa086191"
+      "85dec6eaed56e99845e05058971eab53"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_mul_distribute_left",
@@ -421,7 +421,7 @@
       0,
       [ "@query" ],
       0,
-      "67c26a8984ba469da1af81a46fdbd80d"
+      "a76ffddd5686798329782d4987229d49"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_mul_smaller_is_zero",
@@ -440,7 +440,7 @@
         "typing_Vale.Math.Poly2_s.degree"
       ],
       0,
-      "09bc6960add7692883c43d8a8526f96c"
+      "cf6c08e6c61b7cd7825cfb54fca802a4"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_mul_monomials",
@@ -453,7 +453,7 @@
         "refinement_interpretation_Tm_refine_542f9d4f129664613f2483a6c88bc7c2"
       ],
       0,
-      "0b74d02ccd3f49ce5d5192cde500cbce"
+      "30fe6ccc5149d7101ceb06ae7176399c"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_mul_monomials",
@@ -473,7 +473,7 @@
         "refinement_interpretation_Tm_refine_542f9d4f129664613f2483a6c88bc7c2"
       ],
       0,
-      "2ce7af00be8f4f266439b129ade5a528"
+      "6b885e1e3956b23cb5023979223bac01"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_add_reverse",
@@ -493,7 +493,7 @@
         "typing_Vale.Math.Poly2_s.reverse"
       ],
       0,
-      "92ae49f39e9acc21098a0cda77b22f2b"
+      "b72e4d732fe33937662ae445ad78c596"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_mul_reverse_shift_1",
@@ -506,7 +506,7 @@
         "refinement_interpretation_Tm_refine_542f9d4f129664613f2483a6c88bc7c2"
       ],
       0,
-      "8aab51b65c260c04a3522d32ca4b8c89"
+      "df8bff46817c7efe8536d89ff5f93075"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_mul_reverse_shift_1",
@@ -524,7 +524,7 @@
         "typing_Vale.Math.Poly2_s.mul", "typing_Vale.Math.Poly2_s.poly_index"
       ],
       0,
-      "c56fd0e00517d9f41864bc038bed9ae0"
+      "9a0a34128c2b73fb7bcbe498fc3f751c"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_shift_is_mul_left",
@@ -533,7 +533,7 @@
       0,
       [ "@query" ],
       0,
-      "3e8309f33bfe464a070ac9bdcb5f11be"
+      "17687b3b5c9d421da2ffa1290e83603c"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_shift_shift",
@@ -550,7 +550,7 @@
         "typing_Vale.Math.Poly2_s.shift"
       ],
       0,
-      "df3540fd24a997cab338a50dd3e97729"
+      "05c8751be8b6bfabf2d50512c94e4073"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_mul_all",
@@ -559,7 +559,7 @@
       0,
       [ "@query" ],
       0,
-      "44707993118cd79649b54eba1aad3a33"
+      "a8840419410093b425e058bba79fb40a"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_mod_distribute",
@@ -582,7 +582,7 @@
         "typing_Vale.Math.Poly2_s.poly_index"
       ],
       0,
-      "997c46a30050ffc914a64d862969be8a"
+      "822bf5b19996ecf91a922a366e9d87d5"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_div_mod_unique",
@@ -601,7 +601,7 @@
         "typing_Vale.Math.Poly2_s.mul", "typing_Vale.Math.Poly2_s.poly_index"
       ],
       0,
-      "7f4ec9d3780ed9967a4c203dc4fbd54f"
+      "b337809fc33cebe816b7e4ca71808e51"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_div_mod_exact",
@@ -616,7 +616,7 @@
         "refinement_interpretation_Tm_refine_6c3579831eb81025494abc2bedea1303"
       ],
       0,
-      "34cd92c0a9e462be1d920b80ed3a27b4"
+      "b804ee7dd71c1a313a500540126657d8"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_mod_small",
@@ -625,7 +625,7 @@
       0,
       [ "@query" ],
       0,
-      "3fd0b2a9d5ab5a2c6de7423aa94389f1"
+      "db1829813bbf75fd1ba94d7602a6dcc1"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_mod_mod",
@@ -634,7 +634,7 @@
       0,
       [ "@query", "lemma_Vale.Math.Poly2.lemma_mod_degree" ],
       0,
-      "5218d887db0fda8342054ecc92957ce8"
+      "c9acb39f01f16dacb7ac3e8e2d63b29a"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_mod_cancel",
@@ -643,7 +643,7 @@
       0,
       [ "@query" ],
       0,
-      "1960abb76adb393eab1defd4343e2d93"
+      "8388b3754f225010555eb4000382b5aa"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_mod_mul_mod",
@@ -661,7 +661,7 @@
         "typing_Vale.Math.Poly2_s.mul", "typing_Vale.Math.Poly2_s.poly_index"
       ],
       0,
-      "44f540fe21cfc0598cd2f03055b504aa"
+      "e76d586d1e3b74bf22208abdedf741e1"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_mod_mul_mod_right",
@@ -670,7 +670,7 @@
       0,
       [ "@query", "typing_Vale.Math.Poly2_s.mod" ],
       0,
-      "a319861e4c4e1eaafe01ae42d91a98b1"
+      "67764448a17a46c005ceb723344da6c2"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_shift_mod",
@@ -679,7 +679,7 @@
       0,
       [ "@query" ],
       0,
-      "505ec7e706c7fc756a02b33bceddc14f"
+      "5ad924e89e1f4db521f35c310dc54de7"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_mod_reduce",
@@ -688,7 +688,7 @@
       0,
       [ "@query", "typing_Vale.Math.Poly2_s.add" ],
       0,
-      "4c5c5a9f8db1e21734ac9410888bb580"
+      "17885836433de8ca776a4844324bea72"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_split_define",
@@ -711,7 +711,7 @@
         "typing_Vale.Math.Poly2_s.poly_index"
       ],
       0,
-      "2df7b04e265d8ba543bd32c4daa98d4a"
+      "db9ce4568d3b64291468a8f760314bb9"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_split_define_forward",
@@ -728,7 +728,7 @@
         "typing_Vale.Math.Poly2_s.poly_index"
       ],
       0,
-      "47ff7a7859df01d92e363ab7a00811ea"
+      "f8082d4edd77549c2b9e216d0a7c1e5b"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_combine_define",
@@ -749,7 +749,7 @@
         "typing_Vale.Math.Poly2_s.mul", "typing_Vale.Math.Poly2_s.poly_index"
       ],
       0,
-      "8f1c3f91600f7eebdddc9a5af2df1cea"
+      "97271529b29ff11d08f3310cb215d1b3"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_mask_is_mod",
@@ -771,7 +771,7 @@
         "typing_Vale.Math.Poly2_s.mul", "typing_Vale.Math.Poly2_s.poly_index"
       ],
       0,
-      "022f8dd0f65d1e6deb7830aa825f1ab5"
+      "16046196bd5fff9c98155b15d67db591"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_shift_is_div",
@@ -790,7 +790,7 @@
         "typing_Vale.Math.Poly2_s.shift"
       ],
       0,
-      "1aa07fd03109c73cb389cb1e2fd734d2"
+      "3de6cc448efd1b8461a7652b3118837a"
     ],
     [
       "Vale.Math.Poly2.Lemmas.lemma_mod_monomial",
@@ -809,7 +809,7 @@
         "typing_Vale.Math.Poly2_s.poly_index"
       ],
       0,
-      "5b220d659b67186f8da3866b12950ada"
+      "6cc66b6370b884cae1385c1ae36d6466"
     ]
   ]
 ]

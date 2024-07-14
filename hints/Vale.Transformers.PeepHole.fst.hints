@@ -14,7 +14,7 @@
         "fuel_guarded_inversion_Prims.list", "subterm_ordering_Prims.Cons"
       ],
       0,
-      "ac0d3fd431c6b67499dabfc006d04405"
+      "3eaeb03f2d96c1b3bd5190cc29bd7aa1"
     ],
     [
       "Vale.Transformers.PeepHole.peephole_correct",
@@ -34,7 +34,7 @@
         "typing_Vale.Transformers.PeepHole.__proj__Mkpre_peephole__item__ph"
       ],
       0,
-      "b9c80c6605478111113703c884cb27b3"
+      "81abaa133de03d1fff84464c8b906066"
     ],
     [
       "Vale.Transformers.PeepHole.num_ins_in_code",
@@ -64,7 +64,7 @@
         "subterm_ordering_Vale.X64.Machine_s.While"
       ],
       0,
-      "a1df67ff594a55e8aecc9e922dfed9f0"
+      "2eca8ed8f559c784538f745a7c898eca"
     ],
     [
       "Vale.Transformers.PeepHole.num_ins_in_code",
@@ -84,7 +84,7 @@
         "subterm_ordering_Prims.Cons"
       ],
       0,
-      "6b3832237119a9a0748fcd3910a1b3c3"
+      "5f3ffa51ffe0c735a80a97e8bbc35f98"
     ],
     [
       "Vale.Transformers.PeepHole.lemma_num_ins_in_codes_append",
@@ -117,7 +117,7 @@
         "typing_Vale.Transformers.PeepHole.num_ins_in_codes"
       ],
       0,
-      "67d81fee9a24deec740211482db90561"
+      "9f838e89ba3713235a5838266df1cbbf"
     ],
     [
       "Vale.Transformers.PeepHole.pull_instructions_from_codes",
@@ -207,7 +207,7 @@
         "well-founded-ordering-on-nat"
       ],
       0,
-      "64558e0aefafe8fa25d66dbef5815b68"
+      "735e3fa773d10219b3d6cb4f226de816"
     ],
     [
       "Vale.Transformers.PeepHole.pull_instructions_from_codes",
@@ -298,7 +298,7 @@
         "well-founded-ordering-on-nat"
       ],
       0,
-      "88b0871419d69f1609fbc75242c695a9"
+      "251fab7c123f3cecc86a62be5422ef9c"
     ],
     [
       "Vale.Transformers.PeepHole.wrap_instructions",
@@ -313,7 +313,7 @@
         "fuel_guarded_inversion_Prims.list", "subterm_ordering_Prims.Cons"
       ],
       0,
-      "66f004b55d94ef19313808f4b3d921a4"
+      "650f16813f5e25471ef8f8ac820e40ce"
     ],
     [
       "Vale.Transformers.PeepHole.apply_peephole_to_codes",
@@ -366,7 +366,7 @@
         "well-founded-ordering-on-nat"
       ],
       0,
-      "5ec04d0195d6c0bd86e460f2dea96b53"
+      "5225b64c79b20b36f8147703a94d5e63"
     ],
     [
       "Vale.Transformers.PeepHole.apply_peephole_to_code",
@@ -425,7 +425,7 @@
         "well-founded-ordering-on-nat"
       ],
       0,
-      "807761b6dda70a6255bfe641fa79157e"
+      "874156090b4c59ed2d6e56beb449b18b"
     ],
     [
       "Vale.Transformers.PeepHole.lemma_wrap_instructions",
@@ -499,7 +499,7 @@
         "projection_inverse_Vale.X64.Machine_s.Ins_t_ocmp",
         "refinement_interpretation_Tm_refine_542f9d4f129664613f2483a6c88bc7c2",
         "subterm_ordering_Prims.Cons",
-        "token_correspondence_Vale.Transformers.PeepHole.eval_inss.fuel_instrumented",
+        "typing_Vale.Transformers.PeepHole.eval_inss",
         "typing_Vale.Transformers.PeepHole.wrap_instructions",
         "typing_Vale.X64.Decls.ocmp",
         "typing_Vale.X64.Machine_Semantics_s.machine_eval_codes",
@@ -629,7 +629,7 @@
         "unit_inversion", "unit_typing", "well-founded-ordering-on-nat"
       ],
       0,
-      "e91b66d8b27595f3da5f2b74e8e0cb0b"
+      "b745d7f7bd47e72e9ac67b67a1e75120"
     ],
     [
       "Vale.Transformers.PeepHole.lemma_pull_instructions_from_codes",
@@ -751,7 +751,7 @@
         "unit_inversion", "unit_typing", "well-founded-ordering-on-nat"
       ],
       0,
-      "824e6d79df27b694e992c4214af359d5"
+      "06d74e097a029c5d771119bf455829c5"
     ],
     [
       "Vale.Transformers.PeepHole.lemma_apply_peephole_to_codes",
@@ -973,7 +973,7 @@
         "unit_inversion", "unit_typing", "well-founded-ordering-on-nat"
       ],
       0,
-      "5b098c1a174438c0a5765edcc38e09d6"
+      "8c96c7766cc3dccc10ae609e97893bd4"
     ],
     [
       "Vale.Transformers.PeepHole.lemma_apply_peephole_to_code",
@@ -1048,7 +1048,7 @@
         "unit_inversion", "unit_typing", "well-founded-ordering-on-nat"
       ],
       0,
-      "97e636b6a9f01ad2f1e22ee8ea74ab90"
+      "d8163978cd38d6f7b6025130924df762"
     ],
     [
       "Vale.Transformers.PeepHole.lemma_peephole_transform",
@@ -1165,7 +1165,7 @@
         "typing_Vale.X64.State.__proj__Mkvale_state__item__vs_stack"
       ],
       0,
-      "74e79486ee797d25977ddd1188a34d11"
+      "19f1f1f847b60d4094f477d24f3dbf81"
     ],
     [
       "Vale.Transformers.PeepHole.coerce_to_normal",
@@ -1174,7 +1174,7 @@
       0,
       [ "@query" ],
       0,
-      "cfd2f9ee23225ee5a7034c3773dc7cf8"
+      "4f26e32f93690fd85c5bcc8add72c84c"
     ],
     [
       "Vale.Transformers.PeepHole.lemma_update_to_valid_destination_keeps_it_as_valid_src",
@@ -1329,7 +1329,7 @@
         "typing_Vale.X64.Machine_Semantics_s.valid_src_operand64_and_taint"
       ],
       0,
-      "5968091713e94f58bf74eee2e35fe962"
+      "497dbf2d4468e135cccd010d38326874"
     ],
     [
       "Vale.Transformers.PeepHole.lemma_double_update_reg",
@@ -1404,7 +1404,7 @@
         "typing_tok_Vale.Arch.HeapTypes_s.Public@tok"
       ],
       0,
-      "5b2d0519bf8e70b5e0370497124e4643"
+      "be59e45c32104c6994c33ed2a7da0bdb"
     ]
   ]
 ]

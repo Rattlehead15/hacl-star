@@ -41,7 +41,7 @@
         "typing_tok_Lib.IntTypes.U8@tok"
       ],
       0,
-      "7aebf6376512ca1c1449a5c33456dad9"
+      "f8d06aaa1851d6b69726c091e09bad18"
     ],
     [
       "Hacl.Meta.Poly1305.poly1305_poly1305_init_higher",
@@ -217,7 +217,7 @@
         "typing_tok_Lib.IntTypes.U64@tok", "typing_tok_Lib.IntTypes.U8@tok"
       ],
       0,
-      "cf3af424c01e458c011857401a3983bc"
+      "9e6b117699626d667ea43dd069fd5dc2"
     ],
     [
       "Hacl.Meta.Poly1305.poly1305_poly1305_update_higher_t",
@@ -226,7 +226,7 @@
       0,
       [ "@query" ],
       0,
-      "06fae9c059a473cc5eec2d8a130f9042"
+      "c84f83767b3b18edc4ac7eeb5958d33b"
     ],
     [
       "Hacl.Meta.Poly1305.poly1305_poly1305_update_higher",
@@ -253,7 +253,7 @@
         "typing_tok_Hacl.Impl.Poly1305.Fields.M32@tok"
       ],
       0,
-      "feb23645c9939b2306a3bb20126f18ed"
+      "47c72482dc8a060b5c61f9f605d518da"
     ],
     [
       "Hacl.Meta.Poly1305.poly1305_poly1305_finish_higher_t",
@@ -291,7 +291,7 @@
         "typing_tok_Lib.Buffer.MUT@tok"
       ],
       0,
-      "f05bb5a3b962cf0adf5a9e7e00cf46ee"
+      "839a3d22c513b743897f1b032d6256cb"
     ],
     [
       "Hacl.Meta.Poly1305.poly1305_poly1305_finish_higher",
@@ -438,7 +438,7 @@
         "typing_tok_Lib.IntTypes.U8@tok"
       ],
       0,
-      "a9495cc4b4cc7d41147e54f20a0260be"
+      "afa343b5070687a3abd17a664adcf85e"
     ],
     [
       "Hacl.Meta.Poly1305.poly1305_poly1305_mac_higher_t",
@@ -477,7 +477,7 @@
         "typing_tok_Lib.Buffer.MUT@tok"
       ],
       0,
-      "5e5c217269d475e105733cc42a583c03"
+      "66b7eea946f8d9a90264ecb976c11cf0"
     ],
     [
       "Hacl.Meta.Poly1305.poly1305_poly1305_mac_higher",
@@ -587,6 +587,7 @@
         "lemma_LowStar.Monotonic.Buffer.loc_disjoint_includes_r",
         "lemma_LowStar.Monotonic.Buffer.loc_disjoint_none_r",
         "lemma_LowStar.Monotonic.Buffer.loc_disjoint_sym_",
+        "lemma_LowStar.Monotonic.Buffer.loc_disjoint_union_r_",
         "lemma_LowStar.Monotonic.Buffer.loc_includes_addresses_addresses_2",
         "lemma_LowStar.Monotonic.Buffer.loc_includes_addresses_buffer_",
         "lemma_LowStar.Monotonic.Buffer.loc_includes_none",
@@ -672,7 +673,7 @@
         "typing_tok_Lib.IntTypes.U32@tok", "typing_tok_Lib.IntTypes.U8@tok"
       ],
       0,
-      "2ea50942cfebb6c617fec8c86ed9b720"
+      "fba90275c516d15fac90fc1b218a0bb3"
     ],
     [
       "Hacl.Meta.Poly1305.poly1305_poly1305_mac_higher",
@@ -869,7 +870,7 @@
         "typing_tok_Lib.IntTypes.U32@tok", "typing_tok_Lib.IntTypes.U8@tok"
       ],
       0,
-      "be7e7f02ee1eea7858a0cc32d94053e7"
+      "4a341ba59efa4983d25e81e2a71744a6"
     ]
   ]
 ]

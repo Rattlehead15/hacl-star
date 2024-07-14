@@ -30,7 +30,7 @@
         "typing_Vale.PPC64LE.Machine_s.__proj__Mkstate__item__ok"
       ],
       0,
-      "ca5cb943a7d3008159770c19a10b6f74"
+      "9cdd77ddd5e10cd71afd3af6a4177677"
     ],
     [
       "Vale.AES.PPC64LE.PolyOps.va_wpProof_VPolyAdd",
@@ -104,7 +104,7 @@
         "typing_Vale.PPC64LE.State.update_vec"
       ],
       0,
-      "bd21aecb0ce3dde943af12d94251ffb0"
+      "e848345aa6212064fae637c903314560"
     ],
     [
       "Vale.AES.PPC64LE.PolyOps.va_quick_VPolyAdd",
@@ -116,7 +116,7 @@
         "fuel_guarded_inversion_FStar.Pervasives.Native.tuple3"
       ],
       0,
-      "dd48b97f987efd84c0af83a0e82fb0da"
+      "d59eb2897d663163db759ca27d8ac863"
     ],
     [
       "Vale.AES.PPC64LE.PolyOps.va_lemma_VPolyAnd",
@@ -148,7 +148,7 @@
         "typing_Vale.PPC64LE.Machine_s.__proj__Mkstate__item__ok"
       ],
       0,
-      "c56dd149b6334ba8d7d1541238243b49"
+      "3dc8a7027d055de0c2d1defe1d7331d7"
     ],
     [
       "Vale.AES.PPC64LE.PolyOps.va_wpProof_VPolyAnd",
@@ -222,7 +222,7 @@
         "typing_Vale.PPC64LE.State.update_vec"
       ],
       0,
-      "d84bed648f90f8a7d0cbf9f9a9077d3a"
+      "b7ac16dc1532b1c61e2b49d2473f9a0d"
     ],
     [
       "Vale.AES.PPC64LE.PolyOps.va_quick_VPolyAnd",
@@ -234,7 +234,7 @@
         "fuel_guarded_inversion_FStar.Pervasives.Native.tuple3"
       ],
       0,
-      "a186453058664ac39c22403029b2fa8e"
+      "918b05e23629ebc4c632729205a702c9"
     ],
     [
       "Vale.AES.PPC64LE.PolyOps.va_lemma_VSwap",
@@ -329,7 +329,7 @@
         "typing_Vale.PPC64LE.State.update_vec"
       ],
       0,
-      "f93ad80e5b35b4b7033b872f74986a0a"
+      "589bc8fbc8b54dfa2a2bab46863f375f"
     ],
     [
       "Vale.AES.PPC64LE.PolyOps.va_wpProof_VSwap",
@@ -403,7 +403,7 @@
         "typing_Vale.PPC64LE.State.update_vec"
       ],
       0,
-      "08f2b5e5c0ef1885f350c0cf50ac71d1"
+      "9d2eef18c9825abc86f59614a480d2cf"
     ],
     [
       "Vale.AES.PPC64LE.PolyOps.va_quick_VSwap",
@@ -415,7 +415,7 @@
         "fuel_guarded_inversion_FStar.Pervasives.Native.tuple3"
       ],
       0,
-      "f388fbd9874b2f1f402bd05cc5e7a202"
+      "7b2a9bdedc8d22053e90e5f3de14dd41"
     ],
     [
       "Vale.AES.PPC64LE.PolyOps.va_lemma_VPolyMul",
@@ -515,7 +515,7 @@
         "typing_Vale.PPC64LE.Machine_s.__proj__Mkstate__item__vecs"
       ],
       0,
-      "ea9f3e2f8ab989c9ad5f4ff749c14e70"
+      "e0dd439e9d11230182dd5b3441a0adee"
     ],
     [
       "Vale.AES.PPC64LE.PolyOps.va_wpProof_VPolyMul",
@@ -589,7 +589,7 @@
         "typing_Vale.PPC64LE.State.update_vec"
       ],
       0,
-      "2fbd07b3352050dcd137bc836d2d612d"
+      "6481e3c73f174a50f533dda5ef952ed8"
     ],
     [
       "Vale.AES.PPC64LE.PolyOps.va_quick_VPolyMul",
@@ -601,7 +601,7 @@
         "fuel_guarded_inversion_FStar.Pervasives.Native.tuple3"
       ],
       0,
-      "9b511d192f1c503f486d218583fcc245"
+      "d9668833c3db5ee152e0a4d405f5e2fa"
     ],
     [
       "Vale.AES.PPC64LE.PolyOps.va_lemma_VPolyMulLow",
@@ -683,7 +683,7 @@
         "typing_Vale.PPC64LE.State.update_vec"
       ],
       0,
-      "4ee5f4bc274f5dae53a774caeea0fadb"
+      "ddf4bf5ac16923a7f5ba6d1a665fbddd"
     ],
     [
       "Vale.AES.PPC64LE.PolyOps.va_wpProof_VPolyMulLow",
@@ -757,7 +757,7 @@
         "typing_Vale.PPC64LE.State.update_vec"
       ],
       0,
-      "717b83695dd2ffd0b7960a3b61f5aaaf"
+      "0f4fd40332c09c5ff59ae742a57f1830"
     ],
     [
       "Vale.AES.PPC64LE.PolyOps.va_quick_VPolyMulLow",
@@ -769,7 +769,7 @@
         "fuel_guarded_inversion_FStar.Pervasives.Native.tuple3"
       ],
       0,
-      "254c6f8056ca54922bfbd4a6eed9530a"
+      "0469668a7ae87c8cb0ac8de21122e30b"
     ],
     [
       "Vale.AES.PPC64LE.PolyOps.va_lemma_VPolyMulHigh",
@@ -851,7 +851,7 @@
         "typing_Vale.PPC64LE.State.update_vec"
       ],
       0,
-      "9206e9dc9ab6315c39aafa60b3cd9edf"
+      "81636d98dc8d5662254438de2dd9530a"
     ],
     [
       "Vale.AES.PPC64LE.PolyOps.va_wpProof_VPolyMulHigh",
@@ -925,7 +925,7 @@
         "typing_Vale.PPC64LE.State.update_vec"
       ],
       0,
-      "588611bdbe629531f893ce3b2a23090c"
+      "171030812085d229cd5ad7106b51ebfd"
     ],
     [
       "Vale.AES.PPC64LE.PolyOps.va_quick_VPolyMulHigh",
@@ -937,7 +937,7 @@
         "fuel_guarded_inversion_FStar.Pervasives.Native.tuple3"
       ],
       0,
-      "c76161a3039acdb23c67eb353e3819ed"
+      "d177d745ec26e2274db7c34f95355113"
     ]
   ]
 ]
