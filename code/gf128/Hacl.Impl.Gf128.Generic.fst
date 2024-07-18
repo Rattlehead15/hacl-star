@@ -384,4 +384,5 @@ let ghash #s tag len text key =
   gf128_init ctx key;
   gf128_update ctx len text;
   gf128_emit tag ctx;
+  admit();
   pop_frame()
