@@ -9,15 +9,13 @@ module S = Spec.GF128
 #set-options "--z3rlimit 30 --max_fuel 0 --max_ifuel 0"
 
 let elem = S.elem
-let zero : elem = zero
-let one : elem = one
 
 let ( +% ) (a b:elem) : elem = fadd #S.gf128 a b
 let ( *% ) (a b:elem) : elem = fmul_be #S.gf128 a b
 
 val add_identity: a:elem -> Lemma (zero +% a == a)
 
-val mul_identity: a:elem -> Lemma (one *% a == a)
+val mul_identity: a:elem -> Lemma (one_be *% a == a)
 
 val add_associativity: a:elem -> b:elem -> c:elem ->
   Lemma (a +% b +% c == a +% (b +% c))
