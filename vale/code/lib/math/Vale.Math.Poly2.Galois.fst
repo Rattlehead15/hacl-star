@@ -13,12 +13,11 @@ module GI = Vale.Math.Poly2.Galois.IntTypes
 let to_poly #f e =
   let G.GF t irred = f in
   let n = I.bits t in
-  reverse (of_seq (U.to_vec #n (I.v e))) (n - 1)
+  of_seq (U.to_vec #n (I.v e))
 
 let to_felem f p =
   let G.GF t irred = f in
   let n = I.bits t in
-  let p = reverse p (n - 1) in
   Lib.IntTypes.Compatibility.nat_to_uint (U.from_vec #n (to_seq p n))
 
 let lemma_to_poly_degree #f e =
@@ -36,18 +35,14 @@ let lemma_irred_degree f =
 let lemma_poly_felem f p =
   let G.GF t irred = f in
   let n = I.bits t in
-  let r = reverse p (n - 1) in
-  let s = to_seq r n in
+  let s = to_seq p n in
   let u = U.from_vec #n s in
   let e = Lib.IntTypes.Compatibility.nat_to_uint u in
   let u' = I.v #t #I.SEC e in
   let s' = U.to_vec #n u' in
   let r' = of_seq s' in
-  let p' = reverse r' (n - 1) in
   PL.lemma_index_all ();
-  PL.lemma_reverse_define_all ();
-  lemma_equal r r';
-  lemma_equal p p';
+  lemma_equal p r';
   ()
 
 let lemma_felem_poly #f e =
@@ -56,14 +51,11 @@ let lemma_felem_poly #f e =
   let u = I.v #t #I.SEC e in
   let s = U.to_vec #n u in
   let r = of_seq s in
-  let p = reverse r (n - 1) in
-  let r' = reverse p (n - 1) in
-  let s' = to_seq r' n in
+  let s' = to_seq r n in
   let u' = U.from_vec #n s' in
   let e' = Lib.IntTypes.Compatibility.nat_to_uint #t #I.SEC u' in
   PL.lemma_index_all ();
   PL.lemma_reverse_define_all ();
-  lemma_equal r r';
   assert (equal s s');
   Lib.IntTypes.Compatibility.uintv_extensionality e e';
   ()
@@ -75,7 +67,6 @@ let lemma_zero f =
   let b = to_poly #f G.zero in
   let eq_i (i:int) : Lemma (a.[i] == b.[i]) =
     PL.lemma_index_all ();
-    PL.lemma_reverse_define_all ();
     PL.lemma_zero_define ();
     (if 0 <= i && i < n then U.zero_to_vec_lemma #n (n - 1 - i));
     ()
@@ -92,12 +83,12 @@ let lemma_one f =
   let G.GF t irred = f in
   let n = I.bits t in
   let a = one in
-  let b = to_poly #f G.one in
+  let b = to_poly #f G.one_be in
   let eq_i (i:int) : Lemma (a.[i] == b.[i]) =
     PL.lemma_index_all ();
-    PL.lemma_reverse_define_all ();
     PL.lemma_one_define ();
-    (if 0 <= i && i < n then U.one_to_vec_lemma #n (n - 1 - i));
+    assert(a.[i] == (i = 0));
+    (if 0 <= i && i < n then U.pow2_to_vec_lemma #n (n - 1) i);
     ()
     in
   PL.lemma_pointwise_equal a b eq_i
@@ -106,7 +97,6 @@ let lemma_add f e1 e2 =
   let G.GF t irred = f in
   GI.define_logxor t e1 e2;
   PL.lemma_index_all ();
-  PL.lemma_reverse_define_all ();
   PL.lemma_add_define_all ();
   lemma_equal (to_poly (G.fadd e1 e2)) (to_poly e1 +. to_poly e2)
 
@@ -114,7 +104,6 @@ let lemma_and f e1 e2 =
   let G.GF t irred = f in
   GI.define_logand t e1 e2;
   PL.lemma_index_all ();
-  PL.lemma_reverse_define_all ();
   PL.lemma_and_define_all ();
   lemma_equal (to_poly (I.logand e1 e2)) (to_poly e1 &. to_poly e2)
 
@@ -122,7 +111,6 @@ let lemma_or f e1 e2 =
   let G.GF t irred = f in
   GI.define_logor t e1 e2;
   PL.lemma_index_all ();
-  PL.lemma_reverse_define_all ();
   PL.lemma_or_define_all ();
   lemma_equal (to_poly (I.logor e1 e2)) (to_poly e1 |. to_poly e2)
 
@@ -132,18 +120,19 @@ let lemma_shift_left f e n =
   PL.lemma_index_all ();
   PL.lemma_reverse_define_all ();
   PL.lemma_shift_define_all ();
-  PL.lemma_mod_monomial (shift (to_poly e) (I.uint_v n)) nf;
+  I.shift_left_lemma e n;
+  U.shift_left_value_lemma #nf (I.uint_v e) (I.uint_v n);
   assert (I.uint_v (I.shift_left e n) == U.shift_left #nf (I.uint_v e) (I.uint_v n));
-  lemma_equal (to_poly (I.shift_left e n)) (shift (to_poly e) (I.uint_v n) %. monomial (I.bits f.G.t))
+  lemma_equal (to_poly (I.shift_left e n)) (shift (to_poly e) (-(I.uint_v n)))
 
 let lemma_shift_right f e n =
   let G.GF t irred = f in
   let nf = I.bits t in
   PL.lemma_index_all ();
-  PL.lemma_reverse_define_all ();
   PL.lemma_shift_define_all ();
+  PL.lemma_mod_monomial (shift (to_poly e) (I.uint_v n)) nf;
   assert (I.uint_v (I.shift_right e n) == U.shift_right #nf (I.uint_v e) (I.uint_v n));
-  lemma_equal (to_poly (I.shift_right e n)) (shift (to_poly e) (-(I.uint_v n)))
+  lemma_equal (to_poly (I.shift_right e n)) (shift (to_poly e) (I.uint_v n) %. monomial (I.bits f.G.t))
 
 #reset-options
 
@@ -201,55 +190,51 @@ let rec mmul (a b m:poly) (n:nat) : Tot poly (decreases n) =
 let mod_bit1 (a m:poly) : poly =
   if a.[degree m] then a +. m else a
 
-let rec smul_rec (a b m:poly) (n:nat) : Tot (poly & poly & poly) (decreases n) =
-  if n = 0 then (zero, a, b)
+let rec smul_rec (a b m:poly) (n:nat) : Tot (poly & poly) (decreases n) =
+  if n = 0 then (zero, a)
   else
-    let (p, a, b) = smul_rec a b m (n - 1) in
-    let p = p +. (if b.[0] then a else zero) in
+    let (p, a) = smul_rec a b m (n - 1) in
+    let p = p +. (if b.[n - 1] then a else zero) in
     let a = mod_bit1 (shift a 1) m in // mod_bit1 is equivalent to mod in this case
-    let b = shift b (-1) in
-    (p, a, b)
+    (p, a)
 
 let smul (a b m:poly) (n:nat) : poly =
-  let (p, _, _) = smul_rec a b m n in
+  let (p, _) = smul_rec a b m n in
   p
 
 let mod_shift1 (a irred:poly) (k:nat) : poly =
   let s = shift a 1 %. monomial k in
   s +. (if a.[k - 1] then irred else zero)
 
-let fmul_t (f:G.field) = G.felem f & G.felem f & G.felem f
+let fmul_t (f:G.field) = G.felem f & G.felem f
 
-let fmul_iter (f:G.field) : i:nat{i < I.bits f.G.t - 1} -> fmul_t f -> fmul_t f =
-  fun i (p, a, b) ->
-    let b0 = I.eq_mask #f.G.t (I.logand b (G.one #f)) (G.one #f) in
-    let p = I.logxor p (I.logand b0 a) in
-    let carry_mask = I.eq_mask #f.G.t (I.shift_right a (I.size (I.bits f.G.t - 1))) (G.one #f) in
-    let a = I.shift_left a (I.size 1) in
+let fmul_iter (f:G.field) (b:G.felem f) : i:nat{i < I.bits f.G.t} -> fmul_t f -> fmul_t f =
+  fun i (p, a) ->
+    let bi = I.eq_mask #f.G.t (I.logand (I.shift_right b (I.size (I.bits f.G.t - 1 - i))) (G.one #f)) (G.one #f) in
+    let p = I.logxor p (I.logand a bi) in
+    let carry_mask = I.eq_mask #f.G.t (I.logand a (G.one #f)) (G.one #f) in
+    let a = I.shift_right a (I.size 1) in
     let a = I.logxor a (I.logand carry_mask f.G.irred) in
-    let b = I.shift_right b (I.size 1) in
-    (p, a, b)
+    (p, a)
 
-let rec gmul_rec (f:G.field) (a b:G.felem f) (n:nat) : fmul_t f =
-  if n = 0 then (G.zero #f, a, b)
+let rec gmul_rec (f:G.field) (a b:G.felem f) (n:nat{n <= I.bits f.G.t}) : fmul_t f =
+  if n = 0 then (G.zero #f, a)
   else
-    let (p, a, b) = gmul_rec f a b (n - 1) in
-    fmul_iter f 0 (p, a, b)
+    let (p, a) = gmul_rec f a b (n - 1) in
+    fmul_iter f b (n - 1) (p, a)
 
 let gmul (f:G.field) (a b:G.felem f) : G.felem f =
-  let (p, _, _) = gmul_rec f a b (I.bits f.G.t) in
+  let (p, _) = gmul_rec f a b (I.bits f.G.t) in
   p
 
 let fmul (f:G.field) (a b:G.felem f) : G.felem f =
   let one = G.one #f in
   let zero = G.zero #f in
-  let (p, a, b) =
-    Lib.LoopCombinators.repeati (I.bits f.G.t - 1)
-    (fmul_iter f)
-    (zero, a, b)
+  let (p, a) =
+    Lib.LoopCombinators.repeati (I.bits f.G.t)
+    (fmul_iter f b)
+    (zero, a)
     in
-  let b0 = I.eq_mask #f.G.t (I.logand b (G.one #f)) (G.one #f) in
-  let p = I.logxor p (I.logand b0 a) in
   p
 
 (*
@@ -413,7 +398,7 @@ let lemma_mod_shift1 (a irred:poly) (k:nat) : Lemma
 let rec lemma_mmul_smul_rec (a b m:poly) (n:nat) : Lemma
   (requires degree m >= 0 /\ degree a < degree m)
   (ensures
-    smul_rec a b m n == (mmul a b m n, shift a n %. m, shift b (-n)) /\
+    smul_rec a b m n == (mmul a b m n, shift a n %. m) /\
     mmul a b m n == mmul a b m n %. m
   )
   =
@@ -422,11 +407,11 @@ let rec lemma_mmul_smul_rec (a b m:poly) (n:nat) : Lemma
   PL.lemma_mod_small a m;
   PL.lemma_mod_small zero m;
   lemma_equal (shift a 0) a;
-  let (p0, a0, b0) = smul_rec a b m n in
+  let (p0, a0) = smul_rec a b m n in
   if n > 0 then
   (
     let n1 = n - 1 in
-    let (p1, a1, b1) = smul_rec a b m n1 in
+    let (p1, a1) = smul_rec a b m n1 in
     lemma_mmul_smul_rec a b m n1;
     PL.lemma_shift_shift b (-n1) (-1);
     PL.lemma_shift_shift a n1 1;
@@ -440,7 +425,6 @@ let rec lemma_mmul_smul_rec (a b m:poly) (n:nat) : Lemma
     lemma_add_zero p1;
     ()
   );
-  lemma_equal b0 (shift b (-n));
   ()
 
 let lemma_mmul_smul (a b m:poly) (n:nat) : Lemma
@@ -461,9 +445,9 @@ let lemma_eqmask_and (t:I.inttype{Lib.IntTypes.unsigned t}) (a b c:I.uint_t t I.
   ()
 
 #reset-options "--z3rlimit 20"
-let rec lemma_smul_gmul_rec (f:G.field) (e1 e2:G.felem f) (n:nat) : Lemma
-  ( let (p, a, b) = gmul_rec f e1 e2 n in
-    (to_poly p, to_poly a, to_poly b) == smul_rec (to_poly e1) (to_poly e2) (irred_poly f) n)
+let rec lemma_smul_gmul_rec (f:G.field) (e1 e2:G.felem f) (n:nat{n <= I.bits f.G.t}) : Lemma
+  (ensures (let (p, a) = gmul_rec f e1 e2 n in
+    (to_poly p, to_poly a) == smul_rec (to_poly e1) (to_poly e2) (irred_poly f) n)) (decreases n)
   =
   let G.GF t irred = f in
   let a = to_poly e1 in
@@ -474,57 +458,89 @@ let rec lemma_smul_gmul_rec (f:G.field) (e1 e2:G.felem f) (n:nat) : Lemma
   if n > 0 then
   (
     lemma_smul_gmul_rec f e1 e2 (n - 1);
-    let (sp, sa, sb) = smul_rec a b m (n - 1) in
-    let (gp, ga, gb) = gmul_rec f e1 e2 (n - 1) in
-    //assert (to_poly gp == sp);
-    //assert (to_poly ga == sa);
-    //assert (to_poly gb == sb);
-
-    let sp' = sp +. (if sb.[0] then sa else zero) in
+    let (sp, sa) = smul_rec a b m (n - 1) in
+    let (gp, ga) = gmul_rec f e1 e2 (n - 1) in
+    
+    let sp' = sp +. (if b.[n - 1] then sa else zero) in
     let sa' = mod_bit1 (shift sa 1) m in // mod_bit1 is equivalent to mod in this case
-    let sb' = shift sb (-1) in
     let k = I.bits t in
     let m_lo = to_poly #f irred in
     lemma_mod_shift1 sa m_lo k;
     let ssa = shift sa 1 %. monomial k in
     let ssa_add = if sa.[k - 1] then m_lo else zero in
     let ssa' = ssa +. ssa_add in
-    //assert (sa' == ssa');
 
-    let gb0 = I.eq_mask #f.G.t (I.logand gb (G.one #f)) (G.one #f) in
-    let gp' = I.logxor gp (I.logand gb0 ga) in
-    let carry_mask = I.eq_mask #f.G.t (I.shift_right ga (I.size (I.bits f.G.t - 1))) (G.one #f) in
-    let ga_shift = I.shift_left ga (I.size 1) in
+    let gbi = I.eq_mask #f.G.t (I.logand (I.shift_right e2 (I.size (I.bits f.G.t - 1 - (n - 1)))) (G.one #f)) (G.one #f) in
+    let gp' = I.logxor gp (I.logand ga gbi) in
+    let carry_mask = I.eq_mask #f.G.t (I.logand ga (G.one #f)) (G.one #f) in
+    let ga_shift = I.shift_right ga (I.size 1) in
     let carry_irred = I.logand carry_mask f.G.irred in
     let ga' = I.logxor ga_shift carry_irred in
 
-    lemma_and f gb (G.one #f);
-    lemma_felem_poly #f (I.logand gb (G.one #f));
-    lemma_felem_poly #f G.one;
+    PL.lemma_shift_define_all ();
     PL.lemma_one_define ();
     PL.lemma_and_define_all ();
-    if sb.[0] then lemma_equal (sb &. one) one;
-    //assert (sb.[0] <==> I.v (I.logand gb (G.one #f)) = I.v (G.one #f));
+    PL.lemma_index_all ();
 
-    lemma_eqmask_and t (I.logand gb (G.one #f)) (G.one #f) ga;
-    lemma_add f gp (I.logand gb0 ga);
-    //assert (to_poly gp' == sp');
+    calc (==) {
+      to_poly gp';
+      (==) {lemma_add f gp (I.logand ga gbi)}
+      to_poly gp +. (to_poly (I.logand ga gbi));
+      (==) {
+        lemma_eqmask_and t (I.logand (I.shift_right e2 (I.size (I.bits f.G.t - n))) (G.one #f)) (G.one #f) ga
+      }
+      to_poly gp +. to_poly (if I.v (I.logand (I.shift_right e2 (I.size (I.bits f.G.t - n))) (G.one #f)) = (I.v (G.one #f)) then ga else (G.zero #f));
+      (==) {
+        calc (==) {
+          (I.v (I.logand (I.shift_right e2 (I.size (I.bits f.G.t - n))) (G.one #f))) = (I.v (G.one #f));
+          (==) {}
+          (I.v (I.logand (I.shift_right e2 (I.size (I.bits f.G.t - n))) (G.one #f))) = 1;
+          (==) {I.logand_mask (I.shift_right e2 (I.size (I.bits f.G.t - n))) (G.one #f) 1}
+          (I.v (I.shift_right e2 (I.size (I.bits f.G.t - n))) % 2) = 1;
+          (==) {}
+          (to_poly (I.shift_right e2 (I.size (I.bits f.G.t - n)))).[I.bits f.G.t - 1];
+          (==) {lemma_shift_right f e2 (I.size (I.bits f.G.t - n))}
+          ((shift b (I.bits f.G.t - n)) %. (monomial (I.bits f.G.t))).[I.bits f.G.t - 1];
+          (==) {PL.lemma_mod_monomial (shift b (I.bits f.G.t - n)) (I.bits f.G.t)}
+          (shift b (I.bits f.G.t - n)).[I.bits f.G.t - 1]; // k - 1 - (k - n) = n - 1
+          (==) {}
+          b.[n - 1];
+        }
+      }
+      to_poly gp +. to_poly (if b.[n - 1] then ga else (G.zero #f));
+      (==) {}
+      sp +. (if b.[n - 1] then sa else zero);
+      (==) {}
+      sp';
+    };
 
-    let right_mask = I.shift_right ga (I.size (I.bits f.G.t - 1)) in
-    lemma_eqmask_and t right_mask (G.one #f) f.G.irred;
-    //assert (to_poly f.G.irred == m_lo);
+    calc (==) {
+      to_poly ga';
+      (==) { lemma_add f ga_shift carry_irred }
+      to_poly ga_shift +. to_poly carry_irred;
+      (==) {lemma_shift_right f ga (I.uint 1)}
+      ssa +. to_poly carry_irred;
+      (==) {lemma_eqmask_and t (I.logand ga (G.one #f)) (G.one #f) f.G.irred}
+      ssa +. to_poly (if I.v (I.logand ga (G.one #f)) = I.v (G.one #f) then f.G.irred else (G.zero #f));
+      (==) {
+        calc (==) {
+          (I.v (I.logand ga (G.one #f))) = I.v (G.one #f);
+          (==) {I.logand_mask ga (G.one #f) 1}
+          (I.v ga % 2) = 1;
+          (==) {}
+          (to_poly ga).[I.bits f.G.t - 1];
+          (==) {}
+          sa.[I.bits f.G.t - 1];
+        }
+      }
+      ssa +. ssa_add;
+      (==) {}
+      sa';
+    };
 
-    lemma_felem_poly right_mask;
-    lemma_shift_right f ga (I.size (I.bits f.G.t - 1));
-    //assert (to_poly carry_irred == ssa_add);
-    lemma_add f ga_shift carry_irred;
-    lemma_shift_left f ga (I.uint #I.U32 #I.PUB 1);
-    //assert (to_poly ga_shift == ssa);
-    //assert (to_poly ga' == ssa');
+    assert(to_poly ga' == sa');
+    assert(to_poly gp' == sp');
 
-    let gb' = I.shift_right gb (I.size 1) in
-    lemma_shift_right f gb (I.uint 1);
-    //assert (to_poly gb' == sb');
     ()
   )
 
@@ -538,38 +554,68 @@ let lemma_smul_fmul (f:G.field) (e1 e2:G.felem f) : Lemma
 let lemma_fmul_gmul (f:G.field) (a b:G.felem f) : Lemma
   (fmul f a b == gmul f a b)
   =
-  let pred (n:nat) (pab:(fmul_t f)) : Type0 = gmul_rec f a b n == pab in
-  let _ = Lib.LoopCombinators.repeati_inductive' (I.bits f.G.t - 1) pred (fmul_iter f) (G.zero #f, a, b) in
+  let pred (n:nat{n <= I.bits f.G.t}) (pab:(fmul_t f)) : Type0 = gmul_rec f a b n == pab in
+  let _ = Lib.LoopCombinators.repeati_inductive' (I.bits f.G.t) pred (fmul_iter f b) (G.zero #f, a) in
   ()
+
+let lemma_fmul_be_f_fmul_iter (f:G.field) (b:G.felem f) (i:nat{i<I.bits f.G.t}) (pa: fmul_t f) : Lemma
+  (G.fmul_be_f b i pa == fmul_iter f b i pa)
+  =
+  let (p, a) = pa in
+  calc(==) {
+    G.fmul_be_f b i (p, a);
+    (==) {}
+    (I.logxor p (I.logand a (I.eq_mask (I.logand (I.shift_right b (I.size (I.bits f.G.t - 1 - i))) (G.one #f)) (G.one #f))),
+    I.logxor (I.shift_right a (I.size 1)) (I.logand f.G.irred (I.eq_mask (I.logand (I.shift_right a (I.size 0)) (G.one #f)) (G.one #f))));
+    (==) {
+      I.shift_right_lemma a (I.size 0);
+      U.pow2_values 0;
+      assert(I.v (I.shift_right a (I.size 0)) == I.v a / 1);
+      Lib.IntTypes.Compatibility.uintv_extensionality (I.shift_right a (I.size 0)) a
+    }
+    (I.logxor p (I.logand a (I.eq_mask (I.logand (I.shift_right b (I.size (I.bits f.G.t - 1 - i))) (G.one #f)) (G.one #f))),
+    I.logxor (I.shift_right a (I.size 1)) (I.logand f.G.irred (I.eq_mask (I.logand a (G.one #f)) (G.one #f))));
+    (==) {
+      I.logand_spec f.G.irred (I.eq_mask (I.logand a (G.one #f)) (G.one #f));
+      I.logand_spec (I.eq_mask (I.logand a (G.one #f)) (G.one #f)) f.G.irred;
+      U.logand_commutative #(I.bits f.G.t) (I.v f.G.irred) (I.v (I.eq_mask (I.logand a (G.one #f)) (G.one #f)))
+    }
+    (I.logxor p (I.logand a (I.eq_mask (I.logand (I.shift_right b (I.size (I.bits f.G.t - 1 - i))) (G.one #f)) (G.one #f))),
+    I.logxor (I.shift_right a (I.size 1)) (I.logand (I.eq_mask (I.logand a (G.one #f)) (G.one #f)) f.G.irred));
+    (==) {}
+    fmul_iter f b i (p, a);
+  }
 
 #reset-options "--initial_ifuel 1"
 // HACK: It would be easier if G.fmul were already defined more like fmul (passing repeati a named function rather than a lambda)
 let lemma_fmul_fmul (f:G.field) (a b:G.felem f) : Lemma
-  (G.fmul a b == fmul f a b)
+  (G.fmul_be b a == fmul f a b)
   =
   let repeati = Lib.LoopCombinators.repeati in
-  let acc0 = (G.zero #f, a, b) in
-  let rec lem (n:nat{n < I.bits f.G.t}) (f1:(i:nat{i < n} -> fmul_t f -> fmul_t f)) : Lemma
-    (requires (forall (i:nat{i < n}) (pab:fmul_t f). f1 i pab == fmul_iter f i pab))
-    (ensures repeati n (fmul_iter f) acc0 == repeati n f1 acc0)
-    [SMTPat (repeati n f1 acc0)]
+  let acc0 = (G.zero #f, a) in
+  let rec lem (n:nat{n <= I.bits f.G.t}) : Lemma
+    (requires (forall (i:nat{i < n}) (pa:fmul_t f). (G.fmul_be_f b i pa) == (fmul_iter f b i pa)))
+    (ensures (repeati n (fmul_iter f b) acc0) == (repeati n (G.fmul_be_f b) acc0))
+    [SMTPat (repeati n (G.fmul_be_f b) acc0)]
     =
     if n = 0 then
     (
       let pred (n:nat) (pab:(fmul_t f)) : Type0 = n == 0 ==> pab == acc0 in
-      let _ = Lib.LoopCombinators.repeati_inductive' 0 pred (fmul_iter f) acc0 in
-      let _ = Lib.LoopCombinators.repeati_inductive' 0 pred f1 acc0 in
+      let _ = Lib.LoopCombinators.repeati_inductive' 0 pred (fmul_iter f b) acc0 in
+      let _ = Lib.LoopCombinators.repeati_inductive' 0 pred (G.fmul_be_f b) acc0 in
       ()
     )
     else
     (
-      lem (n - 1) f1;
-      Lib.LoopCombinators.unfold_repeati n (fmul_iter f) acc0 (n - 1);
-      Lib.LoopCombinators.unfold_repeati n f1 acc0 (n - 1);
-      assert (repeati n (fmul_iter f) acc0 == repeati n f1 acc0);
+      lem (n - 1);
+      Lib.LoopCombinators.unfold_repeati n (fmul_iter f b) acc0 (n - 1);
+      Lib.LoopCombinators.unfold_repeati n (G.fmul_be_f b) acc0 (n - 1);
+      assert (repeati n (fmul_iter f b) acc0 == repeati n (G.fmul_be_f b) acc0);
       ()
     )
     in
+  introduce forall (i:nat{i < I.bits f.G.t}) (pa:fmul_t f). (G.fmul_be_f b i pa) == (fmul_iter f b i pa)
+  with lemma_fmul_be_f_fmul_iter f b i pa;
   ()
 
 #reset-options "--max_fuel 0 --max_ifuel 0"
@@ -580,12 +626,12 @@ let lemma_mul f a b =
   let pb = to_poly b in
   let m = irred_poly f in
   lemma_mul_commute pa pb;
-  lemma_mul_def pb pa;
-  lemma_mul_pmul pb pa;
-  lemma_mmul_pmul pa pb m n;
-  lemma_mmul_smul pa pb m n;
-  lemma_smul_fmul f a b;
-  lemma_fmul_gmul f a b;
-  lemma_fmul_fmul f a b;
-  PL.lemma_mod_small (to_poly (G.fmul a b)) m;
+  lemma_mul_def pa pb;
+  lemma_mul_pmul pa pb;
+  lemma_mmul_pmul pb pa m n;
+  lemma_mmul_smul pb pa m n;
+  lemma_smul_fmul f b a;
+  lemma_fmul_gmul f b a;
+  lemma_fmul_fmul f b a;
+  PL.lemma_mod_small (to_poly (G.fmul_be a b)) m;
   ()

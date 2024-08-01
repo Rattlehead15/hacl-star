@@ -1,91 +1,113 @@
 module Hacl.Spec.GF128.Lemmas
 
 open FStar.Mul
-open Lib.IntTypes
-open Spec.GaloisField
 open Lib.LoopCombinators
 
-open FStar.Tactics
+open FStar.Tactics.V2
 open FStar.Algebra.CommMonoid
 open FStar.Tactics.CanonCommSemiring
 open FStar.Math.Lemmas
 
+open Vale.Math.Poly2
+open Vale.Math.Poly2.Lemmas
+open Vale.Math.Poly2.Galois
+
 friend Lib.IntTypes
 
+let poly_extensionality (a:elem) (b:elem) : Lemma
+  (requires to_poly a == to_poly b)
+  (ensures a == b)
+  =
+  lemma_felem_poly a;
+  lemma_felem_poly b
+
 let add_identity a =
-  FStar.UInt.logxor_commutative #128 (v a) (v #U128 #SEC (zero #S.gf128));
-  FStar.UInt.logxor_lemma_1 #128 (v a);
-  v_extensionality (zero ^. a) a
-
-val one_bits_lemma: #f:field -> #i:nat{i < bits f.t} ->
-  Lemma (v (get_ith_bit #f one_be i) == (if i = 0 then 1 else 0))
-let one_bits_lemma #f #i =
   calc (==) {
-    v (get_ith_bit #f (one_be) i);
-    (==) {}
-    (pow2 (bits f.t - 1) / pow2 (bits f.t - 1 - i)) % 2;
+    to_poly (zero +% a);
+    (==) {lemma_add S.gf128 zero a}
+    (to_poly (zero #S.gf128)) +. (to_poly a);
     (==)
-      {
-        if i = 0 then () else (
-          pow2_minus (bits f.t - 1) (bits f.t - 1 - i);
-          pow2_multiplication_modulo_lemma_1 1 1 i
-        )
-      }
-    (if i = 0 then 1 else 0);
-  }
-
-val zero_bits_lemma: #f:field -> #i:nat{i < bits f.t} ->
-  Lemma (v (get_ith_bit #f zero i) == 0)
-let zero_bits_lemma #f #i = ()
-
-val fmul_be_f_one_lemma: i:nat{i < bits S.gf128.t} -> res_y:tuple2 elem elem -> 
-Lemma (fmul_be_f one_be i res_y == ((if i = 0 then fst res_y `fadd` snd res_y else fst res_y), mask_shift_right_mod (snd res_y)))
-let fmul_be_f_one_lemma i res_y =
-  one_bits_lemma #S.gf128 #i
-
-val fmul_be_f_zero_lemma: i:nat{i < bits S.gf128.t} -> res_y:tuple2 elem elem -> 
-Lemma (fmul_be_f zero i res_y == (fst res_y, mask_shift_right_mod (snd res_y)))
-let fmul_be_f_zero_lemma i res_y =
-  zero_bits_lemma #S.gf128 #i
-
-val repeati_fmul_be_f_one_lemma:
-  i:pos{i <= bits S.gf128.t}
-  -> y:elem
-  -> Lemma (fst (repeati i (fmul_be_f one_be) (zero, y)) == y)
-let rec repeati_fmul_be_f_one_lemma i y =
-  calc (==) {
-    fst (repeati i (fmul_be_f one_be) (zero, y));
-    (==) { unfold_repeati (bits S.gf128.t) (fmul_be_f one_be) (zero, y) (i - 1) }
-    fst (fmul_be_f one_be (i - 1) (repeati (i - 1) (fmul_be_f one_be) (zero, y)));
-    (==)
-      {
-        fmul_be_f_one_lemma (i - 1) (repeati (i - 1) (fmul_be_f one_be) (zero, y));
-        if i = 1 then (
-          eq_repeati0 (bits S.gf128.t) (fmul_be_f one_be) (zero, y);
-          fmul_be_f_one_lemma (i - 1) (zero, y);
-          add_identity y
-        ) else (
-          repeati_fmul_be_f_one_lemma (i-1) y
-        )
-      }
-    y;
-  }
+    {
+      lemma_zero S.gf128;
+      lemma_add_zero (to_poly a);
+      lemma_add_commute (to_poly a) (to_poly (zero #S.gf128))
+    }
+    to_poly a;
+  };
+  poly_extensionality (zero +% a) a
 
 let mul_identity a =
-  repeati_fmul_be_f_one_lemma (bits S.gf128.t) a
+  calc (==) {
+    to_poly (one_be *% a);
+    (==) {lemma_mul S.gf128 one_be a}
+    (to_poly ((one_be #S.gf128)) *. (to_poly a) %. (irred_poly S.gf128));
+    (==)
+    {
+      lemma_one S.gf128;
+      lemma_mul_one (to_poly a);
+      lemma_mul_commute (to_poly a) (to_poly (one_be #S.gf128))
+    }
+    (to_poly a %. (irred_poly S.gf128));
+    (==) { lemma_mod_small (to_poly a) (irred_poly S.gf128) }
+    to_poly a;
+  };
+  poly_extensionality (one_be *% a) a
 
 let add_associativity a b c =
-  FStar.UInt.logxor_associative #128 (v a) (v b) (v c);
-  v_extensionality ((a ^. b) ^. c) (a ^. (b ^. c))
+  calc (==) {
+    to_poly (a +% (b +% c));
+    (==) { lemma_add S.gf128 a (b +% c) }
+    to_poly a +. to_poly (b +% c);
+    (==) { lemma_add S.gf128 b c }
+    to_poly a +. (to_poly b +. to_poly c);
+    (==) { lemma_add_associate (to_poly a) (to_poly b) (to_poly c) }
+    to_poly (a +% b +% c);
+  };
+  poly_extensionality (a +% (b +% c)) ((a +% b) +% c)
 
 let add_commutativity a b =
-  FStar.UInt.logxor_commutative #128 (v a) (v b);
-  v_extensionality (a ^. b) (b ^. a)
+  calc (==) {
+    to_poly (a +% b);
+    (==) { lemma_add S.gf128 a b }
+    to_poly a +. to_poly b;
+    (==) { lemma_add_commute (to_poly a) (to_poly b) }
+    to_poly b +. to_poly a;
+    (==) { lemma_add S.gf128 b a }
+    to_poly (b +% a);
+  };
+  poly_extensionality (a +% b) (b +% a)
 
-let mul_associativity a b c = admit()
+let mul_associativity a b c =
+  calc (==) {
+    to_poly (a *% (b *% c));
+    (==) { lemma_mul S.gf128 a (b *% c) }
+    to_poly a *. to_poly (b *% c) %. irred_poly S.gf128;
+    (==) { lemma_mul S.gf128 b c }
+    to_poly a *. (to_poly b *. to_poly c %. irred_poly S.gf128) %. irred_poly S.gf128;
+    (==) { lemma_mod_mul_mod_right (to_poly a) (to_poly b *. to_poly c) (irred_poly S.gf128) }
+    (to_poly a *. (to_poly b *. to_poly c)) %. irred_poly S.gf128;
+    (==) { lemma_mul_associate (to_poly a) (to_poly b) (to_poly c) }
+    (to_poly a *. to_poly b *. to_poly c) %. irred_poly S.gf128;
+    (==) { lemma_mod_mul_mod (to_poly a *. to_poly b) (irred_poly S.gf128) (to_poly c) }
+    ((to_poly a *. to_poly b) %. irred_poly S.gf128) *. to_poly c %. irred_poly S.gf128;
+    (==) { lemma_mul S.gf128 a b }
+    to_poly (a *% b) *. (to_poly c) %. irred_poly S.gf128;
+    (==) { lemma_mul S.gf128 (a *% b) c }
+    to_poly ((a *% b) *% c);
+  };
+  poly_extensionality (a *% b *% c) (a *% (b *% c))
 
-let mul_commutativity a b = admit()
-
+let mul_commutativity a b =
+  calc (==) {
+    to_poly (a *% b);
+    (==) { lemma_mul S.gf128 a b }
+    to_poly a *. to_poly b %. irred_poly S.gf128;
+    (==) { lemma_mul_commute (to_poly a) (to_poly b) }
+    to_poly b *. to_poly a %. irred_poly S.gf128;
+    (==) { lemma_mul S.gf128 b a }
+    to_poly (b *% a);
+  };
+  poly_extensionality (a *% b) (b *% a)
 
 [@canon_attr]
 let elem_add_cm : cm elem =
@@ -95,35 +117,55 @@ let elem_add_cm : cm elem =
 let elem_mul_cm : cm elem =
   CM one_be ( *% ) mul_identity mul_associativity mul_commutativity
 
-val mul_add_distr: distribute_left_lemma elem elem_add_cm elem_mul_cm
-let mul_add_distr a b c = admit()
-
-val repeati_fmul_be_f_zero_lemma:
-  i:pos{i <= bits S.gf128.t}
-  -> y:elem
-  -> Lemma (fst (repeati i (fmul_be_f zero) (zero, y)) == zero)
-let rec repeati_fmul_be_f_zero_lemma i y =
+val add_opp: add_opp_r_lemma elem elem_add_cm id
+let add_opp a =
   calc (==) {
-    fst (repeati i (fmul_be_f zero) (zero, y));
-    (==) { unfold_repeati (bits S.gf128.t) (fmul_be_f zero) (zero, y) (i - 1) }
-    fst (fmul_be_f zero (i - 1) (repeati (i - 1) (fmul_be_f zero) (zero, y)));
-    (==)
-      {
-        fmul_be_f_zero_lemma (i - 1) (repeati (i - 1) (fmul_be_f zero) (zero, y));
-        if i = 1 then (
-          eq_repeati0 (bits S.gf128.t) (fmul_be_f zero) (zero, y)
-        ) else (
-          repeati_fmul_be_f_zero_lemma (i-1) y
-        )
-      }
-    zero;
-  }
+    to_poly (a +% a);
+    (==) { lemma_add S.gf128 a (a) }
+    to_poly a +. to_poly (a);
+    (==) { lemma_add_all () }
+    Vale.Math.Poly2_s.zero;
+  };
+  poly_extensionality (a +% a) zero
+
+val mul_add_distr: distribute_left_lemma elem elem_add_cm elem_mul_cm
+let mul_add_distr a b c =
+  calc (==) {
+    to_poly (a *% (b +% c));
+    (==) { lemma_mul S.gf128 a (b +% c) }
+    to_poly a *. to_poly (b +% c) %. irred_poly S.gf128;
+    (==) { lemma_add S.gf128 b c }
+    to_poly a *. (to_poly b +. to_poly c) %. irred_poly S.gf128;
+    (==) { lemma_mul_distribute_right (to_poly a) (to_poly b) (to_poly c) }
+    (to_poly a *. to_poly b +. to_poly a *. to_poly c) %. irred_poly S.gf128;
+    (==) { lemma_mod_distribute (to_poly a *. to_poly b) (to_poly a *. to_poly c) (irred_poly S.gf128) }
+    to_poly a *. to_poly b %. irred_poly S.gf128 +. to_poly a *. to_poly c %. irred_poly S.gf128;
+    (==) { lemma_mul S.gf128 a b }
+    to_poly (a *% b) +. to_poly a *. to_poly c %. irred_poly S.gf128;
+    (==) { lemma_mul S.gf128 a c }
+    to_poly (a *% b) +. to_poly (a *% c);
+    (==) { lemma_add S.gf128 (a *% b) (a *% c) }
+    to_poly ((a *% b) +% (a *% c));
+  };
+  poly_extensionality (a *% (b +% c)) ((a *% b) +% (a *% c))
 
 val mul_zero_l: mult_zero_l_lemma elem elem_add_cm elem_mul_cm
-let mul_zero_l a = repeati_fmul_be_f_zero_lemma (bits S.gf128.t) a
+let mul_zero_l a =
+  calc (==) {
+    to_poly (zero *% a);
+    (==) { lemma_mul S.gf128 zero a }
+    to_poly (zero #S.gf128) *. to_poly a %. irred_poly S.gf128;
+    (==) { lemma_zero S.gf128 }
+    Vale.Math.Poly2_s.zero *. to_poly a %. irred_poly S.gf128;
+    (==) { lemma_mul_all () }
+    to_poly (zero #S.gf128) %. irred_poly S.gf128;
+    (==) { lemma_mod_small (to_poly (zero #S.gf128)) (irred_poly S.gf128) }
+    to_poly (zero #S.gf128);
+  };
+  poly_extensionality (zero *% a) zero
 
 [@canon_attr]
-let elem_cr : cr elem = admit() //CR elem_add_cm elem_mul_cm mul_add_distr mul_zero_l
+let elem_cr : cr elem = CR elem_add_cm elem_mul_cm id add_opp mul_add_distr mul_zero_l
 
 let gf128_semiring () : Tac unit = canon_semiring elem_cr
 
@@ -137,7 +179,6 @@ let gf128_update_multi_mul_add_lemma_load_acc_aux a0 b0 b1 b2 b3 r =
     (a0 +% b0) *% (r *% (r *% (r *% r))) +% b1 *% (r *% (r *% r)) +% b2 *% (r *% r) +% b3 *% r ==
     ((((a0 +% b0) *% r +% b1) *% r +% b2) *% r +% b3) *% r)
   by (gf128_semiring ())
-
 
 let gf128_update_multi_mul_add_lemma_loop_aux a0 a1 a2 a3 b0 b1 b2 b3 r =
   admit();

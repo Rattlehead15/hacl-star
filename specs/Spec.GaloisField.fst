@@ -3,6 +3,7 @@ open Lib.IntTypes
 open Lib.Sequence
 open Lib.LoopCombinators
 open Lib.ByteSequence
+open FStar.Math.Lemmas
 
 (* We represent GF(2^n) by uint_t along  with some  irreducible polynomial also of type uint_t *)
 (* Consequently this module is specialized for GF(8/16/32/64/128) but can be generalized to other sizes if needed *)
@@ -19,6 +20,9 @@ let from_felem (#f:field) (e:felem f) : n:nat{n <= maxint f.t} = uint_v #f.t #SE
 
 let zero (#f:field) : felem f = to_felem 0
 let one (#f:field) : felem f = to_felem 1
+let one_be (#f:field) : r:(felem f) {v r = pow2 (bits f.t - 1)} = 
+  pow2_lt_compat (bits f.t) (bits f.t - 1);
+  to_felem (pow2 (bits f.t - 1))
 
 let load_felem_be (#f:field) (b:lbytes (numbytes f.t)) : felem f = uint_from_bytes_be #f.t #SEC b
 let store_felem_be (#f:field) (e:felem f): lbytes (numbytes f.t) = uint_to_bytes_be #f.t #SEC e

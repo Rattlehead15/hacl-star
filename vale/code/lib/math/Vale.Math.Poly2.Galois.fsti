@@ -51,8 +51,8 @@ val lemma_zero (f:G.field) : Lemma
 
 val lemma_one (f:G.field) : Lemma
   (requires True)
-  (ensures to_poly #f G.one == one)
-  [SMTPat (to_poly #f G.one)]
+  (ensures to_poly #f G.one_be == one)
+  [SMTPat (to_poly #f G.one_be)]
 
 val lemma_add (f:G.field) (e1 e2:G.felem f) : Lemma
   (requires True)
@@ -71,15 +71,15 @@ val lemma_or (f:G.field) (e1 e2:G.felem f) : Lemma
 
 val lemma_shift_left (f:G.field) (e:G.felem f) (n:I.shiftval f.G.t) : Lemma
   (requires True)
-  (ensures to_poly (I.shift_left e n) == shift (to_poly e) (I.uint_v n) %. monomial (I.bits f.G.t))
+  (ensures to_poly (I.shift_left e n) == shift (to_poly e) (-(I.uint_v n)))
   [SMTPat (to_poly (I.shift_left e n))]
 
 val lemma_shift_right (f:G.field) (e:G.felem f) (n:I.shiftval f.G.t) : Lemma
   (requires True)
-  (ensures to_poly (I.shift_right e n) == shift (to_poly e) (-(I.uint_v n)))
+  (ensures to_poly (I.shift_right e n) == shift (to_poly e) (I.uint_v n) %. monomial (I.bits f.G.t))
   [SMTPat (to_poly (I.shift_right e n))]
 
 val lemma_mul (f:G.field) (a b:G.felem f) : Lemma
   (requires True)
-  (ensures to_poly (G.fmul a b) == (to_poly a *. to_poly b) %. (irred_poly f))
-  [SMTPat (to_poly (G.fmul a b))]
+  (ensures to_poly (G.fmul_be a b) == (to_poly a *. to_poly b) %. (irred_poly f))
+  [SMTPat (to_poly (G.fmul_be a b))]
